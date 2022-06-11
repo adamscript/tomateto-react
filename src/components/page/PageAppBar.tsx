@@ -1,9 +1,12 @@
-import { AppBar, Box, Typography, InputBase, Stack, IconButton } from "@mui/material";
+import { AppBar, Box, Typography, InputBase, Stack, IconButton, Button } from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import { Container, shadows } from '@mui/system';
 import SearchIcon from '@mui/icons-material/Search';
 import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
 import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import { useEffect, useState } from "react";
+import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     height: '60px',
@@ -51,7 +54,9 @@ const IconButtonWrapper = styled('div')(({ theme }) => ({
     gap: 3,
 }))
 
-const PageAppBar = () => {
+const PageAppBar = (props: any) => {
+    const navigate = useNavigate();
+
     return(
         <Box>
             <StyledAppBar elevation={1}>
@@ -62,10 +67,15 @@ const PageAppBar = () => {
                             <SearchIconWrapper><SearchIcon /></SearchIconWrapper>
                             <SearchInput placeholder="Search Tomateto" />
                         </Search>
-                        <IconButtonWrapper>
-                            <IconButton size="large"><AddBoxRoundedIcon fontSize="large"/></IconButton>
-                            <IconButton size="large"><AccountCircleRoundedIcon fontSize="large" /></IconButton>
-                        </IconButtonWrapper>
+                        {
+                            props.isLoggedIn ?
+                            <IconButtonWrapper>
+                                <IconButton size="large"><AddBoxRoundedIcon fontSize="large"/></IconButton>
+                                <IconButton size="large" onClick={() => { auth.signOut().then(() => navigate("/accounts/login")) }}><AccountCircleRoundedIcon fontSize="large" /></IconButton>
+                            </IconButtonWrapper>
+                            : 
+                            <Button onClick={() => { navigate("/accounts/login") }} variant="contained">Log in</Button>
+                        }
                     </ Stack>
                 </Container>
             </StyledAppBar>

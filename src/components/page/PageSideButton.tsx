@@ -1,12 +1,15 @@
 import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from "@mui/material";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
+import { useNavigate } from "react-router-dom";
 
-const PageSideButton = () => {
+const PageSideButton = (props: any) => {
+    const navigate = useNavigate();
+
     return(
         <List sx={{ position: 'fixed' }}>
-            <ListItem>
-                <ListItemButton>
+            <ListItem sx={{ display: props.isLoggedIn ? 'block' : 'none' }}>
+                <ListItemButton onClick={() => navigate("/")}>
                     <ListItemIcon>
                         <HomeOutlinedIcon />
                     </ListItemIcon>
@@ -14,19 +17,19 @@ const PageSideButton = () => {
                 </ListItemButton>
             </ListItem>
             <ListItem>
-                <ListItemButton>
+                <ListItemButton onClick={() => navigate("/explore")}>
                     <ListItemIcon>
                         <ExploreOutlinedIcon />
                     </ListItemIcon>
                     <ListItemText primary="Explore" />
                 </ListItemButton>
             </ListItem>
-            <ListItem>
+            <ListItem sx={{ display: props.isLoggedIn ? 'block' : 'none' }}>
                 <ListItemButton>
                     <Avatar />
                     <Stack>
-                        <Typography>Tabby Avery</Typography>
-                        <Typography>@catinthepiratehat</Typography>
+                        <Typography>{props.response.displayName}</Typography>
+                        <Typography>@{props.response.username}</Typography>
                     </Stack>
                 </ListItemButton>
             </ListItem>

@@ -1,6 +1,6 @@
 import ModalUserEdit from "./ModalUserEdit";
-import User from "./User";
+import UserProfile from "./UserProfile";
 import UserPageTabs from "./UserPageTabs";
 import UserRecommendation from "./UserRecommendation";
 
-export { User, UserRecommendation, UserPageTabs, ModalUserEdit };
+export { UserProfile, UserRecommendation, UserPageTabs, ModalUserEdit };

@@ -1,11 +1,11 @@
-import { Avatar, Card, CardContent, Divider, IconButton, Link, Stack, Typography } from "@mui/material";
+import { Avatar, Card, CardContent, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 
-
-const Post = () => {
+const PostContent = (props: any) => {
     return(
         <Card square={true}>
             <CardContent>
@@ -13,12 +13,12 @@ const Post = () => {
                     <Stack direction="row" spacing="15px">
                         <Avatar />
                         <Stack>
-                            <Link href="#" underline="hover">Tabby Avery</Link>
-                            <Typography>@catinthepiratehat</Typography>
+                            <Link to={`/${props.response.user.username}`}>{props.response.user.displayName}</Link>
+                            <Typography>@{props.response.user.username}</Typography>
                         </Stack>
                     </Stack>
                     <Typography variant="h5">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        {props.response.content}
                     </Typography>
                     <Stack direction="row" spacing={1}>
                         <Typography>14:18</Typography>
@@ -28,10 +28,10 @@ const Post = () => {
                     <Divider />
                     <Stack direction="row" spacing={2}>
                         <Stack direction="row" spacing={1}>
-                            <Link href="#" underline="hover">30 Likes</Link>
+                            <Link to="#">30 Likes</Link>
                         </Stack>
                         <Stack direction="row" spacing={1}>
-                            <Link href="#" underline="hover">30 Replies</Link>
+                            <Link to="#">30 Replies</Link>
                         </Stack>
                     </Stack>
                     <Divider />
@@ -52,4 +52,4 @@ const Post = () => {
     )
 }
 
-export default Post;
+export default PostContent;

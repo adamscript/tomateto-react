@@ -1,6 +1,9 @@
 import { Avatar, Button, Card, CardContent, Link, Stack, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
-const User = () => {
+const UserProfile = (props: any) => {
+    
     return(
         <Card square={true}>
             <CardContent>
@@ -9,13 +12,13 @@ const User = () => {
                     <Stack spacing={2}>
                         <Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Stack>
-                                <Typography variant="h6">Tabby Avery</Typography>
-                                <Typography>@catinthepiratehat</Typography>
+                                <Typography variant="h6">{props.response.displayName}</Typography>
+                                <Typography>@{props.response.username}</Typography>
                             </Stack>
                             <Button variant="contained" sx={{ height: "36px" }}>Follow</Button>
                         </Stack>
                         <Typography>
-                            an artist who is trying to jump ship to software engineering
+                            {props.response.bio}
                         </Typography>
                         <Stack direction="row" spacing={1}>
                             <Link href="#" underline="hover">
@@ -29,11 +32,10 @@ const User = () => {
                             </Link>
                         </Stack>
                     </Stack>
-                    
                 </Stack>
             </CardContent>
         </Card>
     )
 }
 
-export default User;
+export default UserProfile;

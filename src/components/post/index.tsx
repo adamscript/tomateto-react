@@ -1,6 +1,7 @@
 import FeedPost from "./FeedPost";
 import FeedNewPost from "./FeedNewPost";
-import Post from "./Post";
+import PostContent from "./PostContent";
 import ModalNewPost from "./ModalNewPost";
+import PostContentComment from "./PostContentComment";
 
-export { FeedPost, FeedNewPost, ModalNewPost, Post };
+export { FeedPost, FeedNewPost, ModalNewPost, PostContent, PostContentComment };

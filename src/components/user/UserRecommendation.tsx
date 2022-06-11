@@ -1,6 +1,7 @@
-import { Avatar, Button, Card, CardContent, Link, Stack, Typography } from "@mui/material";
+import { Avatar, Button, Card, CardContent, Stack, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
-const UserRecommendation = () => {
+const UserRecommendation = (props: any) => {
     return(
         <Card>
             <CardContent>
@@ -9,13 +10,13 @@ const UserRecommendation = () => {
                     <Stack sx={{ width: "100%" }} spacing={1}>
                         <Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Stack>
-                                <Link href="#" underline="hover">Tabby Avery</Link>
-                                <Typography>@catinthepiratehat</Typography>
+                                <Link to={`/${props.items.username}`}>{props.items.displayName}</Link>
+                                <Typography>@{props.items.username}</Typography>
                             </Stack>
                             <Button variant="contained">Follow</Button>
                         </Stack>
                         <Typography>
-                            an artist who is trying to jump ship to software engineering
+                            {props.items.bio}
                         </Typography>
                     </Stack>
                 </Stack>

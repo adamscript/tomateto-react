@@ -1,7 +1,9 @@
-import { Avatar, Card, CardContent, IconButton, Link, Stack, Typography } from "@mui/material";
+import { Avatar, Card, CardContent, IconButton, Stack, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
+
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
-const Comment = () => {
+const Comment = (props: any) => {
     return(
         <Card>
             <CardContent>
@@ -9,13 +11,13 @@ const Comment = () => {
                     <Avatar />
                     <Stack spacing={1}>
                         <Stack alignItems="center" direction="row" spacing={1}>
-                            <Link href="#" underline="hover">Tabby Avery</Link>
-                            <Typography>@catinthepiratehat</Typography>
+                            <Link to={`/${props.items.user.username}`}>{props.items.user.displayName}</Link>
+                            <Typography>@{props.items.user.username}</Typography>
                             <Typography>•</Typography>
                             <Typography>3h</Typography>
                         </Stack>
                         <Typography>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            {props.items.content}
                         </Typography>
                     </Stack>
                     <Stack alignItems="center">

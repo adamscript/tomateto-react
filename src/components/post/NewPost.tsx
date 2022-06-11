@@ -4,6 +4,7 @@ import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 
 const NewPost = () => {
+
     return(
         <Grid container>
             <Grid item xs={1}>
