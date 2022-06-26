@@ -1,6 +1,7 @@
 import { Avatar, Button, Card, CardContent, Link, Stack, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { PageLink } from "../page";
 
 const UserProfile = (props: any) => {
     
@@ -15,21 +16,20 @@ const UserProfile = (props: any) => {
                                 <Typography variant="h6">{props.response.displayName}</Typography>
                                 <Typography>@{props.response.username}</Typography>
                             </Stack>
-                            <Button variant="contained" sx={{ height: "36px" }}>Follow</Button>
+                            {   props.response.isMine ?
+                                <Button variant="outlined" sx={{ height: "36px" }}>Edit Profile</Button> :
+                                    props.response.isFollowed ?
+                                    <Button variant="outlined" sx={{ height: "36px" }}>Followed</Button> :
+                                    <Button variant="contained" sx={{ height: "36px" }}>Follow</Button>
+                            }
                         </Stack>
                         <Typography>
                             {props.response.bio}
                         </Typography>
                         <Stack direction="row" spacing={1}>
-                            <Link href="#" underline="hover">
-                                50 Posts
-                            </Link>
-                            <Link href="#" underline="hover">
-                                188 Following
-                            </Link>
-                            <Link href="#" underline="hover">
-                                182 Followers
-                            </Link>
+                            <Typography>50 Posts</Typography>
+                            <PageLink following items={props.response} />
+                            <PageLink followers items={props.response} />
                         </Stack>
                     </Stack>
                 </Stack>

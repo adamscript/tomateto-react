@@ -2,13 +2,18 @@ import { Avatar, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Sta
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
+import { current } from "@reduxjs/toolkit";
 
-const PageSideButton = (props: any) => {
+const PageSideButton = () => {
     const navigate = useNavigate();
+
+    const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
+    const currentUser = useAppSelector((state) => state.currentUser);
 
     return(
         <List sx={{ position: 'fixed' }}>
-            <ListItem sx={{ display: props.isLoggedIn ? 'block' : 'none' }}>
+            <ListItem sx={{ display: isLoggedIn ? 'block' : 'none' }}>
                 <ListItemButton onClick={() => navigate("/")}>
                     <ListItemIcon>
                         <HomeOutlinedIcon />
@@ -24,12 +29,12 @@ const PageSideButton = (props: any) => {
                     <ListItemText primary="Explore" />
                 </ListItemButton>
             </ListItem>
-            <ListItem sx={{ display: props.isLoggedIn ? 'block' : 'none' }}>
+            <ListItem sx={{ display: isLoggedIn ? 'block' : 'none' }}>
                 <ListItemButton>
                     <Avatar />
                     <Stack>
-                        <Typography>{props.response.displayName}</Typography>
-                        <Typography>@{props.response.username}</Typography>
+                        <Typography>{currentUser.displayName}</Typography>
+                        <Typography>@{currentUser.username}</Typography>
                     </Stack>
                 </ListItemButton>
             </ListItem>

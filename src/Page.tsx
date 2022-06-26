@@ -7,36 +7,47 @@ import { Container } from '@mui/system';
 import { Link, Route, Routes, useParams } from 'react-router-dom';
 import { Accounts, App, Explore, Home, Post, User } from './routes';
 import { auth } from './firebase';
+import { useAppDispatch } from './app/hooks';
+import { deleteCurrentUser, setCurrentUser } from './features/user/currentUserSlice';
+import { setAuthState } from './features/user/authStateSlice';
 
 function Page() {
-  const [user, setUser] = useState(Object);
-  const [isLoggedIn, setLoggedIn] = useState(Boolean);
   const [isLoaded, setLoaded] = useState(false);
+  const dispatch = useAppDispatch();
 
   console.log("loaded " + isLoaded)
-  console.log("page init " + isLoggedIn)
   
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
+        setLoaded(false);
+
         if(user){
-          setUser(user);
-          setLoggedIn(true);
-          setLoaded(true);
-          console.log("logged in" + isLoggedIn)
+          console.log("logged in");
+          fetch(`http://localhost:8080/api/user/${user.uid}`, { mode: 'cors' })
+          .then((res) => {
+              return res.json();
+          })
+          .then((res) => {
+              dispatch(setCurrentUser(res.items));
+              dispatch(setAuthState(true));
+              setLoaded(true);
+          })
         }
         else{
-          setUser(user);
-          setLoggedIn(false);
-          setLoaded(true);
-          console.log("logged out" + isLoggedIn)
+          setTimeout(() => {
+            console.log("logged out")
+            dispatch(setAuthState(false));
+            dispatch(deleteCurrentUser());
+            setLoaded(true);
+          }, 1)
         }
       });
-  })
+  }, [])
     
   return (
       <Routes>
-        <Route path="/*" element={isLoaded ? <App currentUser={user} isLoggedIn={isLoggedIn} /> : <div>Loading...</div>} />
-        <Route path="accounts/*" element={isLoaded ? <Accounts isLoggedIn={isLoggedIn} /> : <div>Loading...</div>} />
+        <Route path="/*" element={isLoaded ? <App /> : <div>Loading...</div>} />
+        <Route path="accounts/*" element={isLoaded ? <Accounts /> : <div>Loading...</div>} />
       </Routes>
   );
 }

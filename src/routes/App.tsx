@@ -1,53 +1,59 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import '../App.css';
-import { PageAppBar, PageSideButton } from '../components/page';
-import { Box, Divider, Grid, Stack } from '@mui/material';
+import { PageAppBar, PageLinkModal, PagePhotoModal, PageSideButton } from '../components/page';
+import { Box, Dialog, Divider, Grid, Stack } from '@mui/material';
 import { Container } from '@mui/system';
-import { Link, Navigate, Route, Routes, useParams } from 'react-router-dom';
-import { Explore, Home, Post, User } from '.';
+import { Link, Navigate, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Explore, Home, Post, Search, User } from '.';
 import { auth } from '../firebase';
+import { useAppSelector } from '../app/hooks';
 
-function App(props: any) {
-  const [response, setResponse] = useState(Object);
-  const [isLoaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    if(props.isLoggedIn){
-      fetch(`http://localhost:8080/api/user/${props.currentUser.uid}`, { mode: 'cors' })
-      .then((res) => {
-          return res.json();
-      })
-      .then((res) => {
-          setResponse(res.items);
-          setLoaded(true);
-      })
-    }
-    else{
-      setLoaded(true);
-    }
-}, [])
+function App() {
+  const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
+  
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as { backgroundLocation?: Location };
 
   return (
     <Box>
-      <PageAppBar isLoggedIn={props.isLoggedIn}></PageAppBar>
+      <PageAppBar></PageAppBar>
       <Box sx={{ position:'relative', top:'60px' }}>
         <Container maxWidth="md">
           <Grid container>
             <Grid item xs={4}>
-              {isLoaded ? <PageSideButton response={response} isLoggedIn={props.isLoggedIn} /> : <div>loading...</div>}
+              <PageSideButton />
             </Grid>
             <Grid item xs={8}>
               <Stack sx={{ width: "600px" }}>
-                <Routes>
-                  <Route index element={props.isLoggedIn ? <Home /> : <Navigate to="/explore" replace />} />
-                  <Route path="home" element={props.isLoggedIn ? <Home /> : <Navigate to="/explore" replace />} />
+                <Routes location={state?.backgroundLocation || location}>
+                  <Route index element={isLoggedIn ? <Home /> : <Navigate to="/explore" replace />} />
+                  <Route path="home" element={isLoggedIn ? <Home /> : <Navigate to="/explore" replace />} />
                   <Route path="explore" element={<Explore />} />
-                  <Route path=":username">
+                  <Route path="search" element={<Search />} />
+                  <Route path=":username/">
                     <Route index element={<User />} />
-                    <Route path="post/:postId" element={<Post />} />
+                    <Route path="post/:postId/" element={<Post />}>
+                      <Route path="likes" element={<Post />} />
+                      <Route path="photo" element={<Post />} />
+                    </Route>
+                    <Route path="following" element={<User />} />
+                    <Route path="followers" element={<User />} />
                   </Route>
                 </Routes>
+                {
+                  <Routes>
+                    <Route path=":username/" element={<Outlet />}>
+                      <Route path="post/:postId/" element={<Outlet />}>
+                        <Route path="likes" element={<PageLinkModal likes />} />
+                        <Route path="photo" element={<PagePhotoModal />} />
+                      </Route>
+                      <Route path="following" element={<PageLinkModal following />} />
+                      <Route path="followers" element={<PageLinkModal followers />} />
+                    </Route>
+                  </Routes>
+                }
               </Stack>
             </Grid>
           </Grid>

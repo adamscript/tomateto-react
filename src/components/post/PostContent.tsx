@@ -1,37 +1,44 @@
-import { Avatar, Card, CardContent, Divider, IconButton, Stack, Typography } from "@mui/material";
+import { Avatar, Card, CardContent, CardMedia, Divider, IconButton, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
+import PostMenu from "./PostMenu";
+import { PageLikeButton, PageLink, PagePhoto } from "../page";
 
 const PostContent = (props: any) => {
+    console.log(new Date(props.response.date))
     return(
         <Card square={true}>
             <CardContent>
                 <Stack spacing="15px">
                     <Stack direction="row" spacing="15px">
                         <Avatar />
-                        <Stack>
-                            <Link to={`/${props.response.user.username}`}>{props.response.user.displayName}</Link>
-                            <Typography>@{props.response.user.username}</Typography>
+                        <Stack direction="row" justifyContent="space-between" sx={{ width: "100%" }}>
+                            <Stack>
+                                <Link to={`/${props.response.user.username}`}>{props.response.user.displayName}</Link>
+                                <Typography>@{props.response.user.username}</Typography>
+                            </Stack>
+                            {props.response.isMine && <PostMenu items={props.response} />}
                         </Stack>
                     </Stack>
-                    <Typography variant="h5">
+                    <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }} variant="h5">
                         {props.response.content}
+                        {props.response.photo && <PagePhoto items={props.response} />}
                     </Typography>
                     <Stack direction="row" spacing={1}>
-                        <Typography>14:18</Typography>
+                        <Typography>14:15</Typography>
                         <Typography>•</Typography>
                         <Typography>31 May 2022</Typography>
+                        {props.response.isEdited && <Typography>(edited)</Typography>}
                     </Stack>
                     <Divider />
                     <Stack direction="row" spacing={2}>
                         <Stack direction="row" spacing={1}>
-                            <Link to="#">30 Likes</Link>
+                            <PageLink likes items={props.response} />
                         </Stack>
                         <Stack direction="row" spacing={1}>
-                            <Link to="#">30 Replies</Link>
+                            {props.response.commentsCount} Comment{ props.response.commentsCount > 1 && "s" }
                         </Stack>
                     </Stack>
                     <Divider />
@@ -39,9 +46,7 @@ const PostContent = (props: any) => {
                         <IconButton>
                             <ModeCommentOutlinedIcon />
                         </IconButton>
-                        <IconButton>
-                            <FavoriteBorderOutlinedIcon />
-                        </IconButton>
+                        <PageLikeButton items={props.response} />
                         <IconButton>
                             <IosShareOutlinedIcon />
                         </IconButton>

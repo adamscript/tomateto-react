@@ -7,7 +7,7 @@ const ExploreFeedUser = () => {
     const [response, setResponse] = useState([]);
 
     const listFeedPost = response.map((items, index) => 
-    <UserRecommendation key={index} items={items} />
+        <UserRecommendation key={index} items={items} />
     )
 
     useEffect(() => {

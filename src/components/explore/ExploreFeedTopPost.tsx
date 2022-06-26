@@ -1,34 +1,18 @@
-import { List } from "@mui/material";
-import { useState, useEffect } from "react";
+import { Box, List } from "@mui/material";
+import { useAppSelector } from "../../app/hooks";
 import { FeedPost } from "../post";
 
 const ExploreFeedTopPost = () => {
-    const [response, setResponse] = useState([]);
-    const [isLoaded, setLoaded] = useState(false);
+    const response = useAppSelector((state) => state.feedPost);
 
     const listFeedPost = response.map((items, index) => 
-    <FeedPost key={index} items={items} />
+        <FeedPost key={index} items={items} />
     )
 
-    useEffect(() => {
-
-        fetch("http://localhost:8080/api/feed/top", { mode: 'cors' })
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            setResponse(res.items);
-            setLoaded(true);
-        })
-
-    }, [])
-
     return(
-        isLoaded ?
         <List>
             {listFeedPost}
         </List>
-        : <div>Loading...</div>
     )
 }
 
