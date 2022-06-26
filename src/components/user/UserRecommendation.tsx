@@ -6,7 +6,7 @@ const UserRecommendation = (props: any) => {
         <Card>
             <CardContent>
                 <Stack direction="row" spacing={1}>
-                    <Avatar />
+                    <Avatar src={props.items.avatar} />
                     <Stack sx={{ width: "100%" }} spacing={1}>
                         <Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Stack>

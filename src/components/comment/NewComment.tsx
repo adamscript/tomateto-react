@@ -89,7 +89,7 @@ const NewComment = (props: any) => {
                     <Avatar />
                     <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" spacing={1}>
                         <InputBase fullWidth multiline value={content} onChange={(e) => {setContent(e.target.value)}} placeholder="Add a tomathought..." />
-                        <Stack direction="row" spacing={1}>
+                        <Stack direction="row" alignItems="start" spacing={1}>
                             <IconButton>
                                 <EmojiEmotionsOutlinedIcon />
                             </IconButton>

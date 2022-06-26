@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface User{
-    id: String;
-    displayName: String;
-    username: String;
-    avatar: String;
-    bio: String;
+    id: string;
+    displayName: string;
+    username: string;
+    avatar: string;
+    bio: string;
     followCount: Number;
     followersCount: Number;
     postsCount: Number;

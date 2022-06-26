@@ -5,5 +5,6 @@ import User from "./User";
 import Accounts from "./Accounts";
 import App from "./App";
 import Search from "./Search";
+import Settings from "./Settings";
 
-export { Home, Explore, Post, User, Accounts, App, Search };
+export { Home, Explore, Post, User, Accounts, App, Search, Settings };

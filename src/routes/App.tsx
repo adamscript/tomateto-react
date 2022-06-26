@@ -5,9 +5,10 @@ import { PageAppBar, PageLinkModal, PagePhotoModal, PageSideButton } from '../co
 import { Box, Dialog, Divider, Grid, Stack } from '@mui/material';
 import { Container } from '@mui/system';
 import { Link, Navigate, Outlet, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { Explore, Home, Post, Search, User } from '.';
+import { Explore, Home, Post, Search, Settings, User } from '.';
 import { auth } from '../firebase';
 import { useAppSelector } from '../app/hooks';
+import { SettingsAccount, SettingsProfile, SettingsProfileModal } from '../components/settings';
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
@@ -37,9 +38,14 @@ function App() {
                     <Route path="post/:postId/" element={<Post />}>
                       <Route path="likes" element={<Post />} />
                       <Route path="photo" element={<Post />} />
-                    </Route>
+                    </Route> 
                     <Route path="following" element={<User />} />
                     <Route path="followers" element={<User />} />
+                  </Route>
+                  <Route path="settings/">
+                    <Route index element={<Settings />} />
+                    <Route path="profile" element={<SettingsProfile />} /> 
+                    <Route path="account" element={<SettingsAccount />} />
                   </Route>
                 </Routes>
                 {
@@ -52,6 +58,12 @@ function App() {
                       <Route path="following" element={<PageLinkModal following />} />
                       <Route path="followers" element={<PageLinkModal followers />} />
                     </Route>
+                    {
+                      state?.backgroundLocation &&
+                      <Route path="settings/" element={<Outlet />}>
+                        <Route path="profile" element={<SettingsProfileModal />} />
+                      </Route>
+                    }
                   </Routes>
                 }
               </Stack>

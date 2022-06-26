@@ -1,3 +1,4 @@
+import PageAccountMenu from "./PageAccountMenu";
 import PageAppBar from "./PageAppBar";
 import PageBackLabel from "./PageBackLabel";
 import PageLabel from "./PageLabel";
@@ -7,4 +8,4 @@ import { PagePhoto, PagePhotoModal } from "./PagePhoto";
 import PageShowMore from "./PageShowMore";
 import PageSideButton from "./PageSideButton";
 
-export { PageAppBar, PageSideButton, PageLabel, PageShowMore, PageBackLabel, PageLikeButton, PageLink, PageLinkModal, PagePhoto, PagePhotoModal };
+export { PageAppBar, PageSideButton, PageLabel, PageShowMore, PageBackLabel, PageLikeButton, PageLink, PageLinkModal, PagePhoto, PagePhotoModal, PageAccountMenu };

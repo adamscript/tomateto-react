@@ -179,7 +179,7 @@ const PostMenu = (props: any) => {
                           },
                         },
                       }}>
-                <MenuList  sx={{ width: "300px" }}>
+                <MenuList  sx={{ width: 240 }}>
                     <MenuItem onClick={handleEditPostOpen}>
                         <ListItemIcon>
                             <EditIcon />

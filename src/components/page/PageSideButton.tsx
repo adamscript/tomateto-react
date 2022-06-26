@@ -31,7 +31,7 @@ const PageSideButton = () => {
             </ListItem>
             <ListItem sx={{ display: isLoggedIn ? 'block' : 'none' }}>
                 <ListItemButton>
-                    <Avatar />
+                    <Avatar src={currentUser.avatar} />
                     <Stack>
                         <Typography>{currentUser.displayName}</Typography>
                         <Typography>@{currentUser.username}</Typography>

@@ -18,7 +18,7 @@ const FeedPost = (props: any) => {
                 <Grid container>
                     <Grid item xs={1}>
                         <CardContent>
-                            <Avatar></Avatar>
+                            <Avatar src={props.items.user.avatar} />
                         </CardContent>
                     </Grid>
                     <Grid item xs={11}>

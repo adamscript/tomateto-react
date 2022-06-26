@@ -1,14 +1,16 @@
 import { AppBar, Box, Typography, InputBase, Stack, IconButton, Button, Menu, MenuItem, Popper, Popover, Grow, ClickAwayListener, MenuList, Paper } from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import { Container, shadows } from '@mui/system';
+
 import SearchIcon from '@mui/icons-material/Search';
-import AddBoxRoundedIcon from '@mui/icons-material/AddBoxRounded';
-import AccountCircleRoundedIcon from '@mui/icons-material/AccountCircleRounded';
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+
 import { useEffect, useRef, useState } from "react";
 import { auth } from "../../firebase";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ModalNewPost } from "../post";
 import { useAppSelector } from "../../app/hooks";
+import PageAccountMenu from "./PageAccountMenu";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     height: '60px',
@@ -54,6 +56,8 @@ const SearchInput = styled(InputBase)(({ theme }) => ({
 
 const IconButtonWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     gap: 3,
 }))
 
@@ -133,8 +137,8 @@ const PageAppBar = () => {
                         {
                             isLoggedIn ?
                             <IconButtonWrapper>
-                                <IconButton size="large"><AddBoxRoundedIcon fontSize="large"/></IconButton>
-                                <IconButton size="large" onClick={() => { auth.signOut().then(() => navigate("/accounts/login")) }}><AccountCircleRoundedIcon fontSize="large" /></IconButton>
+                                <IconButton><AddBoxOutlinedIcon /></IconButton>
+                                <PageAccountMenu />
                             </IconButtonWrapper>
                             : 
                             <Button onClick={() => { navigate("/accounts/login") }} variant="contained">Log in</Button>
