@@ -8,7 +8,9 @@ import { Link, Navigate, Outlet, Route, Routes, useLocation, useNavigate, usePar
 import { Explore, Home, Post, Search, Settings, User } from '.';
 import { auth } from '../firebase';
 import { useAppSelector } from '../app/hooks';
-import { SettingsAccount, SettingsProfile, SettingsProfileModal } from '../components/settings';
+import { SettingsAccount, SettingsPassword, SettingsProfile, SettingsProfileModal } from '../components/settings';
+import SettingsDelete from '../components/settings/SettingsDelete';
+import SettingsEmail from '../components/settings/SettingsEmail';
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
@@ -45,7 +47,12 @@ function App() {
                   <Route path="settings/">
                     <Route index element={<Settings />} />
                     <Route path="profile" element={<SettingsProfile />} /> 
-                    <Route path="account" element={<SettingsAccount />} />
+                    <Route path="account/">
+                      <Route index element={<SettingsAccount />} />
+                      <Route path="email" element={<SettingsEmail />} /> 
+                      <Route path="password" element={<SettingsPassword />} />
+                      <Route path="delete" element={<SettingsDelete />} />
+                    </Route>
                   </Route>
                 </Routes>
                 {
