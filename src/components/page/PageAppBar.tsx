@@ -123,6 +123,12 @@ const PageAppBar = () => {
         setSearchMenuOpen(false);
     }
 
+    const handleNewPost = () => {
+        navigate('/compose/post', { state: {
+          backgroundLocation: location
+        } });
+    }
+
     return(
         <Box>
             <StyledAppBar elevation={1}>
@@ -137,7 +143,7 @@ const PageAppBar = () => {
                         {
                             isLoggedIn ?
                             <IconButtonWrapper>
-                                <IconButton><AddBoxOutlinedIcon /></IconButton>
+                                <IconButton onClick={handleNewPost}><AddBoxOutlinedIcon /></IconButton>
                                 <PageAccountMenu />
                             </IconButtonWrapper>
                             : 

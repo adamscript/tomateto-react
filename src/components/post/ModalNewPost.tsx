@@ -2,16 +2,19 @@ import { Box, Card, IconButton, Modal } from "@mui/material";
 import NewPost from "./NewPost";
 
 import CloseIcon from '@mui/icons-material/Close';
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ModalNewPost = () => {
-    const [isOpen, setOpen] = useState(true);
-    console.log("is open" + isOpen)
+    const navigate = useNavigate();
+
+    const handleClose = () => {
+        navigate('/');
+    }
 
     return(
         <Modal
-        open={isOpen} 
-        onClose={ () => setOpen(false) }
+        open
+        onClose={handleClose}
         sx={{ display: "flex",
                 alignItems: "flex-start",
                 justifyContent: "center"}}>
@@ -20,7 +23,7 @@ const ModalNewPost = () => {
                         width: "600px",
                         backgroundColor: "white" }}>
                 <Box>
-                    <IconButton>
+                    <IconButton onClick={handleClose}>
                         <CloseIcon />
                     </IconButton>
                 </Box>

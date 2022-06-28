@@ -30,7 +30,7 @@ const PageSideButton = () => {
                 </ListItemButton>
             </ListItem>
             <ListItem sx={{ display: isLoggedIn ? 'block' : 'none' }}>
-                <ListItemButton>
+                <ListItemButton onClick={() => { navigate(`/${currentUser.username}`) }}>
                     <Avatar src={currentUser.avatar} />
                     <Stack>
                         <Typography>{currentUser.displayName}</Typography>

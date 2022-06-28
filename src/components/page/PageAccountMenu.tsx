@@ -32,6 +32,11 @@ const PageAccountMenu = () => {
         setAnchorEl(null);
     };
 
+    const handleProfile = () => {
+        setMenuOpen(false);
+        navigate(`/${currentUser.username}`);
+    }
+
     const handleSettings = () => {
         setMenuOpen(false);
         navigate("/settings");
@@ -79,7 +84,7 @@ const PageAccountMenu = () => {
                         },
                       }}>
                 <MenuList  sx={{ width: 240 }}>
-                    <MenuItem>
+                    <MenuItem onClick={handleProfile}>
                         <ListItemIcon>
                             <AccountCircleOutlinedIcon />
                         </ListItemIcon>

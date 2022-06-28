@@ -11,6 +11,7 @@ import { useAppSelector } from '../app/hooks';
 import { SettingsAccount, SettingsPassword, SettingsProfile, SettingsProfileModal } from '../components/settings';
 import SettingsDelete from '../components/settings/SettingsDelete';
 import SettingsEmail from '../components/settings/SettingsEmail';
+import { ModalNewPost } from '../components/post';
 
 function App() {
   const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
@@ -54,6 +55,7 @@ function App() {
                       <Route path="delete" element={<SettingsDelete />} />
                     </Route>
                   </Route>
+                  <Route path="compose/post" element={<Navigate to="/" replace />} />
                 </Routes>
                 {
                   <Routes>
@@ -65,6 +67,7 @@ function App() {
                       <Route path="following" element={<PageLinkModal following />} />
                       <Route path="followers" element={<PageLinkModal followers />} />
                     </Route>
+                    <Route path="compose/post" element={<ModalNewPost />} />
                     {
                       state?.backgroundLocation &&
                       <Route path="settings/" element={<Outlet />}>
