@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import PostMenu from "./PostMenu";
-import { PageLikeButton, PageLink, PagePhoto } from "../page";
+import { PageLikeButton, PageLink, PagePhoto, PageShareButton } from "../page";
 
 const PostContent = (props: any) => {
     console.log(new Date(props.response.date))
@@ -47,9 +47,7 @@ const PostContent = (props: any) => {
                             <ModeCommentOutlinedIcon />
                         </IconButton>
                         <PageLikeButton items={props.response} />
-                        <IconButton>
-                            <IosShareOutlinedIcon />
-                        </IconButton>
+                        <PageShareButton items={props.response} />
                     </Stack>
                 </Stack>
             </CardContent>

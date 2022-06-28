@@ -1,5 +1,6 @@
 import { Avatar, Button, Card, CardContent, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import { PageFollowButton } from "../page";
 
 const UserRecommendation = (props: any) => {
     return(
@@ -13,7 +14,7 @@ const UserRecommendation = (props: any) => {
                                 <Link to={`/${props.items.username}`}>{props.items.displayName}</Link>
                                 <Typography>@{props.items.username}</Typography>
                             </Stack>
-                            <Button variant="contained">Follow</Button>
+                            <PageFollowButton items={props.items} />
                         </Stack>
                         <Typography>
                             {props.items.bio}

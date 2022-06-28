@@ -1,11 +1,10 @@
 import { Avatar, Box, Button, ButtonBase, Card, CardActionArea, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from "@mui/material";
 
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
-import IosShareIcon from '@mui/icons-material/IosShare';
 
 import { Link, useNavigate } from "react-router-dom";
 import PostMenu from "./PostMenu";
-import { PageLikeButton, PagePhoto } from "../page";
+import { PageLikeButton, PagePhoto, PageShareButton } from "../page";
 
 //onClick={() => navigate(`${props.items.user.username}/post/${props.items.id}`)}
 
@@ -44,9 +43,7 @@ const FeedPost = (props: any) => {
                                 <Typography>{props.items.commentsCount}</Typography>
                             </Stack>
                             <PageLikeButton feed items={props.items} />
-                            <Stack direction="row" alignItems="center">
-                                <IconButton><IosShareIcon /></IconButton>
-                            </Stack>
+                            <PageShareButton items={props.items} />
                         </Stack>
                     </Grid>
                 </Grid>
