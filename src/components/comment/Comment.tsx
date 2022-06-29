@@ -1,24 +1,24 @@
-import { Avatar, Card, CardContent, IconButton, Stack, Typography } from "@mui/material";
+import { Avatar, Card, CardContent, Divider, IconButton, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import { useState } from "react";
 import CommentMenu from "./CommentMenu";
-import { PageLikeButton } from "../page";
+import { PageAvatarButton, PageLikeButton, PageLink } from "../page";
 
 const Comment = (props: any) => {
     const [hover, setHover] = useState(false);
 
     return(
-        <Card onMouseEnter={() => { setHover(true) }} onMouseLeave={() => { setHover(false) }}>
+        <Card onMouseEnter={() => { setHover(true) }} onMouseLeave={() => { setHover(false) }} elevation={0}>
             <CardContent>
                 <Stack direction="row" alignItems="start" spacing={1}>
-                    <Avatar />
-                    <Stack spacing={1}  sx={{ width: "100%" }}>
+                    <PageAvatarButton items={props.items.user} />
+                    <Stack sx={{ width: "100%" }}>
                         <Stack alignItems="center" direction="row" spacing={1}>
-                            <Link to={`/${props.items.user.username}`}>{props.items.user.displayName}</Link>
-                            <Typography>@{props.items.user.username}</Typography>
-                            <Typography>•</Typography>
-                            <Typography>3h</Typography>
+                            <PageLink user items={props.items.user} />
+                            <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.items.user.username}</Typography>
+                            <Typography sx={{ color: theme => theme.palette.text.secondary }}>•</Typography>
+                            <PageLink comment items={props.items} />
                         </Stack>
                         <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
                             {props.items.content}

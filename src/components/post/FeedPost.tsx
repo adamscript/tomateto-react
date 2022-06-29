@@ -1,53 +1,55 @@
-import { Avatar, Box, Button, ButtonBase, Card, CardActionArea, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Stack, Typography } from "@mui/material";
+import { Avatar, ButtonBase, Card, CardContent, Divider, IconButton, Stack, styled, Typography } from "@mui/material";
 
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PostMenu from "./PostMenu";
-import { PageLikeButton, PagePhoto, PageShareButton } from "../page";
-
-//onClick={() => navigate(`${props.items.user.username}/post/${props.items.id}`)}
+import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton } from "../page";
 
 const FeedPost = (props: any) => {
     const navigate = useNavigate();
 
     return(
         <>
-        <Card square={true}>
-                <Grid container>
-                    <Grid item xs={1}>
-                        <CardContent>
-                            <Avatar src={props.items.user.avatar} />
-                        </CardContent>
-                    </Grid>
-                    <Grid item xs={11}>
-                        <CardContent>
+        <Card square elevation={0}>
+            <CardContent sx={{ pb: 1 }}>
+                <Stack direction="row" alignItems="start" spacing={1}>
+                    <PageAvatarButton items={props.items.user} />
+                    <Stack spacing={1} sx={{ width: 1 }}>
+                        <Stack>
                             <Stack direction="row" justifyContent="space-between">
                                 <Stack direction="row" alignItems="center" spacing={1}>
-                                    <Link to={`/${props.items.user.username}`}>{props.items.user.displayName}</Link>
-                                    <Typography>@{props.items.user.username}</Typography>
-                                    <Typography>•</Typography>
-                                    <Link to={`/${props.items.user.username}/post/${props.items.id}`}>3h</Link>
-                                    {props.items.isEdited && <Typography>(edited)</Typography>}
+                                    <PageLink user items={props.items.user} />
+                                    <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.items.user.username}</Typography>
+                                    <Typography sx={{ color: theme => theme.palette.text.secondary }}>•</Typography>
+                                    <PageLink post items={props.items} />
+                                    {
+                                        props.items.isEdited && 
+                                        <><Typography sx={{ color: theme => theme.palette.text.secondary }}>•</Typography>
+                                        <Typography sx={{ color: theme => theme.palette.text.secondary, fontSize: 14 }}>Edited</Typography></>
+                                    }
                                 </Stack>
                                 {props.items.isMine && <PostMenu items={props.items} />}
                             </Stack>
-                            <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
-                                {props.items.content}
-                            </Typography>
-                            {props.items.photo && <PagePhoto items={props.items} />}
-                        </CardContent>
-                        <Stack direction="row" spacing={15}>
-                            <Stack direction="row" alignItems="center">
-                                <IconButton><ModeCommentOutlinedIcon /></IconButton>
-                                <Typography>{props.items.commentsCount}</Typography>
+                            <Stack spacing={1}>
+                                <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
+                                    {props.items.content}
+                                </Typography>
+                                {props.items.photo && <PagePhoto items={props.items} />}
+                            </Stack>
+                        </Stack>
+                        <Stack direction="row" spacing={15} justifyContent="start">
+                            <Stack spacing={1} direction="row" alignItems="center">
+                                <IconButton size="small" onClick={ () => { navigate(`/${props.items.user.username}/post/${props.items.id}`) }}><ModeCommentOutlinedIcon fontSize="inherit" /></IconButton>
+                                <Typography variant="body2" sx={{ color: theme => theme.palette.text.secondary }}>{ props.items.commentsCount > 0 && props.items.commentsCount }</Typography>
                             </Stack>
                             <PageLikeButton feed items={props.items} />
                             <PageShareButton items={props.items} />
                         </Stack>
-                    </Grid>
-                </Grid>
-        <Divider />
+                    </Stack>
+                </Stack>
+            </CardContent>
+        <Divider variant="middle" />
         </Card>
         </>
     )

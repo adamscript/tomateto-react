@@ -7,6 +7,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -22,10 +31,6 @@ code {
 
   filter: drop-shadow(0 0.2rem 0.25rem rgba(0, 0, 0, 0.2));
 
-}
-
-div{
-  color: black;
 }
 
 .navbar-items{
@@ -44,5 +49,5 @@ div{
 .logo{
   font-family: 'Titillium Web', sans-serif;
   font-size: 24px;
-  color: #ff0a0a;
+  color: tomato;
 }

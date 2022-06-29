@@ -1,4 +1,4 @@
-import { Box, Tabs, Tab } from "@mui/material";
+import { Box, Tabs, Tab, styled, Divider } from "@mui/material";
 import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { loadPosts } from "../../features/post/feedPostSlice";
@@ -23,6 +23,51 @@ function TabPanel(props: any) {
       </div>
     );
   }
+
+  interface StyledTabsProps {
+    children?: React.ReactNode;
+    value: string;
+    onChange: (event: React.SyntheticEvent, newValue: string) => void;
+}
+
+const StyledTabs = styled((props: StyledTabsProps) => (
+    <Tabs
+        {...props}
+        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+    />
+    ))<StyledTabsProps>(({ theme, value }) => ({
+    '& .MuiTabs-indicator': {
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+    },
+    '& .MuiTabs-indicatorSpan': {
+        maxWidth: value == 'posts' && 48 || value == 'comments' && 80 || value == 'liked' && 48,
+        width: '100%',
+        backgroundColor: theme.palette.text.primary,
+    },
+})) as typeof Tabs;
+
+interface StyledTabProps {
+    label: string;
+    value: string;
+  }
+
+const StyledTab = styled((props: StyledTabProps) => (
+    <Tab {...props} />
+  ))(({ theme }) => ({
+    textTransform: 'none',
+    fontSize: 16,
+    fontWeight: 500,
+    color: theme.palette.text.secondary,
+    '&.Mui-selected': {
+      color: theme.palette.text.primary,
+      fontWeight: 700
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: 'rgba(100, 95, 228, 0.32)',
+    },
+  }));
 
 const UserPageTabs = (props: any) => {
     const [value, setValue] = React.useState("posts");
@@ -64,12 +109,13 @@ const UserPageTabs = (props: any) => {
     
     return(
         <Box>
-            <Box sx={{ height: "60px" }}>
-                <Tabs value={value} onChange={(e, value) => setValue(value)} variant="fullWidth">
-                    <Tab value="posts" label="Posts" />
-                    <Tab value="comments" label="Comments" />
-                    <Tab value="liked" label="Liked" />
-                </Tabs>
+            <Box>
+                <StyledTabs value={value} onChange={(e, value) => setValue(value)} variant="fullWidth">
+                    <StyledTab value="posts" label="Posts" />
+                    <StyledTab value="comments" label="Comments" />
+                    <StyledTab value="liked" label="Liked" />
+                </StyledTabs>
+                <Divider />
             </Box>
             <TabPanel index="posts" value={value}>
                 <UserProfilePost />

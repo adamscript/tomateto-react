@@ -1,12 +1,15 @@
-import { Avatar, Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
-import { useState } from "react";
+import { Avatar, Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, useTheme } from "@mui/material";
+import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
-import { useAppSelector } from "../../app/hooks";
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { setLightMode, setDarkMode } from "../../features/app/darkModeSlice";
 
 const PageAccountMenu = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -15,6 +18,8 @@ const PageAccountMenu = () => {
     const navigate = useNavigate();
 
     const currentUser = useAppSelector((state) => state.currentUser);
+    const darkMode = useAppSelector((state) => state.darkMode.value);
+    const dispatch = useAppDispatch();
 
     const handleMenu = (e: any) => {
         if(menuOpen){
@@ -40,6 +45,16 @@ const PageAccountMenu = () => {
     const handleSettings = () => {
         setMenuOpen(false);
         navigate("/settings");
+    }
+
+    const handleDarkMode = () => {
+        console.log(darkMode)
+        if(darkMode){
+            dispatch(setLightMode());
+        }
+        else{
+            dispatch(setDarkMode());
+        }
     }
     
     const handleLogOut = () => {
@@ -101,11 +116,11 @@ const PageAccountMenu = () => {
                         <ListItemText sx={{ color: "red" }}>Log out</ListItemText>
                     </MenuItem>
                     <Divider />
-                        <MenuItem>
+                        <MenuItem onClick={handleDarkMode}>
                             <ListItemIcon>
-                                <DarkModeOutlinedIcon />
+                                { darkMode ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon /> }
                             </ListItemIcon>
-                            <ListItemText>Dark Mode</ListItemText>
+                            <ListItemText>{darkMode ? 'Light' : 'Dark'} Mode</ListItemText>
                         </MenuItem>
                 </MenuList>
             </Menu>

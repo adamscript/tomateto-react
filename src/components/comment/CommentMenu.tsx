@@ -72,8 +72,8 @@ const CommentMenu = (props: any) => {
     };
 
     return(
-            <><IconButton onClick={handleMenu}>
-                <MoreHorizIcon />
+            <><IconButton onClick={handleMenu} size="small">
+                <MoreHorizIcon fontSize="inherit" />
             </IconButton>
             <Menu anchorEl={anchorEl} 
                     open={menuOpen} 

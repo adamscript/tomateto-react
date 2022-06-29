@@ -1,4 +1,4 @@
-import { Box, List } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useAppSelector } from "../../app/hooks";
 import { FeedPost } from "../post";
 
@@ -10,9 +10,9 @@ const ExploreFeedTopPost = () => {
     )
 
     return(
-        <List>
+        <Stack>
             {listFeedPost}
-        </List>
+        </Stack>
     )
 }
 

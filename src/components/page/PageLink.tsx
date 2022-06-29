@@ -1,4 +1,4 @@
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, styled, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
@@ -6,15 +6,34 @@ import { auth } from "../../firebase";
 import { UserRecommendation } from "../user";
 import CloseIcon from '@mui/icons-material/Close';
 
+const LinkTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    textDecoration: 'none',
+    fontSize: 14,
+    '&:hover': {
+        textDecoration: 'underline'
+    }
+})) as typeof Typography;
+
+const LinkTypographyNumber = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    textDecoration: 'none',
+    fontWeight: 500,
+    fontSize: 14
+})) as typeof Typography;
+
 const PageLink = (props: any) => {
     const location = useLocation();
 
     return(
         <Box>
             {
-                (props.following && <Link to="following" state={{ backgroundLocation: location, user: props.items.id }}>{props.items.followCount} Following{ props.items.followCount > 1 && 's' }</Link>) ||
-                (props.followers && <Link to="followers" state={{ backgroundLocation: location, user: props.items.id }}>{props.items.followersCount} Follower{ props.items.followersCount > 1 && 's' }</Link>) ||
-                (props.likes && <Link to="likes" state={{ backgroundLocation: location, post: props.items.id }}>{props.items.likesCount} Like{ props.items.likesCount > 1 && 's' }</Link>)
+                (props.user && <LinkTypography component={Link} to={`/${props.items.username}`} sx={{ color: theme => theme.palette.text.primary, fontWeight: '700', fontSize: 16 }}>{props.items.displayName}</LinkTypography>) ||
+                (props.post && <LinkTypography component={Link} to={`/${props.items.user.username}/post/${props.items.id}`} sx={{ fontSize: 16 }}>3h</LinkTypography>) ||
+                (props.comment && <LinkTypography component={Link} to={`/${props.items.user.username}/post/${props.items.post}`} sx={{ fontSize: 16 }}>3h</LinkTypography>) ||
+                (props.following && <LinkTypography component={Link} to="following" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followCount}</LinkTypographyNumber> Following{ props.items.followCount > 1 && 's' }</LinkTypography>) ||
+                (props.followers && <LinkTypography component={Link} to="followers" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followersCount}</LinkTypographyNumber> Follower{ props.items.followersCount > 1 && 's' }</LinkTypography>) ||
+                (props.likes && <LinkTypography component={Link} to="likes" state={{ backgroundLocation: location, post: props.items.id }}><LinkTypographyNumber display="inline">{props.items.likesCount}</LinkTypographyNumber> Like{ props.items.likesCount > 1 && 's' }</LinkTypography>)
             }
         </Box>
     )

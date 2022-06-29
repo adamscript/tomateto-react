@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { Avatar, Box, Button, CardContent, CardMedia, Grid, IconButton, InputBase, LinearProgress, Stack, styled } from "@mui/material";
+import { Avatar, Box, Button, Card, CardContent, CardMedia, Grid, IconButton, InputBase, LinearProgress, Stack, styled } from "@mui/material";
 
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
@@ -166,23 +166,19 @@ const NewPost = () => {
     }, [photoURLPreview])
 
     return(
-        <Box>
+        <Box sx={{ p: 2, pb: 1 }}>
             {isPosting && <LinearProgress />}
             {isUploading && <LinearProgress variant="determinate" value={uploadProgress} />}
-            <Grid container>
-                <Grid item xs={1}>
-                    <CardContent>
-                        <Avatar />
-                    </CardContent>
-                </Grid>
-                <Grid item xs={11}>
-                    <CardContent>
-                        <InputBase multiline fullWidth value={content} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
-                        {photoURLPreview != "" &&
+            <Stack spacing={2} direction='row'>
+                <Avatar src={currentUser.avatar} />
+                <Stack sx={{ width: 1 }}>
+                    <InputBase multiline fullWidth minRows={2} value={content} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
+                    {
+                        photoURLPreview &&
                         <><IconButton onClick={handleCancelPhoto}><CloseIcon /></IconButton>
-                        <CardMedia component="img" image={photoURLPreview} /></>}
-                    </CardContent>
-                    <Stack direction="row" justifyContent="space-between">
+                        <CardMedia component="img" image={photoURLPreview} /></>
+                    }
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
                         <Stack direction="row">
                             <label htmlFor="photo-input">
                                 <Input ref={photoInputRef} accept="image/*" id="photo-input" type="file" onChange={handleImageChange} />
@@ -196,8 +192,8 @@ const NewPost = () => {
                         </Stack>
                         <Button onClick={handlePost} variant="contained" disabled={ content == "" || isPosting || isUploading }>Post</Button>
                     </Stack>
-                </Grid>
-            </Grid>
+                </Stack>
+            </Stack>
         </Box>
     )
 };

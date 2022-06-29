@@ -1,19 +1,125 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
-import { PageAppBar, PageSideButton } from './components/page';
-import { Box, Divider, Grid, Stack } from '@mui/material';
-import { Container } from '@mui/system';
-import { Link, Route, Routes, useParams } from 'react-router-dom';
-import { Accounts, App, Explore, Home, Post, User } from './routes';
+import { Box, createTheme, CssBaseline, Paper, styled, ThemeProvider } from '@mui/material';
+import { Route, Routes } from 'react-router-dom';
+import { Accounts, App } from './routes';
 import { auth } from './firebase';
-import { useAppDispatch } from './app/hooks';
+import { useAppDispatch, useAppSelector } from './app/hooks';
 import { deleteCurrentUser, setCurrentUser } from './features/user/currentUserSlice';
 import { setAuthState } from './features/user/authStateSlice';
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light'
+  },
+
+  components: {
+    MuiAvatar : {
+      styleOverrides: {
+        root: {
+          width: 48,
+          height: 48
+        }
+      }
+    },
+
+    MuiButton : {
+      styleOverrides: {
+        root: {
+            textTransform: 'none',
+            fontFamily: 'Roboto',
+            fontSize: 14,
+            fontWeight: 700,
+            borderRadius: 30,
+            minWidth: 75,
+            height: 35
+        }
+      }
+    },
+
+    MuiCardMedia : {
+      styleOverrides: {
+        root: {
+          borderRadius: 15,
+          '&:hover': {
+            borderRadius: 15
+          }
+        }
+      }
+    }
+  }
+})
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark'
+  },
+
+  components: {
+    MuiAvatar : {
+      styleOverrides: {
+        root: {
+          width: 48,
+          height: 48
+        }
+      }
+    },
+
+    MuiButton : {
+      styleOverrides: {
+        root: {
+            textTransform: 'none',
+            fontFamily: 'Roboto',
+            fontSize: 14,
+            fontWeight: 700,
+            borderRadius: 30,
+            minWidth: 75,
+            height: 35
+        }
+      }
+    },
+
+    MuiCard : {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'transparent'
+        }
+      }
+    },
+
+    MuiCardMedia : {
+      styleOverrides: {
+        root: {
+          borderRadius: 15,
+          '&:hover': {
+            borderRadius: 15
+          }
+        }
+      }
+    }
+  }
+})
+
+const Foreground = styled(Box)(({ theme }) => ({
+  color: theme.palette.text.primary
+})) as typeof Box;
+
+const Background = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  zIndex: -1
+})) as typeof Paper;
+
 
 function Page() {
   const [isLoaded, setLoaded] = useState(false);
   const dispatch = useAppDispatch();
+
+  const darkMode = useAppSelector((state) => state.darkMode.value);
 
   console.log("loaded " + isLoaded)
   
@@ -45,10 +151,15 @@ function Page() {
   }, [])
     
   return (
-      <Routes>
-        <Route path="/*" element={isLoaded ? <App /> : <div>Loading...</div>} />
-        <Route path="accounts/*" element={isLoaded ? <Accounts /> : <div>Loading...</div>} />
-      </Routes>
+    <ThemeProvider theme={ darkMode ? darkTheme : lightTheme }>
+      <Foreground>
+        <Routes>
+          <Route path="/*" element={isLoaded ? <App /> : <div>Loading...</div>} />
+          <Route path="accounts/*" element={isLoaded ? <Accounts /> : <div>Loading...</div>} />
+        </Routes>
+      </Foreground>
+      <Background />
+    </ThemeProvider>
   );
 }
 

@@ -1,12 +1,11 @@
-import { List } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useState, useEffect } from "react";
-import { FeedPost } from "../post";
 import { UserRecommendation } from "../user";
 
-const ExploreFeedUser = () => {
+const ExploreFeedUser = (props: any) => {
     const [response, setResponse] = useState([]);
 
-    const listFeedPost = response.map((items, index) => 
+    const listFeedPost = response.slice(0, props.top ? 3 : response.length).map((items, index) => 
         <UserRecommendation key={index} items={items} />
     )
 
@@ -23,9 +22,9 @@ const ExploreFeedUser = () => {
     }, [])
 
     return(
-        <List>
+        <Stack>
             {listFeedPost}
-        </List>
+        </Stack>
     )
 }
 

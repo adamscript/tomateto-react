@@ -1,5 +1,6 @@
+import { Divider } from "@mui/material";
 import { Box } from "@mui/system";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { Comment, NewComment } from "../components/comment";
@@ -9,6 +10,7 @@ import { auth } from "../firebase";
 
 const Post = () => {
     const [isLoaded, setLoaded] = useState(false);
+    const inputRef = useRef();
 
     const response = useAppSelector((state) => state.feedPost);
     const dispatch = useAppDispatch();
@@ -48,8 +50,10 @@ const Post = () => {
     return(
         isLoaded ?
         <Box>
-            <PostContent response={response[0]} />
-            <NewComment post={response[0]} />
+            <PostContent inputRef={inputRef} response={response[0]} />
+            <Divider variant="middle" />
+            <NewComment ref={inputRef} post={response[0]} />
+            <Divider variant="middle" />
             <PostContentComment response={response[0]} />
         </Box>
         : <div>Loading...</div>

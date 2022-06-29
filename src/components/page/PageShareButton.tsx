@@ -30,8 +30,8 @@ const PageShareButton = (props: any) => {
 
     return(
         <Box>
-            <IconButton onClick={handleMenu}>
-                <IosShareIcon />
+            <IconButton size={ props.content ? "medium" : "small" } onClick={handleMenu}>
+                <IosShareIcon fontSize="inherit" />
             </IconButton>
             <Menu anchorEl={anchorEl} 
                     open={menuOpen} 

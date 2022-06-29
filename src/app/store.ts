@@ -4,13 +4,15 @@ import feedPostReducer from '../features/post/feedPostSlice';
 import feedCommentReducer from '../features/comment/feedCommentSlice';
 import currentUserReducer from "../features/user/currentUserSlice";
 import authStateReducer from "../features/user/authStateSlice";
+import darkModeReducer from "../features/app/darkModeSlice";
 
 const store = configureStore({
     reducer: {
       feedPost: feedPostReducer,
       feedComment: feedCommentReducer,
       currentUser: currentUserReducer,
-      authState: authStateReducer
+      authState: authStateReducer,
+      darkMode: darkModeReducer
     },
   })
 

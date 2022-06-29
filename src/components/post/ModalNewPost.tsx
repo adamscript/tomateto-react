@@ -1,4 +1,4 @@
-import { Box, Card, IconButton, Modal } from "@mui/material";
+import { Box, IconButton, Dialog } from "@mui/material";
 import NewPost from "./NewPost";
 
 import CloseIcon from '@mui/icons-material/Close';
@@ -8,28 +8,23 @@ const ModalNewPost = () => {
     const navigate = useNavigate();
 
     const handleClose = () => {
-        navigate('/');
+        navigate(-1);
     }
 
     return(
-        <Modal
-        open
-        onClose={handleClose}
-        sx={{ display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "center"}}>
-            <Box sx={{ position: "relative",
-                        top: "90px",
-                        width: "600px",
-                        backgroundColor: "white" }}>
+        <Box>
+            <Dialog open onClose={handleClose} fullWidth maxWidth="sm"
+                PaperProps={{ sx: { position: "absolute", top: 60 } }}>
                 <Box>
-                    <IconButton onClick={handleClose}>
-                        <CloseIcon />
-                    </IconButton>
+                    <Box sx={{ pt: 1, pl: 1 }}>
+                        <IconButton onClick={handleClose}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                    <NewPost />
                 </Box>
-                <NewPost />
-            </Box>
-        </Modal>
+            </Dialog>
+        </Box>
     )
 }
 

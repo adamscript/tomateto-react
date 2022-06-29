@@ -1,12 +1,10 @@
-import { Tabs, Tab } from "@mui/material";
+import { Tabs, Tab, Divider, styled } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { ExploreFeedLatestPost, ExploreFeedTopPost, ExploreFeedUser } from "../components/explore";
 import { PageLabel, PageShowMore } from "../components/page";
-import { FeedPost } from "../components/post";
-import { UserRecommendation } from "../components/user";
 import { loadPosts } from "../features/post/feedPostSlice";
 import { auth } from "../firebase";
 
@@ -23,6 +21,51 @@ function TabPanel(props: any) {
       </div>
     );
   }
+
+interface StyledTabsProps {
+    children?: React.ReactNode;
+    value: string;
+    onChange: (event: React.SyntheticEvent, newValue: string) => void;
+}
+
+const StyledTabs = styled((props: StyledTabsProps) => (
+    <Tabs
+        {...props}
+        TabIndicatorProps={{ children: <span className="MuiTabs-indicatorSpan" /> }}
+    />
+    ))<StyledTabsProps>(({ theme, value }) => ({
+    '& .MuiTabs-indicator': {
+        display: 'flex',
+        justifyContent: 'center',
+        backgroundColor: 'transparent',
+    },
+    '& .MuiTabs-indicatorSpan': {
+        maxWidth: value == 'top' && 24 || value == 'latest' && 32 || value == 'user' && 56,
+        width: '100%',
+        backgroundColor: theme.palette.text.primary,
+    },
+}));
+
+interface StyledTabProps {
+    label: string;
+    value: string;
+  }
+
+const StyledTab = styled((props: StyledTabProps) => (
+    <Tab {...props} />
+  ))(({ theme }) => ({
+    textTransform: 'none',
+    fontSize: 16,
+    fontWeight: 400,
+    color: theme.palette.text.secondary,
+    '&.Mui-selected': {
+      color: theme.palette.text.primary,
+      fontWeight: 500
+    },
+    '&.Mui-focusVisible': {
+      backgroundColor: 'rgba(100, 95, 228, 0.32)',
+    },
+  }));
 
 const Explore = () => {
     const [value, setValue] = React.useState("top");
@@ -66,11 +109,12 @@ const Explore = () => {
     return(
         <Box>
             <Box>
-                <Tabs value={value} onChange={(e, value) => { setValue(value); setLoaded(false); }}>
-                    <Tab value="top" label="Top" />
-                    <Tab value="latest" label="Post" />
-                    <Tab value="user" label="Tomates" />
-                </Tabs>
+                <StyledTabs value={value} onChange={(e, value) => { setValue(value); setLoaded(false); }}>
+                    <StyledTab value="top" label="Top" />
+                    <StyledTab value="latest" label="Post" />
+                    <StyledTab value="user" label="Tomates" />
+                </StyledTabs>
+                <Divider />
             </Box>
             {isLoaded ?
             <Box>
@@ -78,8 +122,9 @@ const Explore = () => {
                     {
                         authState.isLoggedIn &&
                         <><PageLabel>Tomates to follow</PageLabel>
-                        <ExploreFeedUser />
-                        <PageShowMore onClick={() => setValue("user")} /></>
+                        <ExploreFeedUser top />
+                        <PageShowMore onClick={() => setValue("user")}>Show more</PageShowMore>
+                        <Divider /></>
                     }
                     <PageLabel>Top Posts</PageLabel>
                     <ExploreFeedTopPost />

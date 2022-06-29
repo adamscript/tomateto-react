@@ -1,57 +1,70 @@
-import { Avatar, Card, CardContent, CardMedia, Divider, IconButton, Stack, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Avatar, Box, ButtonBase, Divider, IconButton, Stack, styled, Typography } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
 
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
-import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
 import PostMenu from "./PostMenu";
-import { PageLikeButton, PageLink, PagePhoto, PageShareButton } from "../page";
+import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton } from "../page";
+
+const SecondaryTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary
+})) as typeof Typography;
 
 const PostContent = (props: any) => {
-    console.log(new Date(props.response.date))
+    
+    const handleComment = () => {
+        props.inputRef.current.focus();
+    };
+
     return(
-        <Card square={true}>
-            <CardContent>
-                <Stack spacing="15px">
-                    <Stack direction="row" spacing="15px">
-                        <Avatar />
-                        <Stack direction="row" justifyContent="space-between" sx={{ width: "100%" }}>
-                            <Stack>
-                                <Link to={`/${props.response.user.username}`}>{props.response.user.displayName}</Link>
-                                <Typography>@{props.response.user.username}</Typography>
-                            </Stack>
-                            {props.response.isMine && <PostMenu items={props.response} />}
+        <Box sx={{ p: 2, pb: 1 }}>
+            <Stack spacing={2}>
+                <Stack direction="row" spacing={1}>
+                    <PageAvatarButton items={props.response.user} />
+                    <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: "100%" }}>
+                        <Stack>
+                            <PageLink user items={props.response.user} />
+                            <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.response.user.username}</Typography>
                         </Stack>
-                    </Stack>
-                    <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }} variant="h5">
-                        {props.response.content}
-                        {props.response.photo && <PagePhoto items={props.response} />}
-                    </Typography>
-                    <Stack direction="row" spacing={1}>
-                        <Typography>14:15</Typography>
-                        <Typography>•</Typography>
-                        <Typography>31 May 2022</Typography>
-                        {props.response.isEdited && <Typography>(edited)</Typography>}
-                    </Stack>
-                    <Divider />
-                    <Stack direction="row" spacing={2}>
-                        <Stack direction="row" spacing={1}>
-                            <PageLink likes items={props.response} />
-                        </Stack>
-                        <Stack direction="row" spacing={1}>
-                            {props.response.commentsCount} Comment{ props.response.commentsCount > 1 && "s" }
-                        </Stack>
-                    </Stack>
-                    <Divider />
-                    <Stack direction="row" justifyContent="space-around">
-                        <IconButton>
-                            <ModeCommentOutlinedIcon />
-                        </IconButton>
-                        <PageLikeButton items={props.response} />
-                        <PageShareButton items={props.response} />
+                        {props.response.isMine && <PostMenu items={props.response} />}
                     </Stack>
                 </Stack>
-            </CardContent>
-        </Card>
+                <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }} variant="h5">
+                    {props.response.content}
+                </Typography>
+                {props.response.photo && <PagePhoto items={props.response} />}
+                <Stack direction="row" spacing={1}>
+                    <SecondaryTypography>14:15</SecondaryTypography>
+                    <SecondaryTypography>•</SecondaryTypography>
+                    <SecondaryTypography>31 May 2022</SecondaryTypography>
+                    {
+                        props.response.isEdited && 
+                        <><SecondaryTypography>•</SecondaryTypography>
+                        <SecondaryTypography>Edited</SecondaryTypography></>
+                    }
+                </Stack>
+                <Divider light />
+                {    
+                    props.response.likesCount || props.response.commentsCount ?
+                    <><Stack direction="row" spacing={2}>
+                        { props.response.likesCount ? <PageLink likes items={props.response} /> : <></> }
+                        {
+                            props.response.commentsCount ?
+                            <Typography component="div" sx={{ fontSize: 14, fontWeight: 500 }}>{props.response.commentsCount} <SecondaryTypography display="inline" sx={{ fontSize: 14 }}>Comment{ props.response.commentsCount > 1 && "s" }</SecondaryTypography></Typography> :
+                            <></>
+                        }
+                    </Stack>
+                    <Divider light /></> :
+                    <></>
+                }
+            </Stack>
+            <Stack direction="row" justifyContent="space-around" sx={{ pt: 1 }}>
+                <IconButton onClick={handleComment}>
+                    <ModeCommentOutlinedIcon />
+                </IconButton>
+                <PageLikeButton content items={props.response} />
+                <PageShareButton content items={props.response} />
+            </Stack>
+        </Box>
     )
 }
 

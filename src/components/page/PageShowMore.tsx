@@ -1,11 +1,22 @@
-import { Box, Button, Link, Typography } from "@mui/material";
+import { alpha, Box, Button, Link, styled, Typography } from "@mui/material";
+
+const TextButton = styled(Button)(({ theme }) => ({
+    height: 60,
+    width: '100%',
+    justifyContent: 'start',
+    borderRadius: 0,
+    color: theme.palette.text.secondary,
+    '&:hover': {
+        backgroundColor: alpha(theme.palette.text.secondary, theme.palette.action.hoverOpacity)
+    }
+})) as typeof Button;
 
 const PageShowMore = (props:any) => {
     return(
-        <Box sx={{ height: "60px", display: 'flex', alignItems: 'center' }}>
-            <Button onClick={props.onClick} sx={{ height: "100%", width: "100%", justifyContent: 'start' }}>
-                <Typography>Show More</Typography>
-            </Button>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <TextButton onClick={props.onClick}>
+                <Typography sx={{ pl: 1 }}>{props.children}</Typography>
+            </TextButton>
         </Box>
     )
 }

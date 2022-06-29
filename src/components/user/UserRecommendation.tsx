@@ -1,18 +1,20 @@
-import { Avatar, Button, Card, CardContent, Stack, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import { PageFollowButton } from "../page";
+import { Avatar, ButtonBase, Card, CardContent, Stack, styled, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { PageAvatarButton, PageFollowButton, PageLink } from "../page";
 
 const UserRecommendation = (props: any) => {
+    const navigate = useNavigate();
+
     return(
-        <Card>
+        <Card elevation={0}>
             <CardContent>
                 <Stack direction="row" spacing={1}>
-                    <Avatar src={props.items.avatar} />
+                    <PageAvatarButton items={props.items} />
                     <Stack sx={{ width: "100%" }} spacing={1}>
                         <Stack direction="row" alignItems="center" justifyContent="space-between">
                             <Stack>
-                                <Link to={`/${props.items.username}`}>{props.items.displayName}</Link>
-                                <Typography>@{props.items.username}</Typography>
+                                <PageLink user items={props.items} />
+                                <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.items.username}</Typography>
                             </Stack>
                             <PageFollowButton items={props.items} />
                         </Stack>

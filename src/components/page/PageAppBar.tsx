@@ -23,7 +23,7 @@ const StyledAppBar = styled(AppBar)(({ theme }) => ({
 const Logo = styled(Typography)(() => ({
     fontFamily: 'Titillium Web',
     fontSize: '36px',
-    color: '#ff0a0a',
+    color: '#FF3333',
 }));
 
 const Search = styled('div')(({ theme }) => ({

@@ -145,7 +145,7 @@ const PostMenu = (props: any) => {
     };
 
     return(
-            <><IconButton onClick={handleMenu}>
+            <><IconButton onClick={handleMenu} size="small">
                 <MoreHorizIcon />
             </IconButton>
             <Menu anchorEl={anchorEl} 
@@ -170,7 +170,7 @@ const PostMenu = (props: any) => {
                             display: 'block',
                             position: 'absolute',
                             top: 0,
-                            right: 15,
+                            right: 12,
                             width: 10,
                             height: 10,
                             bgcolor: 'background.paper',

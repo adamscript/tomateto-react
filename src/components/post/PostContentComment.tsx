@@ -1,4 +1,4 @@
-import { List } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Comment } from "../comment";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -41,9 +41,9 @@ const PostContentComment = (props: any) => {
 
     return(
         isLoaded ?
-        <List>
+        <Stack>
             {listPostComment}
-        </List>
+        </Stack>
         : <div>Loading...</div>
     )
 }

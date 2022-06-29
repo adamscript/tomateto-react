@@ -82,11 +82,11 @@ const PostLikeButton = (props: any) => {
     }
     
     return(
-        <Stack direction={ (props.feed && "row") || (props.comment && "column") } alignItems="center">
-            <IconButton onClick={handleLike} sx={{ color: props.items.isLiked ? "red" : "grey" }}>
-                { props.items.isLiked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon /> }
+        <Stack spacing={1} direction={ (props.feed && "row") || (props.comment && "column") } alignItems="center">
+            <IconButton onClick={handleLike} size={ props.content ? "medium" : "small" } sx={{ color: theme => props.items.isLiked ? "red" : theme.palette.text.secondary }}>
+                { props.items.isLiked ? <FavoriteIcon fontSize="inherit" /> : <FavoriteBorderOutlinedIcon fontSize="inherit" /> }
             </IconButton>
-            { props.feed || props.comment ? <Typography sx={{ color: props.items.isLiked ? "red" : "grey" }}>{props.items.likesCount}</Typography> : <></> }
+            { props.feed || props.comment ? <Typography variant="body2" sx={{ color: theme => props.items.isLiked ? "red" : theme.palette.text.secondary }}>{ props.items.likesCount > 0 && props.items.likesCount }</Typography> : <></> }
         </Stack>
     )
 }

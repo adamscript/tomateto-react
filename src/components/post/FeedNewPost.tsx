@@ -1,11 +1,12 @@
-import { Card } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import NewPost from "./NewPost";
 
 const FeedNewPost = () => {
     return(
-        <Card square={true}>
+        <Box sx={{ mt: 3 }}>
             <NewPost />
-        </Card>
+            <Divider variant="middle" />
+        </Box>
     )
 }
 

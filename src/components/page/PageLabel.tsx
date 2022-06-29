@@ -2,8 +2,8 @@ import { Box, Typography } from "@mui/material";
 
 const PageLabel = (props:any) => {
     return(
-        <Box sx={{ height: "60px", display: 'flex', alignItems: 'center'}}>
-            <Typography variant="h6">{ props.children }</Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', p: 2 }}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>{ props.children }</Typography>
         </Box>
     )
 }

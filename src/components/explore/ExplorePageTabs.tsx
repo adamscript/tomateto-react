@@ -9,7 +9,7 @@ const ExplorePageTabs = () => {
     };
     
     return(
-        <Box sx={{ height: "60px" }}>
+        <Box>
             <Tabs value={value} onChange={handleChange}>
                 <Tab value="one" label="Top" />
                 <Tab value="two" label="Post" />

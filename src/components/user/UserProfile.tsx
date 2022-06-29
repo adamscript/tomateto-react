@@ -1,7 +1,16 @@
-import { Avatar, Button, Card, CardContent, Link, Stack, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
+import { Avatar, Box, Button, Stack, styled, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PageFollowButton, PageLink } from "../page";
+
+const EditProfileButton = styled(Button)(({ theme }) => ({
+    height: "36px", 
+    color: theme.palette.text.primary, 
+    borderColor: theme.palette.action.focus,
+    '&:hover': {
+        borderColor: theme.palette.action.focus,
+        backgroundColor: theme.palette.action.hover
+    }
+})) as typeof Button;
 
 const UserProfile = (props: any) => {
     const navigate = useNavigate();
@@ -16,33 +25,31 @@ const UserProfile = (props: any) => {
     }
     
     return(
-        <Card square={true}>
-            <CardContent>
-                <Stack direction="row" spacing={2}>
-                    <Avatar sx={{ width: 135, height: 135 }} src={props.response.avatar} />
-                    <Stack spacing={2} sx={{ width: 1 }}>
-                        <Stack direction="row" alignItems="center" justifyContent="space-between">
-                            <Stack>
-                                <Typography variant="h6">{props.response.displayName}</Typography>
-                                <Typography>@{props.response.username}</Typography>
-                            </Stack>
-                            {   props.response.isMine ?
-                                <Button variant="outlined" sx={{ height: "36px" }} onClick={handleEditProfile}>Edit Profile</Button> :
-                                <PageFollowButton items={props.response} />
-                            }
+        <Box sx={{ p: 2 }}>
+            <Stack direction="row" spacing={2}>
+                <Avatar sx={{ width: 135, height: 135 }} src={props.response.avatar} />
+                <Stack spacing={2} sx={{ width: 1 }}>
+                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+                        <Stack>
+                            <Typography variant="h6" sx={{ fontWeight: 700 }}>{props.response.displayName}</Typography>
+                            <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.response.username}</Typography>
                         </Stack>
-                        <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
-                            {props.response.bio}
-                        </Typography>
-                        <Stack direction="row" spacing={1}>
-                            <Typography>{props.response.postsCount} Posts</Typography>
-                            <PageLink following items={props.response} />
-                            <PageLink followers items={props.response} />
-                        </Stack>
+                        {   props.response.isMine ?
+                            <EditProfileButton variant="outlined" onClick={handleEditProfile}>Edit Profile</EditProfileButton> :
+                            <PageFollowButton items={props.response} />
+                        }
+                    </Stack>
+                    <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
+                        {props.response.bio}
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                        <Typography component='div' sx={{ fontWeight: 500, fontSize: 14 }}>{props.response.postsCount} <Typography display="inline" sx={{ color: theme => theme.palette.text.secondary, fontSize: 14 }}>Post{ props.response.postsCount > 1 && 's' }</Typography></Typography>
+                        <PageLink following items={props.response} />
+                        <PageLink followers items={props.response} />
                     </Stack>
                 </Stack>
-            </CardContent>
-        </Card>
+            </Stack>
+        </Box>
     )
 }
 
