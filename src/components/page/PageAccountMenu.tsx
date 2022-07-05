@@ -1,9 +1,10 @@
-import { Avatar, Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, useTheme } from "@mui/material";
+import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, styled, SwipeableDrawer, useMediaQuery, useTheme } from "@mui/material";
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
@@ -11,7 +12,17 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setLightMode, setDarkMode } from "../../features/app/darkModeSlice";
 
-const PageAccountMenu = () => {
+const Puller = styled(Box)(({ theme }) => ({
+    width: 30,
+    height: 6,
+    backgroundColor: theme.palette.text.secondary,
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+
+const PageAccountMenu = (props: any) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -20,6 +31,9 @@ const PageAccountMenu = () => {
     const currentUser = useAppSelector((state) => state.currentUser);
     const darkMode = useAppSelector((state) => state.darkMode.value);
     const dispatch = useAppDispatch();
+
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleMenu = (e: any) => {
         if(menuOpen){
@@ -66,9 +80,15 @@ const PageAccountMenu = () => {
 
     return(
         <Box>
-            <IconButton onClick={handleMenu}><Avatar src={currentUser.avatar} sx={{ width: 28, height: 28 }} /></IconButton>
+            <IconButton onClick={handleMenu}>
+                {
+                    props.drawer ?
+                    <MenuIcon /> :
+                    <Avatar src={currentUser.avatar} sx={{ width: 28, height: 28 }} />
+                }
+            </IconButton>
             <Menu anchorEl={anchorEl} 
-                    open={menuOpen} 
+                    open={ smDown ? false : menuOpen } 
                     onClose={handleMenuClose}
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -111,19 +131,42 @@ const PageAccountMenu = () => {
                         </ListItemIcon>
                         <ListItemText>Settings</ListItemText>
                     </MenuItem>
-                    <Divider />
-                    <MenuItem onClick={handleLogOut}>
-                        <ListItemText sx={{ color: "red" }}>Log out</ListItemText>
-                    </MenuItem>
-                    <Divider />
+                    <Divider variant="middle" />
                         <MenuItem onClick={handleDarkMode}>
                             <ListItemIcon>
                                 { darkMode ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon /> }
                             </ListItemIcon>
-                            <ListItemText>{darkMode ? 'Light' : 'Dark'} Mode</ListItemText>
+                            <ListItemText>{darkMode ? 'Light' : 'Dark'} mode</ListItemText>
                         </MenuItem>
+                    <Divider variant="middle" />
+                    <MenuItem onClick={handleLogOut}>
+                        <ListItemText sx={{ color: "red" }}>Log out</ListItemText>
+                    </MenuItem>
                 </MenuList>
             </Menu>
+
+            <SwipeableDrawer anchor="bottom" open={ smDown ? menuOpen : false} onOpen={handleMenu} onClose={handleMenuClose} disableSwipeToOpen>
+                <Box sx={{ height: 12, backgroundColor: 'transparent' }}>
+                    <Puller />
+                </Box>
+                <List>
+                    <ListItem onClick={handleSettings}>
+                        <ListItemIcon>
+                            <SettingsOutlinedIcon />
+                        </ListItemIcon>
+                        <ListItemText>Settings</ListItemText>
+                    </ListItem>
+                    <ListItem onClick={handleDarkMode}>
+                        <ListItemIcon>
+                            { darkMode ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon /> }
+                        </ListItemIcon>
+                        <ListItemText>{darkMode ? 'Light' : 'Dark'} mode</ListItemText>
+                    </ListItem>
+                    <ListItem onClick={handleLogOut}>
+                        <ListItemText sx={{ color: "red" }}>Log out</ListItemText>
+                    </ListItem>
+                </List>
+            </SwipeableDrawer>
         </Box>
     )
 }

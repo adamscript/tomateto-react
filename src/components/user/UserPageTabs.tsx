@@ -1,4 +1,4 @@
-import { Box, Tabs, Tab, styled, Divider } from "@mui/material";
+import { Box, Tabs, Tab, styled, Divider, useMediaQuery, useTheme } from "@mui/material";
 import React, { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { loadPosts } from "../../features/post/feedPostSlice";
@@ -76,6 +76,9 @@ const UserPageTabs = (props: any) => {
     const authState = useAppSelector((state) => state.authState);
     const dispatch = useAppDispatch();
 
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
     useEffect(() => {
         function fetchListFeedPost(res?: String){
             fetch(`http://localhost:8080/api/user/profile/${props.response.id}/${value}`, { 
@@ -109,7 +112,7 @@ const UserPageTabs = (props: any) => {
     
     return(
         <Box>
-            <Box>
+            <Box sx={{ position: smDown ? 'sticky' : 'static', top: 60, backgroundColor: theme => theme.palette.background.default, zIndex: 2 }}>
                 <StyledTabs value={value} onChange={(e, value) => setValue(value)} variant="fullWidth">
                     <StyledTab value="posts" label="Posts" />
                     <StyledTab value="comments" label="Comments" />

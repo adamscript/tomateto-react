@@ -31,7 +31,7 @@ const lightTheme = createTheme({
             fontSize: 14,
             fontWeight: 700,
             borderRadius: 30,
-            minWidth: 75,
+            minWidth: 80,
             height: 35
         }
       }
@@ -45,6 +45,23 @@ const lightTheme = createTheme({
             borderRadius: 15
           }
         }
+      }
+    },
+
+    MuiDrawer : {
+      styleOverrides: {
+        root: {
+          '& .MuiDrawer-paper': {
+            borderRadius: '30px 30px 0 0',
+            minHeight: 150
+          }
+        }
+      }
+    },
+
+    MuiUseMediaQuery : {
+      defaultProps: {
+        noSsr: true
       }
     }
   }
@@ -73,7 +90,7 @@ const darkTheme = createTheme({
             fontSize: 14,
             fontWeight: 700,
             borderRadius: 30,
-            minWidth: 75,
+            minWidth: 80,
             height: 35
         }
       }
@@ -90,11 +107,35 @@ const darkTheme = createTheme({
     MuiCardMedia : {
       styleOverrides: {
         root: {
-          borderRadius: 15,
-          '&:hover': {
-            borderRadius: 15
+          borderRadius: 15
+        }
+      }
+    },
+
+    MuiDrawer : {
+      styleOverrides: {
+        root: {
+          '& .MuiDrawer-paper': {
+            borderRadius: '30px 30px 0 0',
+            minHeight: 150
           }
         }
+      }
+    },
+
+    MuiDialog : {
+      styleOverrides: {
+        root: {
+          '& .MuiDialog-paper': {
+            backgroundColor: '#000'
+          }
+        }
+      }
+    },
+
+    MuiUseMediaQuery : {
+      defaultProps: {
+        noSsr: true
       }
     }
   }
@@ -104,7 +145,7 @@ const Foreground = styled(Box)(({ theme }) => ({
   color: theme.palette.text.primary
 })) as typeof Box;
 
-const Background = styled(Paper)(({ theme }) => ({
+const Background = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   position: 'fixed',
   top: 0,
@@ -112,7 +153,7 @@ const Background = styled(Paper)(({ theme }) => ({
   width: '100vw',
   height: '100vh',
   zIndex: -1
-})) as typeof Paper;
+})) as typeof Box;
 
 
 function Page() {

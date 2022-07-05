@@ -1,21 +1,23 @@
 import { v4 as uuid } from 'uuid';
 
-import { Avatar, Button, Dialog, Divider, IconButton, LinearProgress, Stack, styled, TextField, Typography } from "@mui/material";
+import { Avatar, Button, Dialog, Divider, IconButton, LinearProgress, Slide, Stack, styled, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
 
 import { PageLabel } from "../page";
 
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { forwardRef, ReactElement, Ref, useEffect, useRef, useState } from "react";
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setCurrentUser } from "../../features/user/currentUserSlice";
 
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { auth, storage } from "../../firebase";
+import { TransitionProps } from '@mui/material/transitions';
 
 interface User{
     id: string;
@@ -31,6 +33,15 @@ interface User{
 const Input = styled('input')({
     display: 'none',
   });
+
+const Transition = forwardRef(function Transition(
+    props: TransitionProps & {
+        children: ReactElement<any, any>;
+    },
+    ref: Ref<unknown>,
+    ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const SettingsProfile = (props: any) => {
     const [usernameInput, setUsernameInput] = useState('');
@@ -49,6 +60,9 @@ const SettingsProfile = (props: any) => {
 
     const currentUser = useAppSelector((state) => state.currentUser);
     const dispatch = useAppDispatch();
+
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleImageChange = (e: any) => {
         setPhotoFile(e.target.files[0]);
@@ -173,13 +187,13 @@ const SettingsProfile = (props: any) => {
                     <PageLabel>Edit Profile</PageLabel>
                 </Stack>
                 :
-                <Stack spacing={2} direction="row" alignItems="center" sx={{ width: '100%' }}>
+                <Stack spacing={1} direction="row" alignItems="center" sx={{ width: 'calc(100% - 20px)', pl: 1 }}>
                     <IconButton onClick={ () => {navigate(`/${currentUser.username}`); handleCancelPhoto();} }>
                         <CloseIcon />
                     </IconButton>
                     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
                         <PageLabel>Edit Profile</PageLabel>
-                        <Button onClick={handleEdit} disabled={ !usernameInput || !nameInput || isSaving || isUploading ? true : false } variant="contained">Save</Button>
+                        <Button onClick={handleEdit} disabled={ !usernameInput || !nameInput || isSaving || isUploading ? true : false } variant={ smDown ? "text" : "contained" }>Save</Button>
                     </Stack>
                 </Stack>
             }
@@ -189,7 +203,13 @@ const SettingsProfile = (props: any) => {
                     <label htmlFor="photo-input">
                         <Input ref={photoInputRef} accept="image/*" id="photo-input" type="file" onChange={handleImageChange} />
                         <IconButton component="span" disabled={isSaving || isUploading} sx={{ width: 140, height: 140 }}>
-                            <Avatar src={photoURLPreview} sx={{ width: 140, height: 140 }} />
+                            <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <Box sx={{ position: 'absolute', color: 'white', zIndex: 3 }}>
+                                    <AddAPhotoOutlinedIcon fontSize='large' />
+                                </Box>
+                                <Box sx={{ position: 'absolute', width: 140, height: 140, borderRadius: '50%', background: 'rgba(0, 0, 0, 0.4)', zIndex: 2 }} />
+                                <Avatar src={photoURLPreview} sx={{ width: 140, height: 140 }} />
+                            </Box>
                         </IconButton>
                         
                     </label>
@@ -214,14 +234,18 @@ const SettingsProfileModal = () => {
     
     const currentUser = useAppSelector((state) => state.currentUser);
 
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
+
     const handleClose = () => {
         setOpen(false);
-        navigate(`/${currentUser.username}`)
+        navigate(`/${currentUser.username}`);
     }
 
     return(
         <Box>
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+            <Dialog open={open} onClose={handleClose} fullScreen={ smDown && true } fullWidth maxWidth="sm"
+                TransitionComponent={ smDown ? Transition : undefined }>
                 <SettingsProfile modal />
             </Dialog>
         </Box>

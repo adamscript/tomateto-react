@@ -53,7 +53,7 @@ const SettingsPassword = () => {
                 <Divider />
                 <Stack direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent={ confirmPasswordInput ? "space-between" : "end" }>
                     { confirmPasswordInput && <Alert severity={ newPasswordInput != confirmPasswordInput ? "warning" : "success" }>{ newPasswordInput != confirmPasswordInput ? "Password does not match" : "Password matched" }</Alert> }
-                    <Button variant="contained" onClick={handleChangePassword} disabled={ !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Save</Button>
+                    <Button variant="contained" onClick={handleChangePassword} disabled={ !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Update password</Button>
                 </Stack>
             </Stack>
         </Box>

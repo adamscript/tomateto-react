@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 import { Avatar, Box, Button, Card, CardContent, CardMedia, Grid, IconButton, InputBase, LinearProgress, Stack, styled } from "@mui/material";
 
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useEffect, useRef, useState } from "react";
@@ -12,6 +11,7 @@ import { insertPost } from "../../features/post/feedPostSlice";
 
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { auth, storage } from '../../firebase';
+import { PageEmojiButton } from '../page';
 
 interface User{
     id: String;
@@ -43,6 +43,7 @@ const NewPost = () => {
     let [uploadProgress, setUploadProgress] = useState(0);
 
     let [content, setContent] = useState(String);
+    let inputRef = useRef<HTMLInputElement>(null);
 
     let [photoFile, setPhotoFile] = useState<File | null>();
     let [photoURLPreview, setPhotoURLPreview] = useState(String)
@@ -81,6 +82,10 @@ const NewPost = () => {
         isEdited: false,
         isLiked: false,
         isMine: true,
+    }
+
+    const handleEmojiSelect = (emoji: any) => {
+        setContent(inputRef!.current!.value + emoji.native);
     }
 
     const handlePost = () => {
@@ -172,11 +177,13 @@ const NewPost = () => {
             <Stack spacing={2} direction='row'>
                 <Avatar src={currentUser.avatar} />
                 <Stack sx={{ width: 1 }}>
-                    <InputBase multiline fullWidth minRows={2} value={content} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
+                    <InputBase inputRef={inputRef} multiline fullWidth minRows={2} value={content} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
                     {
                         photoURLPreview &&
-                        <><IconButton onClick={handleCancelPhoto}><CloseIcon /></IconButton>
-                        <CardMedia component="img" image={photoURLPreview} /></>
+                        <Box sx={{ position: 'relative', m: 1 }}>
+                            <IconButton sx={{ position: 'absolute', top: 6, left: 6, color: 'white', background: 'rgba(125, 125, 125, 0.6)', '&:hover': { background: 'rgba(100, 100, 100, 0.6)' } }} onClick={handleCancelPhoto} size="small"><CloseIcon /></IconButton>
+                            <CardMedia component="img" image={photoURLPreview} />
+                        </Box>
                     }
                     <Stack direction="row" alignItems="center" justifyContent="space-between">
                         <Stack direction="row">
@@ -186,9 +193,7 @@ const NewPost = () => {
                                     <ImageOutlinedIcon />
                                 </IconButton>
                             </label>
-                            <IconButton disabled={isPosting || isUploading}>
-                                <EmojiEmotionsOutlinedIcon />
-                            </IconButton>
+                            <PageEmojiButton onEmojiSelect={handleEmojiSelect} disabled={isPosting || isUploading} />
                         </Stack>
                         <Button onClick={handlePost} variant="contained" disabled={ content == "" || isPosting || isUploading }>Post</Button>
                     </Stack>

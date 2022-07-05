@@ -1,11 +1,24 @@
-import { Box, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList } from "@mui/material";
+import { Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, styled, SwipeableDrawer, Typography, useMediaQuery, useTheme } from "@mui/material";
 import IosShareIcon from '@mui/icons-material/IosShare';
 import LinkIcon from '@mui/icons-material/Link';
 import { useState } from "react";
 
+const Puller = styled(Box)(({ theme }) => ({
+    width: 30,
+    height: 6,
+    backgroundColor: theme.palette.text.secondary,
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+
 const PageShareButton = (props: any) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
+
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleMenu = (e: any) => {
         if(menuOpen){
@@ -34,7 +47,7 @@ const PageShareButton = (props: any) => {
                 <IosShareIcon fontSize="inherit" />
             </IconButton>
             <Menu anchorEl={anchorEl} 
-                    open={menuOpen} 
+                    open={ smDown ? false : menuOpen } 
                     onClose={handleMenuClose}
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -73,6 +86,21 @@ const PageShareButton = (props: any) => {
                     </MenuItem>
                 </MenuList>
             </Menu>
+
+            <SwipeableDrawer anchor="bottom" open={ smDown ? menuOpen : false} onOpen={handleMenu} onClose={handleMenuClose} disableSwipeToOpen>
+                <Box sx={{ height: 12, backgroundColor: 'transparent' }}>
+                    <Puller />
+                </Box>
+                <List>
+                    <Typography variant="h6" sx={{ p: 2, pt: 1 }}>Share Post</Typography>
+                    <ListItem onClick={handleCopyLink}>
+                        <ListItemIcon>
+                                <LinkIcon />
+                        </ListItemIcon>
+                        <ListItemText>Copy link to post</ListItemText>
+                    </ListItem>
+                </List>
+            </SwipeableDrawer>
         </Box>
     )
 }

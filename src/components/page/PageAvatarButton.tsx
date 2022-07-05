@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { Avatar, ButtonBase } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AvatarButton = styled(Avatar)(({ theme }) => ({
     '&:hover': {
@@ -10,9 +10,10 @@ const AvatarButton = styled(Avatar)(({ theme }) => ({
 
 const PageAvatarButton = (props: any) => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     return(
-        <AvatarButton component={ButtonBase} onClick={ () => { navigate(`/${props.items.username}`) } } src={props.items.avatar} />
+        <AvatarButton component={ButtonBase} sx={{ zIndex: 1 }} onClick={ () => { navigate(`/${props.items.username}`, { state: { location: location } }) } } src={props.items.avatar} />
     )
 }
 

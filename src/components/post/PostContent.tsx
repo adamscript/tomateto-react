@@ -10,6 +10,8 @@ const SecondaryTypography = styled(Typography)(({ theme }) => ({
 })) as typeof Typography;
 
 const PostContent = (props: any) => {
+
+    console.log(props.response)
     
     const handleComment = () => {
         props.inputRef.current.focus();
@@ -21,9 +23,9 @@ const PostContent = (props: any) => {
                 <Stack direction="row" spacing={1}>
                     <PageAvatarButton items={props.response.user} />
                     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: "100%" }}>
-                        <Stack>
+                        <Stack width="80%">
                             <PageLink user items={props.response.user} />
-                            <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.response.user.username}</Typography>
+                            <Typography noWrap sx={{ color: theme => theme.palette.text.secondary }}>@{props.response.user.username}</Typography>
                         </Stack>
                         {props.response.isMine && <PostMenu items={props.response} />}
                     </Stack>

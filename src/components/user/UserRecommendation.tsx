@@ -10,13 +10,13 @@ const UserRecommendation = (props: any) => {
             <CardContent>
                 <Stack direction="row" spacing={1}>
                     <PageAvatarButton items={props.items} />
-                    <Stack sx={{ width: "100%" }} spacing={1}>
-                        <Stack direction="row" alignItems="center" justifyContent="space-between">
-                            <Stack>
+                    <Stack width="100%" minWidth={0} spacing={1}>
+                        <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
+                            <Stack minWidth={0} >
                                 <PageLink user items={props.items} />
-                                <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.items.username}</Typography>
+                                <Typography noWrap sx={{ color: theme => theme.palette.text.secondary }}>@{props.items.username}</Typography>
                             </Stack>
-                            <PageFollowButton items={props.items} />
+                            { !props.items.isMine && <PageFollowButton items={props.items} /> }
                         </Stack>
                         <Typography>
                             {props.items.bio}

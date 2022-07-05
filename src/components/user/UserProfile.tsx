@@ -4,6 +4,7 @@ import { PageFollowButton, PageLink } from "../page";
 
 const EditProfileButton = styled(Button)(({ theme }) => ({
     height: "36px", 
+    minWidth: 120,
     color: theme.palette.text.primary, 
     borderColor: theme.palette.action.focus,
     '&:hover': {
@@ -11,6 +12,16 @@ const EditProfileButton = styled(Button)(({ theme }) => ({
         backgroundColor: theme.palette.action.hover
     }
 })) as typeof Button;
+
+const AvatarProfile = styled(Avatar)(({ theme }) => ({
+    width: 80,
+    height: 80,
+    
+    [theme.breakpoints.up('sm')]: {
+        width: 135,
+        height: 135
+    }
+})) as typeof Avatar;
 
 const UserProfile = (props: any) => {
     const navigate = useNavigate();
@@ -26,13 +37,13 @@ const UserProfile = (props: any) => {
     
     return(
         <Box sx={{ p: 2 }}>
-            <Stack direction="row" spacing={2}>
-                <Avatar sx={{ width: 135, height: 135 }} src={props.response.avatar} />
-                <Stack spacing={2} sx={{ width: 1 }}>
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Stack>
-                            <Typography variant="h6" sx={{ fontWeight: 700 }}>{props.response.displayName}</Typography>
-                            <Typography sx={{ color: theme => theme.palette.text.secondary }}>@{props.response.username}</Typography>
+            <Stack direction="row" spacing={2} minWidth={0}>
+                <AvatarProfile src={props.response.avatar} />
+                <Stack spacing={2} sx={{ width: 1 }} minWidth={0}>
+                    <Stack direction="row" spacing={1} alignItems="start" justifyContent="space-between">
+                        <Stack minWidth={0}>
+                            <Typography noWrap variant="h6" sx={{ fontWeight: 700 }}>{props.response.displayName}</Typography>
+                            <Typography noWrap sx={{ color: theme => theme.palette.text.secondary }}>@{props.response.username}</Typography>
                         </Stack>
                         {   props.response.isMine ?
                             <EditProfileButton variant="outlined" onClick={handleEditProfile}>Edit Profile</EditProfileButton> :

@@ -1,14 +1,18 @@
-import { IconButton, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Button, Modal, Box, Typography, Card, CardContent, InputBase, Avatar, LinearProgress } from "@mui/material";
-import { useState } from "react";
+import { IconButton, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Button, Modal, Box, Typography, Card, CardContent, InputBase, Avatar, LinearProgress, useMediaQuery, useTheme, Drawer, List, ListItem, SwipeableDrawer, styled, Slide } from "@mui/material";
+import { forwardRef, ReactElement, Ref, useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { deletePost, editPost } from "../../features/post/feedPostSlice";
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CloseIcon from '@mui/icons-material/Close';
+
 import { auth } from "../../firebase";
+import { TransitionProps } from "@mui/material/transitions";
+import { PageEmojiButton } from "../page";
 
 interface User{
     id: String;
@@ -30,6 +34,25 @@ interface Post{
     isMine: boolean;
 }
 
+const Puller = styled(Box)(({ theme }) => ({
+    width: 30,
+    height: 6,
+    backgroundColor: theme.palette.text.secondary,
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
+
+const Transition = forwardRef(function Transition(
+    props: TransitionProps & {
+        children: ReactElement<any, any>;
+    },
+    ref: Ref<unknown>,
+    ) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
 const PostMenu = (props: any) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
@@ -38,9 +61,14 @@ const PostMenu = (props: any) => {
     const [editContent, setEditContent] = useState(String);
     const [isEditSaving, setEditSaving] = useState(false);
 
+    let inputRef = useRef<HTMLInputElement>(null);
+
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
 
     const dispatch = useAppDispatch();
+
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleMenu = (e: any) => {
         if(menuOpen){
@@ -114,6 +142,11 @@ const PostMenu = (props: any) => {
         setMenuOpen(true);
     }
 
+    const handleEmojiSelect = (emoji: any) => {
+        inputRef!.current!.value = inputRef!.current!.value + emoji.native;
+        setEditContent(inputRef!.current!.value + emoji.native);
+    }
+
     const handleDelete = () => {
         function fetchDeletePost(res: String){
             fetch(`http://localhost:8080/api/post/${props.items.id}/delete`, {
@@ -146,10 +179,10 @@ const PostMenu = (props: any) => {
 
     return(
             <><IconButton onClick={handleMenu} size="small">
-                <MoreHorizIcon />
+                { smDown ? <MoreVertIcon /> : <MoreHorizIcon /> }
             </IconButton>
             <Menu anchorEl={anchorEl} 
-                    open={menuOpen} 
+                    open={ smDown ? false : menuOpen } 
                     onClose={handleMenuClose}
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -195,6 +228,26 @@ const PostMenu = (props: any) => {
                     </MenuItem>
                 </MenuList>
             </Menu>
+
+            <SwipeableDrawer anchor="bottom" open={ smDown ? menuOpen : false} onOpen={handleMenu} onClose={handleMenuClose} disableSwipeToOpen>
+                <Box sx={{ height: 12, backgroundColor: 'transparent' }}>
+                    <Puller />
+                </Box>
+                <List>
+                    <ListItem onClick={handleEditPostOpen}>
+                        <ListItemIcon>
+                            <EditIcon />
+                        </ListItemIcon>
+                        <ListItemText>Edit post</ListItemText>
+                    </ListItem>
+                    <ListItem onClick={handleDeleteAlertOpen}>
+                        <ListItemIcon sx={{ color: "red" }}>
+                            <DeleteOutlinedIcon />
+                        </ListItemIcon>
+                        <ListItemText sx={{ color: "red" }}>Delete</ListItemText>
+                    </ListItem>
+                </List>
+            </SwipeableDrawer>
         
             <Dialog open={deleteAlertOpen} onClose={handleDeleteAlertClose}>
                 <DialogTitle>
@@ -205,20 +258,16 @@ const PostMenu = (props: any) => {
                 </DialogContent>
                 <DialogActions>
                     <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-                        <Button variant="text" onClick={handleDeleteAlertClose}>Cancel</Button>
-                        <Button variant="contained" onClick={handleDelete}>Delete</Button>
+                        <Button variant="text" sx={{ color: theme => theme.palette.text.primary }} onClick={handleDeleteAlertClose}>Cancel</Button>
+                        <Button variant={ smDown ? "text" : "contained" } color="error" onClick={handleDelete}>Delete</Button>
                     </Stack>
                 </DialogActions>
             </Dialog>
 
-            <Modal open={editPostOpen} onClose={handleEditPostClose}
-                    sx={{ display: "flex",
-                    alignItems: "flex-start",
-                    justifyContent: "center"}}>
-                <Box sx={{ position: "relative",
-                        top: "90px",
-                        width: "600px",
-                        backgroundColor: "white" }}>
+            <Dialog open={editPostOpen} fullScreen={ smDown ? true : false } onClose={handleEditPostClose} fullWidth maxWidth="sm"
+                PaperProps={{ sx: { position: "absolute", top: smDown ? 0 : 60 } }}
+                TransitionComponent={ smDown ? Transition : undefined }>
+                <Box sx={{ p: 1 }}>
                     <Stack direction="row" spacing={2} alignItems="center">
                         <IconButton onClick={handleEditPostClose}>
                             <CloseIcon />
@@ -226,20 +275,21 @@ const PostMenu = (props: any) => {
                         <Typography variant="h6">Edit Post</Typography>
                     </Stack>
                     { isEditSaving && <LinearProgress /> }
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" spacing={2} sx={{ p: 1 }}>
                         <Avatar />
                         <Stack sx={{ width: "100%" }}>
-                            <InputBase multiline fullWidth defaultValue={props.items.content} disabled={isEditSaving} onChange={ (e) => {setEditContent(e.target.value)} } placeholder="What's on your to-mind?" />
-                            <Stack direction="row" justifyContent="space-between">
-                                <IconButton disabled={isEditSaving}>
-                                    <EmojiEmotionsOutlinedIcon />
-                                </IconButton>
+                            <InputBase inputRef={inputRef} autoFocus multiline fullWidth defaultValue={props.items.content} disabled={isEditSaving} onChange={ (e) => {setEditContent(e.target.value)} } placeholder="What's on your to-mind?" />
+                            <Stack direction="row" justifyContent={ smDown ? "end" : "space-between" }>
+                                {
+                                    !smDown &&
+                                    <PageEmojiButton onEmojiSelect={handleEmojiSelect} disabled={isEditSaving} />
+                                }
                                 <Button onClick={handleEdit} variant="contained" disabled={ editContent == "" || isEditSaving }>Save</Button>
                             </Stack>
                         </Stack>
                     </Stack>
                 </Box>
-            </Modal></>
+            </Dialog></>
     )
 }
 

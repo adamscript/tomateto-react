@@ -73,7 +73,8 @@ const PagePhotoModal = () => {
                         left: '10px',
                         top: '10px',
                         color: 'white',
-                        background: 'rgba(125, 125, 125, 0.5)'
+                        background: 'rgba(125, 125, 125, 0.5)',
+                        '&:hover': { background: 'rgba(100, 100, 100, 0.5)' }
                     }}
                     onClick={handleClose}>
                         <CloseIcon />

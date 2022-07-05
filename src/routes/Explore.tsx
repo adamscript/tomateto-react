@@ -1,10 +1,10 @@
-import { Tabs, Tab, Divider, styled } from "@mui/material";
+import { Tabs, Tab, Divider, styled, Slide, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { ExploreFeedLatestPost, ExploreFeedTopPost, ExploreFeedUser } from "../components/explore";
-import { PageLabel, PageShowMore } from "../components/page";
+import { PageLabel, PageSearchInput, PageShowMore } from "../components/page";
 import { loadPosts } from "../features/post/feedPostSlice";
 import { auth } from "../firebase";
 
@@ -68,11 +68,14 @@ const StyledTab = styled((props: StyledTabProps) => (
   }));
 
 const Explore = () => {
-    const [value, setValue] = React.useState("top");
-    const [isLoaded, setLoaded] = React.useState(false);
+    const [value, setValue] = useState("top");
+    const [isLoaded, setLoaded] = useState(false);
 
     const authState = useAppSelector((state) => state.authState);
     const dispatch = useAppDispatch();
+
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
         function fetchListFeedPost(res?: String){
@@ -108,7 +111,7 @@ const Explore = () => {
 
     return(
         <Box>
-            <Box>
+            <Box sx={{ position: 'sticky', top: smDown ? 0 : 60, backgroundColor: theme => theme.palette.background.default, zIndex: 2 }}>
                 <StyledTabs value={value} onChange={(e, value) => { setValue(value); setLoaded(false); }}>
                     <StyledTab value="top" label="Top" />
                     <StyledTab value="latest" label="Post" />

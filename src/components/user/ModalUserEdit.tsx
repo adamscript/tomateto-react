@@ -1,10 +1,10 @@
-import { Avatar, Box, Button, IconButton, Modal, Stack, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, Dialog, IconButton, Modal, Stack, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import { minHeight } from "@mui/system";
 
 const ModalUserEdit = () => {
     return(
-        <Modal open={true} sx={{ display: "flex",
+        <Dialog open={true} sx={{ display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center"}}>
             <Box sx={{ width: "600px",
@@ -27,7 +27,7 @@ const ModalUserEdit = () => {
                     </Stack>
                 </Stack>
             </Box>
-        </Modal>
+        </Dialog>
     )
 }
 

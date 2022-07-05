@@ -1,27 +1,35 @@
-import { IconButton, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Button, Modal, Box, Typography, Card, CardContent, InputBase, Avatar } from "@mui/material";
+import { IconButton, Menu, MenuList, MenuItem, ListItemIcon, ListItemText, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Stack, Button, Modal, Box, Typography, Card, CardContent, InputBase, Avatar, ButtonBase, List, ListItem, styled, SwipeableDrawer, useMediaQuery, useTheme } from "@mui/material";
 import { useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { decrementCommentsCount, deletePost, editPost } from "../../features/post/feedPostSlice";
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import EditIcon from '@mui/icons-material/Edit';
-import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+
 import { deleteComment } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
+
+const Puller = styled(Box)(({ theme }) => ({
+    width: 30,
+    height: 6,
+    backgroundColor: theme.palette.text.secondary,
+    borderRadius: 3,
+    position: 'absolute',
+    top: 8,
+    left: 'calc(50% - 15px)',
+  }));
 
 const CommentMenu = (props: any) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
-    const [editPostOpen, setEditPostOpen] = useState(false);
-    const [editContent, setEditContent] = useState(props.items.Content);
-    const [isEditSaving, setEditSaving] = useState(false);
-
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
 
     const dispatch = useAppDispatch();
+
+    const theme = useTheme();
+    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleMenu = (e: any) => {
         console.log(props.items.post)
@@ -39,6 +47,11 @@ const CommentMenu = (props: any) => {
     const handleMenuClose = () => {
         setMenuOpen(false);
         setAnchorEl(null);
+    };
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(props.items.content);
+        setMenuOpen(false);
     };
 
     const handleDelete = () => {
@@ -72,11 +85,16 @@ const CommentMenu = (props: any) => {
     };
 
     return(
-            <><IconButton onClick={handleMenu} size="small">
-                <MoreHorizIcon fontSize="inherit" />
-            </IconButton>
+            <>
+            {
+                props.area ?
+                <ButtonBase component={Box} onClick={handleMenu} sx={{ position: 'absolute', top: 0, width: '100%', height: '100%' }} /> :
+                <IconButton onClick={handleMenu} size="small">
+                    <MoreHorizIcon fontSize="inherit" />
+                </IconButton>
+            }
             <Menu anchorEl={anchorEl} 
-                    open={menuOpen} 
+                    open={ smDown ? false : menuOpen } 
                     onClose={handleMenuClose}
                     anchorOrigin={{
                         vertical: 'bottom',
@@ -115,6 +133,29 @@ const CommentMenu = (props: any) => {
                     </MenuItem>
                 </MenuList>
             </Menu>
+
+            <SwipeableDrawer anchor="bottom" open={ smDown ? menuOpen : false} onOpen={handleMenu} onClose={handleMenuClose} disableSwipeToOpen>
+                <Box sx={{ height: 12, backgroundColor: 'transparent' }}>
+                    <Puller />
+                </Box>
+                <List>
+                    <ListItem onClick={handleCopy}>
+                        <ListItemIcon>
+                            <ContentCopyIcon />
+                        </ListItemIcon>
+                        <ListItemText>Copy to clipboard</ListItemText>
+                    </ListItem>
+                    {
+                        props.items.isMine &&
+                        <ListItem onClick={handleDeleteAlertOpen}>
+                            <ListItemIcon sx={{ color: "red" }}>
+                                <DeleteOutlinedIcon />
+                            </ListItemIcon>
+                            <ListItemText sx={{ color: "red" }}>Delete</ListItemText>
+                        </ListItem>
+                    }
+                </List>
+            </SwipeableDrawer>
         
             <Dialog open={deleteAlertOpen} onClose={handleDeleteAlertClose}>
                 <DialogTitle>
@@ -125,8 +166,8 @@ const CommentMenu = (props: any) => {
                 </DialogContent>
                 <DialogActions>
                     <Stack direction="row" justifyContent="center" alignItems="center" spacing={2}>
-                        <Button variant="text" onClick={handleDeleteAlertClose}>Cancel</Button>
-                        <Button variant="contained" onClick={handleDelete}>Delete</Button>
+                        <Button variant="text" sx={{ color: theme => theme.palette.text.primary }} onClick={handleDeleteAlertClose}>Cancel</Button>
+                        <Button variant={ smDown ? "text" : "contained" } color="error" onClick={handleDelete}>Delete</Button>
                     </Stack>
                 </DialogActions>
             </Dialog></>

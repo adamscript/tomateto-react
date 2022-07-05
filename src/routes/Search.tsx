@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { ExploreFeedTopPost } from "../components/explore";
-import { PageLabel } from "../components/page";
+import { PageLabel, PageSearchInput } from "../components/page";
 import { FeedPost } from "../components/post";
 import { UserRecommendation } from "../components/user";
 import { loadPosts } from "../features/post/feedPostSlice";

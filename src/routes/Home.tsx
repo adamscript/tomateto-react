@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { FeedNewPost, FeedPost } from "../components/post";
@@ -10,6 +10,9 @@ const Home = () => {
 
     const response = useAppSelector((state) => state.feedPost);
     const dispatch = useAppDispatch();
+
+    const theme = useTheme();
+    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
     const listFeedPost = response.map((items, index) => 
         <FeedPost key={index} items={items} />
@@ -39,7 +42,7 @@ const Home = () => {
 
     return(
         <Box>
-            <FeedNewPost />
+            { smUp && <FeedNewPost /> }
             {isLoaded ? listFeedPost : <div>Loading...</div>}
         </Box>
     )
