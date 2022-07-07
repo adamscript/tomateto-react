@@ -62,7 +62,7 @@ const PageAppBar = () => {
                                 <PageAccountMenu />
                             </IconButtonWrapper></>
                             : 
-                            <Button onClick={() => { navigate("/accounts/login") }} variant="contained">Log in</Button>
+                            <Button onClick={() => { navigate("/accounts/login")}} variant="contained">Log in</Button>
                         }</>
                       }
                   </ Stack>

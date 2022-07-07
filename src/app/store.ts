@@ -5,6 +5,7 @@ import feedCommentReducer from '../features/comment/feedCommentSlice';
 import currentUserReducer from "../features/user/currentUserSlice";
 import authStateReducer from "../features/user/authStateSlice";
 import darkModeReducer from "../features/app/darkModeSlice";
+import snackbarReducer from "../features/app/snackbarSlice";
 
 const store = configureStore({
     reducer: {
@@ -12,7 +13,8 @@ const store = configureStore({
       feedComment: feedCommentReducer,
       currentUser: currentUserReducer,
       authState: authStateReducer,
-      darkMode: darkModeReducer
+      darkMode: darkModeReducer,
+      snackbar: snackbarReducer
     },
   })
 

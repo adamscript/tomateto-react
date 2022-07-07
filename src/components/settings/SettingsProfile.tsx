@@ -15,15 +15,23 @@ import { forwardRef, ReactElement, Ref, useEffect, useRef, useState } from "reac
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setCurrentUser } from "../../features/user/currentUserSlice";
 
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import { auth, storage } from "../../firebase";
 import { TransitionProps } from '@mui/material/transitions';
+import { resizePhoto } from '../../features/utility';
+
+interface Avatar{
+    default: string;
+    medium: string;
+    small: string;
+    extraSmall: string;
+}
 
 interface User{
     id: string;
     displayName: string;
     username: string;
-    avatar: string;
+    avatar: Avatar;
     bio: string;
     followCount: Number;
     followersCount: Number;
@@ -49,8 +57,6 @@ const SettingsProfile = (props: any) => {
     const [bioInput, setBioInput] = useState('');
 
     let [isSaving, setSaving] = useState(false);
-    let [isUploading, setUploading] = useState(false);
-    let [uploadProgress, setUploadProgress] = useState(0);
     
     let [photoFile, setPhotoFile] = useState<File | null>();
     let [photoURLPreview, setPhotoURLPreview] = useState(String)
@@ -84,7 +90,12 @@ const SettingsProfile = (props: any) => {
         id: currentUser.id,
         displayName: nameInput,
         username: usernameInput,
-        avatar: currentUser.avatar,
+        avatar: {
+            default: currentUser.avatar.default,
+            medium: currentUser.avatar.medium,
+            small: currentUser.avatar.small,
+            extraSmall: currentUser.avatar.extraSmall
+        },
         bio: bioInput,
         followCount: currentUser.followCount,
         followersCount: currentUser.followersCount,
@@ -92,18 +103,38 @@ const SettingsProfile = (props: any) => {
     }
 
     const handleEdit = () => {
+        let uploadedPhotoList: number[] = [];
 
-        function getPhotoURL(photoUploadRef: any){
+        function getPhotoURL(photoUploadRef: any, dimension: number){
             getDownloadURL(photoUploadRef)
                 .then((url) => {
                     console.log(url)
-                    editedUser.avatar = url;
+                    if(dimension == 270){
+                        editedUser.avatar.default = url;
+                        uploadedPhotoList.push(dimension);
+                    }
+                    else if(dimension == 160){
+                        editedUser.avatar.medium = url;
+                        uploadedPhotoList.push(dimension);
+                    }
+                    else if(dimension == 96){
+                        editedUser.avatar.small = url;
+                        uploadedPhotoList.push(dimension);
+                    }
+                    else if(dimension == 64){
+                        editedUser.avatar.extraSmall = url;
+                        uploadedPhotoList.push(dimension);
+                    }
 
-                    fetchEditUser();
+                    if(uploadedPhotoList.length == 4){
+                        fetchEditUser();
+                    }
                 })
         }
 
         function fetchEditUser(){
+            uploadedPhotoList.length = 0;
+
             auth.currentUser?.getIdToken()
             .then((res) => {
                 fetch('http://localhost:8080/api/user', {
@@ -115,7 +146,10 @@ const SettingsProfile = (props: any) => {
                         username: editedUser.username,
                         displayName : editedUser.displayName,
                         bio : editedUser.bio,
-                        avatar: editedUser.avatar
+                        avatarDefault: editedUser.avatar.default,
+                        avatarMedium: editedUser.avatar.medium,
+                        avatarSmall: editedUser.avatar.small,
+                        avatarExtrasmall: editedUser.avatar.extraSmall,
                     })
                 })
                 .then((res) => {
@@ -137,31 +171,44 @@ const SettingsProfile = (props: any) => {
             setSaving(false)
         }
 
-        if(photoFile){
-            console.log("post with photo upload")
-            setUploading(true)
-
-            const photoUploadRef = ref(storage, `photo/${currentUser.id}/profile/${uuid()}.jpg`);
+        function uploadPhoto(photoFile: any, name: string, dimension: number){
+            const photoUploadRef = ref(storage, `photo/${currentUser.id}/profile/${name}-${dimension}x${dimension}`);
             const metadata = {
                 contentType: 'image/jpeg'
             };
 
-            uploadBytesResumable(photoUploadRef, photoFile, metadata)
-            .on('state_changed', (snapshot) => {
-                setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-            },
-            (error) => {
-                console.log(error)
-            },
-            () => {
-                setUploading(false);
+            uploadBytes(photoUploadRef, photoFile, metadata)
+            .then((snapshot) => {
+                console.log("upload successful " + dimension)
                 setSaving(true);
 
-                console.log("upload successful")
+                getPhotoURL(photoUploadRef, dimension);
+            });
+            
+        }
 
-                getPhotoURL(photoUploadRef);
-            })
+        async function resizePhotos(){
+            const photoFileName = uuid();
+            const photoDimensionList = [270, 160, 96, 64];
 
+            let resizedPhotoList: any = [];
+
+            for(let dimension of photoDimensionList){
+                const resizedPhoto = await resizePhoto(photoFile, dimension);
+                resizedPhotoList.push({ blob: resizedPhoto, dimension: dimension })
+            }
+
+            if(resizedPhotoList.length == 4){
+                resizedPhotoList.forEach((result: any) => {
+                    console.log(result)
+                    uploadPhoto(result.blob, photoFileName, result.dimension);
+                })
+            }
+        }
+
+        if(photoFile){
+            console.log("post with photo upload")
+            resizePhotos();
         }
         else{
             setSaving(true)
@@ -173,7 +220,7 @@ const SettingsProfile = (props: any) => {
         setUsernameInput(currentUser.username);
         setNameInput(currentUser.displayName);
         setBioInput(currentUser.bio);
-        setPhotoURLPreview(currentUser.avatar);
+        setPhotoURLPreview(currentUser.avatar.default);
     }, [])
 
     return(
@@ -193,16 +240,15 @@ const SettingsProfile = (props: any) => {
                     </IconButton>
                     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
                         <PageLabel>Edit Profile</PageLabel>
-                        <Button onClick={handleEdit} disabled={ !usernameInput || !nameInput || isSaving || isUploading ? true : false } variant={ smDown ? "text" : "contained" }>Save</Button>
+                        <Button onClick={handleEdit} disabled={ !usernameInput || !nameInput || isSaving ? true : false } variant={ smDown ? "text" : "contained" }>Save</Button>
                     </Stack>
                 </Stack>
             }
             {isSaving && <LinearProgress />}
-            {isUploading && <LinearProgress variant="determinate" value={uploadProgress} />}
             <Stack spacing={2} padding={2} alignItems="center">
                     <label htmlFor="photo-input">
                         <Input ref={photoInputRef} accept="image/*" id="photo-input" type="file" onChange={handleImageChange} />
-                        <IconButton component="span" disabled={isSaving || isUploading} sx={{ width: 140, height: 140 }}>
+                        <IconButton component="span" disabled={isSaving} sx={{ width: 140, height: 140 }}>
                             <Box sx={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <Box sx={{ position: 'absolute', color: 'white', zIndex: 3 }}>
                                     <AddAPhotoOutlinedIcon fontSize='large' />
@@ -213,14 +259,14 @@ const SettingsProfile = (props: any) => {
                         </IconButton>
                         
                     </label>
-                <TextField fullWidth id="username-input" label="Username" value={usernameInput} onChange={ (e) => { setUsernameInput(e.target.value) } } disabled={isSaving || isUploading} />
-                <TextField fullWidth id="name-input" label="Name" value={nameInput} onChange={ (e) => { setNameInput(e.target.value) } } disabled={isSaving || isUploading} />
-                <TextField fullWidth multiline minRows={3} id="bio-input" label="Bio" value={bioInput} onChange={ (e) => { setBioInput(e.target.value) } } disabled={isSaving || isUploading} />
+                <TextField fullWidth id="username-input" label="Username" value={usernameInput} onChange={ (e) => { setUsernameInput(e.target.value) } } disabled={isSaving} />
+                <TextField fullWidth id="name-input" label="Name" value={nameInput} onChange={ (e) => { setNameInput(e.target.value) } } disabled={isSaving} />
+                <TextField fullWidth multiline minRows={3} id="bio-input" label="Bio" value={bioInput} onChange={ (e) => { setBioInput(e.target.value) } } disabled={isSaving} />
                 {
                     !props.modal &&
                     <><Divider sx={{ width: '100%' }} />
                     <Stack direction="row" sx={{ width: '100%' }} justifyContent="end">
-                        <Button onClick={handleEdit} disabled={ !usernameInput || !nameInput || isSaving || isUploading ? true : false } variant="contained">Save</Button>
+                        <Button onClick={handleEdit} disabled={ !usernameInput || !nameInput || isSaving ? true : false } variant="contained">Save</Button>
                     </Stack></>
                 }
             </Stack>

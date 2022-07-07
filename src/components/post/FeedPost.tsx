@@ -23,11 +23,6 @@ const FeedPost = (props: any) => {
                                     <Typography noWrap sx={{ color: theme => theme.palette.text.secondary }}>@{props.items.user.username}</Typography>
                                     <Typography sx={{ color: theme => theme.palette.text.secondary }}>•</Typography>
                                     <PageLink post items={props.items} />
-                                    {
-                                        props.items.isEdited && 
-                                        <><Typography sx={{ color: theme => theme.palette.text.secondary }}>•</Typography>
-                                        <Typography sx={{ color: theme => theme.palette.text.secondary, fontSize: 14 }}>Edited</Typography></>
-                                    }
                                 </Stack>
                                 {props.items.isMine && <PostMenu items={props.items} />}
                             </Stack>

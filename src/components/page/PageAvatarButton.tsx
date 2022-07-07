@@ -13,7 +13,7 @@ const PageAvatarButton = (props: any) => {
     const location = useLocation();
 
     return(
-        <AvatarButton component={ButtonBase} sx={{ zIndex: 1 }} onClick={ () => { navigate(`/${props.items.username}`, { state: { location: location } }) } } src={props.items.avatar} />
+        <AvatarButton component={ButtonBase} sx={{ zIndex: 1 }} onClick={ () => { navigate(`/${props.items.username}`, { state: { location: location } }) } } src={props.items.avatar.small} />
     )
 }
 

@@ -1,5 +1,5 @@
 import '../App.css';
-import { PageAppBar, PageBottomNavigation, PageFabNewPost, PageLinkModal, PagePhotoModal, PageSearchInput, PageSideNavigation } from '../components/page';
+import { PageAppBar, PageBottomNavigation, PageFabNewPost, PageLinkModal, PagePhotoModal, PageSearchInput, PageSideNavigation, PageSnackbar } from '../components/page';
 import { Box, Divider, Paper, Slide, Stack, useMediaQuery, useScrollTrigger } from '@mui/material';
 import { Container } from '@mui/system';
 import { styled, useTheme } from '@mui/material/styles';

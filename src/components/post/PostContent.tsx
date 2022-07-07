@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import PostMenu from "./PostMenu";
 import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton } from "../page";
+import { format, parseISO } from "date-fns";
 
 const SecondaryTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary
@@ -11,8 +12,6 @@ const SecondaryTypography = styled(Typography)(({ theme }) => ({
 
 const PostContent = (props: any) => {
 
-    console.log(props.response)
-    
     const handleComment = () => {
         props.inputRef.current.focus();
     };
@@ -35,9 +34,9 @@ const PostContent = (props: any) => {
                 </Typography>
                 {props.response.photo && <PagePhoto items={props.response} />}
                 <Stack direction="row" spacing={1}>
-                    <SecondaryTypography>14:15</SecondaryTypography>
+                    <SecondaryTypography>{format(parseISO(props.response.date), 'HH:mm')}</SecondaryTypography>
                     <SecondaryTypography>•</SecondaryTypography>
-                    <SecondaryTypography>31 May 2022</SecondaryTypography>
+                    <SecondaryTypography>{format(parseISO(props.response.date), 'PP')}</SecondaryTypography>
                     {
                         props.response.isEdited && 
                         <><SecondaryTypography>•</SecondaryTypography>

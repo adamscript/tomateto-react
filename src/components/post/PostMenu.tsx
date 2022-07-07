@@ -14,11 +14,18 @@ import { auth } from "../../firebase";
 import { TransitionProps } from "@mui/material/transitions";
 import { PageEmojiButton } from "../page";
 
+interface Avatar{
+    default: string;
+    medium: string;
+    small: string;
+    extraSmall: string;
+}
+
 interface User{
     id: String;
     displayName: String;
     username: String;
-    avatar: String;
+    avatar: Avatar;
 }
 
 interface Post{

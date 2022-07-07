@@ -64,7 +64,7 @@ const PageSideNavigation = () => {
                 <ListItem sx={{ display: isLoggedIn ? 'block' : 'none', m: 2, ml: 0 }} disablePadding>
                     <ListItemButton disableRipple={ !mdUp && true } onClick={() => { navigate(`/${currentUser.username}`) }}>
                         <Stack direction="row" spacing={2} alignItems="center">    
-                            <Avatar src={currentUser.avatar} />
+                            <Avatar src={currentUser.avatar.small} />
                             {
                                 mdUp &&
                                 <Stack>

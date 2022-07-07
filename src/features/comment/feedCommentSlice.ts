@@ -1,10 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+interface Avatar{
+    default: string;
+    medium: string;
+    small: string;
+    extraSmall: string;
+}
+
 interface User{
     id: String;
     displayName: String;
     username: String;
-    avatar: String;
+    avatar: Avatar;
 }
 
 interface Comment{

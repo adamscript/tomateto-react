@@ -19,7 +19,7 @@ const PageBottomNavigation = () => {
             <BottomNavigation>
                 <BottomNavigationAction onClick={() => { navigate('/') }} icon={ location.pathname == '/' ? <HomeRoundedIcon sx={{ color: theme => theme.palette.text.primary }} fontSize="large" /> : <HomeOutlinedIcon sx={{ color: theme => theme.palette.text.primary }} fontSize="large" /> } />
                 <BottomNavigationAction onClick={() => { navigate('/explore') }} icon={<SearchIcon sx={{ color: theme => theme.palette.text.primary, stroke: theme => theme.palette.text.primary, strokeWidth: location.pathname == '/explore' ? 1 : 0 }} fontSize="large" />} />
-                <BottomNavigationAction onClick={() => { navigate(`/${currentUser.username}`) }} icon={<Avatar src={currentUser.avatar} sx={{ width: 32, height: 32 }} />} />
+                <BottomNavigationAction onClick={() => { navigate(`/${currentUser.username}`) }} icon={<Avatar src={currentUser.avatar.extraSmall} sx={{ width: 32, height: 32 }} />} />
             </BottomNavigation>
         </Box>
     )

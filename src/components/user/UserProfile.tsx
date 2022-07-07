@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Stack, styled, Typography } from "@mui/material";
+import { Avatar, Box, Button, Stack, styled, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PageFollowButton, PageLink } from "../page";
 
@@ -27,6 +27,9 @@ const UserProfile = (props: any) => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const theme = useTheme();
+    const smUp = useMediaQuery(theme.breakpoints.up('sm'));
+
     const handleEditProfile = () => {
         navigate('/settings/profile', {
             state: {
@@ -38,7 +41,7 @@ const UserProfile = (props: any) => {
     return(
         <Box sx={{ p: 2 }}>
             <Stack direction="row" spacing={2} minWidth={0}>
-                <AvatarProfile src={props.response.avatar} />
+                <AvatarProfile src={ smUp ? props.response.avatar.default : props.response.avatar.medium } />
                 <Stack spacing={2} sx={{ width: 1 }} minWidth={0}>
                     <Stack direction="row" spacing={1} alignItems="start" justifyContent="space-between">
                         <Stack minWidth={0}>

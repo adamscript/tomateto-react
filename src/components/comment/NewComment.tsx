@@ -8,11 +8,18 @@ import { auth } from "../../firebase";
 import { incrementCommentsCount } from "../../features/post/feedPostSlice";
 import { PageEmojiButton } from "../page";
 
+interface Avatar{
+    default: string;
+    medium: string;
+    small: string;
+    extraSmall: string;
+}
+
 interface User{
     id: String;
     displayName: String;
     username: String;
-    avatar: String;
+    avatar: Avatar;
 }
 
 interface Comment{
@@ -69,7 +76,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
         },
         post: props.post.id,
         content: content,
-        date: "",
+        date: new Date().toISOString(),
         likesCount: 0,
         isLiked: false,
         isMine: true
@@ -111,7 +118,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
     return(
         <NewCommentContainer>
             <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
-                <StyledAvatar src={currentUser.avatar} />
+                <StyledAvatar src={currentUser.avatar.small} />
                 <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" spacing={1}>
                     <InputBase inputRef={ref} fullWidth multiline value={content} onChange={(e) => {setContent(e.target.value)}} placeholder="Add a tomathought..." />
                     <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>

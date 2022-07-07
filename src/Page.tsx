@@ -7,6 +7,7 @@ import { auth } from './firebase';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { deleteCurrentUser, setCurrentUser } from './features/user/currentUserSlice';
 import { setAuthState } from './features/user/authStateSlice';
+import { PageSnackbar } from './components/page';
 
 const lightTheme = createTheme({
   palette: {
@@ -193,6 +194,7 @@ function Page() {
     
   return (
     <ThemeProvider theme={ darkMode ? darkTheme : lightTheme }>
+      <PageSnackbar />
       <Foreground>
         <Routes>
           <Route path="/*" element={isLoaded ? <App /> : <div>Loading...</div>} />

@@ -7,6 +7,7 @@ import { UserRecommendation } from "../user";
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { TransitionProps } from "@mui/material/transitions";
+import { format, intervalToDuration, parseISO } from "date-fns";
 
 const LinkTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -36,12 +37,36 @@ const Transition = forwardRef(function Transition(
 const PageLink = (props: any) => {
     const location = useLocation();
 
+    const getPostDate = () => {
+        let postDate = parseISO(props.items.date);
+        let interval = intervalToDuration({ start: postDate, end: Date.now() });
+
+        if(interval.years){
+            return (format(postDate, 'PP'));
+        }
+        else if(interval.days && interval.days >= 7 || interval.months){
+            return (format(postDate, 'MMM d'));
+        }
+        else if(interval.days){
+            return (`${interval.days}d`);
+        }
+        else if(interval.hours){
+            return (`${interval.hours}h`);
+        }
+        else if(interval.minutes){
+            return (`${interval.minutes}m`);
+        }
+        else if(interval.seconds){
+            return (`${interval.seconds}s`);
+        }
+    }
+
     return(
         <Box zIndex={1}>
             {
                 (props.user && <LinkTypography noWrap component={Link} to={`/${props.items.username}`} state={{ location: location }} sx={{ color: theme => theme.palette.text.primary, fontWeight: '700', fontSize: 16 }}>{props.items.displayName}</LinkTypography>) ||
-                (props.post && <LinkTypography component={Link} to={`/${props.items.user.username}/post/${props.items.id}`} state={{ location: location }} sx={{ fontSize: 16 }}>3h</LinkTypography>) ||
-                (props.comment && <LinkTypography component={Link} to={`/${props.items.user.username}/post/${props.items.post}`} state={{ location: location }} sx={{ fontSize: 16 }}>3h</LinkTypography>) ||
+                (props.post && <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.id}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>) ||
+                (props.comment && <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.post}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>) ||
                 (props.following && <LinkTypography component={Link} to="following" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followCount}</LinkTypographyNumber> Following{ props.items.followCount > 1 && 's' }</LinkTypography>) ||
                 (props.followers && <LinkTypography component={Link} to="followers" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followersCount}</LinkTypographyNumber> Follower{ props.items.followersCount > 1 && 's' }</LinkTypography>) ||
                 (props.likes && <LinkTypography component={Link} to="likes" state={{ backgroundLocation: location, post: props.items.id }}><LinkTypographyNumber display="inline">{props.items.likesCount}</LinkTypographyNumber> Like{ props.items.likesCount > 1 && 's' }</LinkTypography>)

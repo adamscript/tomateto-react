@@ -12,12 +12,22 @@ import { insertPost } from "../../features/post/feedPostSlice";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { auth, storage } from '../../firebase';
 import { PageEmojiButton } from '../page';
+import { compressPhoto } from '../../features/utility';
+import { openSnackbarInfo } from '../../features/app/snackbarSlice';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+interface Avatar{
+    default: string;
+    medium: string;
+    small: string;
+    extraSmall: string;
+}
 
 interface User{
     id: String;
     displayName: String;
     username: String;
-    avatar: String;
+    avatar: Avatar;
 }
 
 interface Post{
@@ -48,6 +58,10 @@ const NewPost = () => {
     let [photoFile, setPhotoFile] = useState<File | null>();
     let [photoURLPreview, setPhotoURLPreview] = useState(String)
     let photoInputRef = useRef<HTMLInputElement>(null);
+    let photoRef = useRef<HTMLImageElement>(null);
+
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const currentUser = useAppSelector((state) => state.currentUser);
     const dispatch = useAppDispatch();
@@ -55,6 +69,8 @@ const NewPost = () => {
     const handleImageChange = (e: any) => {
         setPhotoFile(e.target.files[0]);
         setPhotoURLPreview(URL.createObjectURL(e.target.files[0]));
+
+        compressPhoto(photoFile).then((res) => { console.log(res) });
     }
 
     const handleCancelPhoto = () => {
@@ -76,7 +92,7 @@ const NewPost = () => {
         },
         content: content,
         photo: "",
-        date: "",
+        date: new Date().toISOString(),
         likesCount: 0,
         commentsCount: 0,
         isEdited: false,
@@ -125,24 +141,25 @@ const NewPost = () => {
 
         function handlePostSuccess(){
             dispatch(insertPost(newPost));
+            dispatch(openSnackbarInfo("Your Post was sent"))
             console.log(newPost)
 
             setContent("");
             setPhotoURLPreview("");
             setPhotoFile(null);
+
+            if(photoInputRef.current){
+                photoInputRef.current.value = "";
+            }
+
+            if(location.pathname == '/compose/post'){
+                navigate(-1);
+            }
             
             setPosting(false)
         }
 
-        if(photoFile){
-            console.log("post with photo upload")
-            setUploading(true)
-
-            const photoUploadRef = ref(storage, `photo/${currentUser.id}/post/${uuid()}.jpg`);
-            const metadata = {
-                contentType: 'image/jpeg'
-            };
-
+        function uploadPhoto(photoUploadRef: any, photoFile: any, metadata: any){
             uploadBytesResumable(photoUploadRef, photoFile, metadata)
             .on('state_changed', (snapshot) => {
                 setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
@@ -157,6 +174,21 @@ const NewPost = () => {
                 console.log("upload successful")
 
                 getPhotoURL(photoUploadRef);
+            })
+        }
+
+        if(photoFile){
+            console.log("post with photo upload")
+            setUploading(true)
+
+            const photoUploadRef = ref(storage, `photo/${currentUser.id}/post/${uuid()}.jpg`);
+            const metadata = {
+                contentType: 'image/jpeg'
+            };
+
+            compressPhoto(photoFile)
+            .then((res) => {
+                uploadPhoto(photoUploadRef, res, metadata);
             })
 
         }
@@ -175,14 +207,14 @@ const NewPost = () => {
             {isPosting && <LinearProgress />}
             {isUploading && <LinearProgress variant="determinate" value={uploadProgress} />}
             <Stack spacing={2} direction='row'>
-                <Avatar src={currentUser.avatar} />
+                <Avatar src={currentUser.avatar.small} />
                 <Stack sx={{ width: 1 }}>
                     <InputBase inputRef={inputRef} multiline fullWidth minRows={2} value={content} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
                     {
                         photoURLPreview &&
                         <Box sx={{ position: 'relative', m: 1 }}>
                             <IconButton sx={{ position: 'absolute', top: 6, left: 6, color: 'white', background: 'rgba(125, 125, 125, 0.6)', '&:hover': { background: 'rgba(100, 100, 100, 0.6)' } }} onClick={handleCancelPhoto} size="small"><CloseIcon /></IconButton>
-                            <CardMedia component="img" image={photoURLPreview} />
+                            <CardMedia ref={photoRef} component="img" image={photoURLPreview} />
                         </Box>
                     }
                     <Stack direction="row" alignItems="center" justifyContent="space-between">

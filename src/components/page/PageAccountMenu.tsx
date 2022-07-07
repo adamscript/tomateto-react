@@ -84,7 +84,7 @@ const PageAccountMenu = (props: any) => {
                 {
                     props.drawer ?
                     <MenuIcon /> :
-                    <Avatar src={currentUser.avatar} sx={{ width: 28, height: 28 }} />
+                    <Avatar src={currentUser.avatar.extraSmall} sx={{ width: 28, height: 28 }} />
                 }
             </IconButton>
             <Menu anchorEl={anchorEl} 
