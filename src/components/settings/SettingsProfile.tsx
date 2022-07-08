@@ -19,6 +19,7 @@ import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase
 import { auth, storage } from "../../firebase";
 import { TransitionProps } from '@mui/material/transitions';
 import { resizePhoto } from '../../features/utility';
+import { openSnackbarError, openSnackbarInfo } from '../../features/app/snackbarSlice';
 
 interface Avatar{
     default: string;
@@ -56,7 +57,8 @@ const SettingsProfile = (props: any) => {
     const [nameInput, setNameInput] = useState('');
     const [bioInput, setBioInput] = useState('');
 
-    let [isSaving, setSaving] = useState(false);
+    const [isSaving, setSaving] = useState(false);
+    const [errorText, setErrorText] = useState('');
     
     let [photoFile, setPhotoFile] = useState<File | null>();
     let [photoURLPreview, setPhotoURLPreview] = useState(String)
@@ -157,18 +159,30 @@ const SettingsProfile = (props: any) => {
                 })
                 .then((res: any) => {
                     console.log(res)
-                    handleEditSuccess();
+                    if(!res.code){
+                        handleEditSuccess();
+                    }
+                    else if(res.code == 101){
+                        setSaving(false);
+                        setErrorText("Username already in use.");
+                    }
+                    else{
+                        dispatch(openSnackbarError(res.message));
+                        setSaving(false);
+                        setErrorText('');
+                    }
                 })
             })
         }
 
         function handleEditSuccess(){
             dispatch(setCurrentUser(editedUser));
+            dispatch(openSnackbarInfo("Profile saved"))
             console.log(editedUser)
 
             setPhotoFile(null);
-            
             setSaving(false)
+            setErrorText('');
         }
 
         function uploadPhoto(photoFile: any, name: string, dimension: number){
@@ -180,7 +194,6 @@ const SettingsProfile = (props: any) => {
             uploadBytes(photoUploadRef, photoFile, metadata)
             .then((snapshot) => {
                 console.log("upload successful " + dimension)
-                setSaving(true);
 
                 getPhotoURL(photoUploadRef, dimension);
             });
@@ -207,11 +220,13 @@ const SettingsProfile = (props: any) => {
         }
 
         if(photoFile){
+            setSaving(true);
+
             console.log("post with photo upload")
             resizePhotos();
         }
         else{
-            setSaving(true)
+            setSaving(true);
             fetchEditUser();
         }
     } 
@@ -259,7 +274,7 @@ const SettingsProfile = (props: any) => {
                         </IconButton>
                         
                     </label>
-                <TextField fullWidth id="username-input" label="Username" value={usernameInput} onChange={ (e) => { setUsernameInput(e.target.value) } } disabled={isSaving} />
+                <TextField fullWidth id="username-input" label="Username" value={usernameInput} onChange={ (e) => { setUsernameInput(e.target.value) } } error={ errorText ? true : false } helperText={errorText} disabled={isSaving} />
                 <TextField fullWidth id="name-input" label="Name" value={nameInput} onChange={ (e) => { setNameInput(e.target.value) } } disabled={isSaving} />
                 <TextField fullWidth multiline minRows={3} id="bio-input" label="Bio" value={bioInput} onChange={ (e) => { setBioInput(e.target.value) } } disabled={isSaving} />
                 {

@@ -124,7 +124,7 @@ const Explore = () => {
                 <TabPanel index="top" value={value}>
                 <PageLabel>Tomates to follow</PageLabel>
                     <ExploreFeedUser top />
-                    <PageShowMore onClick={() => setValue("user")}>Show more</PageShowMore>
+                    <PageShowMore textPadding={1} height={60} onClick={() => setValue("user")}>Show more</PageShowMore>
                     <Divider />
                     <PageLabel>Top Posts</PageLabel>
                     { isLoaded ? <ExploreFeedTopPost /> : <PostSkeleton /> }

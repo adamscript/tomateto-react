@@ -6,9 +6,14 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { likeComment, unlikeComment } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../app/hooks";
 
 const PostLikeButton = (props: any) => {
     const dispatch = useDispatch();
+    const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
+
+    const navigate = useNavigate();
 
     const handleLike = () =>{
         function fetchLikePost(res: String){
@@ -59,26 +64,32 @@ const PostLikeButton = (props: any) => {
             })
         }
 
-        auth.currentUser?.getIdToken()
-        .then((res) => {
-            if(props.items.isLiked){
-                if(props.comment){
-                    fetchUnlikeComment(res);
+        if(isLoggedIn){
+            auth.currentUser?.getIdToken()
+            .then((res) => {
+                if(props.items.isLiked){
+                    if(props.comment){
+                        fetchUnlikeComment(res);
+                    }
+                    else{
+                        fetchUnlikePost(res);
+                    }
                 }
                 else{
-                    fetchUnlikePost(res);
+                    if(props.comment){
+                        fetchLikeComment(res);
+                    }
+                    else{
+                        fetchLikePost(res);
+                    }
                 }
-            }
-            else{
-                if(props.comment){
-                    fetchLikeComment(res);
-                }
-                else{
-                    fetchLikePost(res);
-                }
-            }
-        })
-
+            })
+        }
+        else{
+            navigate('/accounts/login', { state: { 
+                isLoggedIn: false
+            } })
+        }
     }
     
     return(

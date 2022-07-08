@@ -120,7 +120,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
             <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
                 <StyledAvatar src={currentUser.avatar.small} />
                 <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" spacing={1}>
-                    <InputBase inputRef={ref} fullWidth multiline value={content} onChange={(e) => {setContent(e.target.value)}} placeholder="Add a tomathought..." />
+                    <InputBase inputRef={ref} fullWidth multiline value={content} inputProps={{ maxLength: 2200 }} onChange={(e) => {setContent(e.target.value)}} placeholder="Add a tomathought..." />
                     <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
                         {
                             smUp && 

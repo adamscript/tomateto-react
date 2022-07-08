@@ -7,7 +7,7 @@ import { FeedPost } from "../post";
 import UserProfileComment from "./UserProfileComment";
 import UserProfileLiked from "./UserProfileLiked";
 import UserProfilePost from "./UserProfilePost";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { auth } from "../../firebase";
 
 function TabPanel(props: any) {
@@ -76,6 +76,8 @@ const UserPageTabs = (props: any) => {
     const authState = useAppSelector((state) => state.authState);
     const dispatch = useAppDispatch();
 
+    const location = useLocation();
+
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -108,7 +110,7 @@ const UserPageTabs = (props: any) => {
         else{
             fetchListFeedPost();
         }
-    }, [value])
+    })
     
     return(
         <Box>

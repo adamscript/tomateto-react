@@ -163,7 +163,7 @@ const PageLinkModal = (props: any) => {
             })
         }
 
-    }, [response]);
+    }, []);
 
     return(
         <Box>

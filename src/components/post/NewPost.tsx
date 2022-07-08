@@ -141,7 +141,7 @@ const NewPost = () => {
 
         function handlePostSuccess(){
             dispatch(insertPost(newPost));
-            dispatch(openSnackbarInfo("Your Post was sent"))
+            dispatch(openSnackbarInfo("Your post was sent"))
             console.log(newPost)
 
             setContent("");
@@ -210,7 +210,7 @@ const NewPost = () => {
             <Stack spacing={2} direction='row'>
                 <Avatar src={currentUser.avatar.small} />
                 <Stack sx={{ width: 1 }}>
-                    <InputBase inputRef={inputRef} multiline fullWidth minRows={2} value={content} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
+                    <InputBase inputRef={inputRef} multiline fullWidth minRows={2} value={content} inputProps={{ maxLength: 8000 }} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
                     {
                         photoURLPreview &&
                         <Box sx={{ position: 'relative', m: 1 }}>

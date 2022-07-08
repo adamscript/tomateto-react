@@ -1,8 +1,9 @@
-import { Stack, TextField, Button } from "@mui/material";
+import { Stack, TextField, Button, Alert } from "@mui/material";
 import { createUserWithEmailAndPassword, deleteUser, getIdToken } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { firebaseErrorHandling } from "../../features/utility";
 
 interface User {
     id: string;
@@ -16,6 +17,7 @@ const Signup = () => {
     const [usernameInput, setUsernameInput] = useState('');
     const [passwordInput, setPasswordInput] = useState('');
     const [isSignup, setSignup] = useState(false);
+    const [errorText, setErrorText] = useState('');
 
     const navigate = useNavigate();
 
@@ -64,8 +66,7 @@ const Signup = () => {
                 
             })
             .catch((error) => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
+                setErrorText(firebaseErrorHandling(error));
                 setSignup(false);
             })
         }
@@ -76,6 +77,7 @@ const Signup = () => {
 
     return(
         <Stack alignItems="center" justifyContent="center" spacing={3} sx={{ height: "100%" }}>
+            { errorText && <Alert severity="error">{errorText}</Alert> }
             <TextField id="name-input" label="Name" onChange={ (e) => {setNameInput(e.target.value)} } />
             <TextField id="email-input" label="Email" onChange={ (e) => {setEmailInput(e.target.value)} } />
             <TextField id="username-input" label="Username" onChange={ (e) => {setUsernameInput(e.target.value)} } />

@@ -2,6 +2,8 @@ import { alpha, styled } from "@mui/material";
 import { useState } from "react";
 import { auth } from "../../firebase";
 import { LoadingButton } from '@mui/lab';
+import { useAppSelector } from "../../app/hooks";
+import { useNavigate } from "react-router-dom";
 
 const UnfollowButton = styled(LoadingButton)(({ theme }) => ({
     color: theme.palette.text.primary, 
@@ -19,6 +21,10 @@ const PageFollowButton = (props: any) => {
     const [isFollowed, setFollowed] = useState(props.items.isFollowed);
     const [followedLabel, setFollowedLabel] = useState('Followed');
 
+    const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
+
+    const navigate = useNavigate();
+
     const handleFollow = () => {
         setLoading(true);
 
@@ -34,11 +40,18 @@ const PageFollowButton = (props: any) => {
                 setFollowed(true);
             })
         }
-        
-        auth.currentUser?.getIdToken()
-        .then((res) => {
-            fetchFollowUser(res);
-        })
+
+        if(isLoggedIn){
+            auth.currentUser?.getIdToken()
+            .then((res) => {
+                fetchFollowUser(res);
+            })
+        }
+        else{
+            navigate('/accounts/login', { state: { 
+                isLoggedIn: false
+            } })
+        }
     }
 
     const handleUnfollow = () => {

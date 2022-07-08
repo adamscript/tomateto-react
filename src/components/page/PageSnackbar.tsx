@@ -31,7 +31,7 @@ const PageSnackBar = () => {
             onClose={handleClose}
             sx={ !smDown ? { top: 30 } : { bottom: 140 } }
         >
-            <Alert onClose={handleClose} severity={snackbarSeverity == 'info' ? 'info' : 'error'} sx={{ width: '100%' }}>{snackbarMessage}</Alert>
+            <Alert onClose={handleClose} severity={snackbarSeverity == 'info' ? 'info' : 'error'} variant="filled" sx={{ width: '100%' }}>{snackbarMessage}</Alert>
         </Snackbar>
     )
 }

@@ -15,5 +15,6 @@ import PageShowMore from "./PageShowMore";
 import PageSideNavigation from "./PageSideNavigation";
 import PageEmojiButton from "./PageEmojiButton";
 import PageSnackbar from "./PageSnackbar";
+import PageNotFound from "./PageNotFound";
 
-export { PageAppBar, PageAvatarButton, PageBottomNavigation, PageEmojiButton, PageFabNewPost, PageSideNavigation, PageLabel, PageShowMore, PageSnackbar, PageBackLabel, PageLikeButton, PageLink, PageLinkModal, PagePhoto, PagePhotoModal, PageAccountMenu, PageFollowButton, PageShareButton, PageSearchInput };
+export { PageAppBar, PageAvatarButton, PageBottomNavigation, PageEmojiButton, PageFabNewPost, PageSideNavigation, PageLabel, PageShowMore, PageSnackbar, PageBackLabel, PageLikeButton, PageLink, PageLinkModal, PagePhoto, PagePhotoModal, PageAccountMenu, PageFollowButton, PageShareButton, PageSearchInput, PageNotFound };

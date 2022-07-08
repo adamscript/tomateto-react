@@ -1,5 +1,5 @@
 import '../App.css';
-import { PageAppBar, PageBottomNavigation, PageFabNewPost, PageLinkModal, PagePhotoModal, PageSearchInput, PageSideNavigation, PageSnackbar } from '../components/page';
+import { PageAppBar, PageBottomNavigation, PageFabNewPost, PageLinkModal, PageNotFound, PagePhotoModal, PageSearchInput, PageSideNavigation, PageSnackbar } from '../components/page';
 import { Box, Divider, Paper, Slide, Stack, useMediaQuery, useScrollTrigger } from '@mui/material';
 import { Container } from '@mui/system';
 import { styled, useTheme } from '@mui/material/styles';
@@ -83,7 +83,7 @@ function App() {
               <Box sx={{ width: 1, maxWidth: 600 }}>
                 <Routes location={state?.backgroundLocation || location}>
                   <Route index element={isLoggedIn ? <Home /> : <Navigate to="/explore" replace />} />
-                  <Route path="home" element={isLoggedIn ? <Home /> : <Navigate to="/explore" replace />} />
+                  <Route path="home" element={isLoggedIn ? <Navigate to="/" replace /> : <Navigate to="/explore" replace />} />
                   <Route path="explore" element={<Explore />} />
                   <Route path="search" element={<Search />} />
                   <Route path=":username/">
@@ -96,16 +96,18 @@ function App() {
                     <Route path="followers" element={<User />} />
                   </Route>
                   <Route path="settings/">
-                    <Route index element={<Settings />} />
-                    <Route path="profile" element={<SettingsProfile />} /> 
+                    <Route index element={isLoggedIn ? <Settings /> : <Navigate to="/explore" replace />} />
+                    <Route path="profile" element={isLoggedIn ? <SettingsProfile /> : <Navigate to="/explore" replace />} /> 
                     <Route path="account/">
-                      <Route index element={<SettingsAccount />} />
-                      <Route path="email" element={<SettingsEmail />} /> 
-                      <Route path="password" element={<SettingsPassword />} />
-                      <Route path="delete" element={<SettingsDelete />} />
+                      <Route index element={isLoggedIn ? <SettingsAccount /> : <Navigate to="/explore" replace />} />
+                      <Route path="email" element={isLoggedIn ? <SettingsEmail /> : <Navigate to="/explore" replace />} /> 
+                      <Route path="password" element={isLoggedIn ? <SettingsPassword /> : <Navigate to="/explore" replace />} />
+                      <Route path="delete" element={isLoggedIn ? <SettingsDelete /> : <Navigate to="/explore" replace />} />
                     </Route>
                   </Route>
                   <Route path="compose/post" element={<Navigate to="/" replace />} />
+                  <Route path="404" element={<PageNotFound />} />
+                  <Route path="*" element={<Navigate to="/404" replace />} />
                 </Routes>
                 {
                   <Routes>
@@ -130,7 +132,7 @@ function App() {
             </Stack>
           </AppContainer>
         </Box>
-        <PageFabNewPost />
+        { isLoggedIn && <PageFabNewPost /> }
         <Offset />
         {
           !location.pathname.includes('/post/') &&

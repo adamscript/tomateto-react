@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
+import { firebaseErrorHandling } from "../../features/utility";
 
 const SettingsPassword = () => {
     const [oldPasswordInput, setOldPasswordInput] = useState('');
@@ -13,6 +14,8 @@ const SettingsPassword = () => {
     const [confirmPasswordInput, setConfirmPasswordInput] = useState('');
 
     const [isLoading, setLoading] = useState(false);
+    const [errorText, setErrorText] = useState('');
+    const [errorAlertMessage, setErrorAlertMessage] = useState('');
     
     const navigate = useNavigate();
     const location = useLocation();
@@ -32,7 +35,27 @@ const SettingsPassword = () => {
                 setOldPasswordInput('');
                 setNewPasswordInput('');
                 setConfirmPasswordInput('');
+                setErrorText('');
+                setErrorAlertMessage('');
             })
+            .catch((err) => {
+                setLoading(false);
+
+                setErrorAlertMessage(firebaseErrorHandling(err));
+                setErrorText('');
+            })
+        })
+        .catch((err) => {
+            setLoading(false);
+
+            if(err.code == 'auth/wrong-password'){
+                setErrorText(firebaseErrorHandling(err));
+                setErrorAlertMessage('');
+            }
+            else{
+                setErrorAlertMessage(firebaseErrorHandling(err));
+                setErrorText('');
+            }
         })
     }
 
@@ -46,14 +69,15 @@ const SettingsPassword = () => {
             </Stack>
             <Stack spacing={2}>
                 { isLoading && <LinearProgress /> }
-                <TextField id="oldpassword-input" label="Old password" value={oldPasswordInput} type="password" onChange={ (e) => {setOldPasswordInput(e.target.value)} } />
+                <TextField id="oldpassword-input" label="Old password" value={oldPasswordInput} type="password" onChange={ (e) => {setOldPasswordInput(e.target.value)} } error={errorText ? true : false} helperText={errorText} />
                 <Divider />
                 <TextField id="newpassword-input" label="New password" value={newPasswordInput} type="password" onChange={ (e) => {setNewPasswordInput(e.target.value)} } />
                 <TextField id="confirmpassword-input" label="Confirm new password" value={confirmPasswordInput} type="password" onChange={ (e) => {setConfirmPasswordInput(e.target.value)} } />
                 <Divider />
                 <Stack direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent={ confirmPasswordInput ? "space-between" : "end" }>
-                    { confirmPasswordInput && <Alert severity={ newPasswordInput != confirmPasswordInput ? "warning" : "success" }>{ newPasswordInput != confirmPasswordInput ? "Password does not match" : "Password matched" }</Alert> }
-                    <Button variant="contained" onClick={handleChangePassword} disabled={ !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Update password</Button>
+                    { !errorAlertMessage && confirmPasswordInput && <Alert severity={ newPasswordInput != confirmPasswordInput ? "warning" : "success" }>{ newPasswordInput != confirmPasswordInput ? "Password does not match" : "Password matched" }</Alert> }
+                    { errorAlertMessage && <Alert severity="error">{errorAlertMessage}</Alert> }
+                    <Button variant="contained" onClick={handleChangePassword} disabled={ !oldPasswordInput || !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Update password</Button>
                 </Stack>
             </Stack>
         </Box>

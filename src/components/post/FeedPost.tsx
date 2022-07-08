@@ -4,7 +4,19 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 
 import { useNavigate } from "react-router-dom";
 import PostMenu from "./PostMenu";
-import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton } from "../page";
+import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton, PageShowMore } from "../page";
+
+const Content = styled(Typography)(({ theme }) => ({
+
+    wordWrap: "break-word", 
+    whiteSpace: "pre-line",
+
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical"
+
+})) as typeof Typography;
 
 const FeedPost = (props: any) => {
     const navigate = useNavigate();
@@ -27,9 +39,9 @@ const FeedPost = (props: any) => {
                                 {props.items.isMine && <PostMenu items={props.items} />}
                             </Stack>
                             <Stack spacing={1}>
-                                <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
+                                <Content sx={{ WebkitLineClamp: '4' }}>
                                     {props.items.content}
-                                </Typography>
+                                </Content>
                                 {props.items.photo && <PagePhoto items={props.items} />}
                             </Stack>
                         </Stack>
@@ -46,7 +58,8 @@ const FeedPost = (props: any) => {
                     </Stack>
                 </Stack>
             </CardContent>
-        <Divider variant="middle" />
+            { props.items.content.length > 280 || props.items.content.match(/\r\n|\r|\n/g) && props.items.content.match(/\r\n|\r|\n/g).length >= 4 ? <PageShowMore textPadding={8} height={40} onClick={ () => { navigate(`/${props.items.user.username}/post/${props.items.id}`) }}>Show this post</PageShowMore> : <></> }
+            <Divider variant="middle" />
         </Card>
         </>
     )

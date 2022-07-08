@@ -13,6 +13,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { auth } from "../../firebase";
 import { TransitionProps } from "@mui/material/transitions";
 import { PageEmojiButton } from "../page";
+import { openSnackbarInfo } from "../../features/app/snackbarSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Avatar{
     default: string;
@@ -73,6 +75,9 @@ const PostMenu = (props: any) => {
     const [deleteAlertOpen, setDeleteAlertOpen] = useState(false);
 
     const dispatch = useAppDispatch();
+
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -164,7 +169,13 @@ const PostMenu = (props: any) => {
                 })
             .then((res) => {
                 setDeleteAlertOpen(false);
+
+                if(location.pathname.includes('/post/')){
+                    navigate('/');
+                }
+
                 dispatch(deletePost(props.items));
+                dispatch(openSnackbarInfo("Your post was deleted"));
             })
         }
         
@@ -285,7 +296,7 @@ const PostMenu = (props: any) => {
                     <Stack direction="row" spacing={2} sx={{ p: 2 }}>
                         <Avatar />
                         <Stack sx={{ width: "100%" }}>
-                            <InputBase inputRef={inputRef} autoFocus multiline fullWidth minRows={2} defaultValue={props.items.content} disabled={isEditSaving} onChange={ (e) => {setEditContent(e.target.value)} } placeholder="What's on your to-mind?" />
+                            <InputBase inputRef={inputRef} autoFocus multiline fullWidth minRows={2} defaultValue={props.items.content} inputProps={{ maxLength: 8000 }} disabled={isEditSaving} onChange={ (e) => {setEditContent(e.target.value)} } placeholder="What's on your to-mind?" />
                             <Stack direction="row" justifyContent={ smDown ? "end" : "space-between" }>
                                 {
                                     !smDown &&

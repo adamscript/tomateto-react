@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { Login, Signup } from "../components/accounts";
+import { PageNotFound } from "../components/page";
 import { auth } from "../firebase";
 
 const Accounts = () => {
@@ -13,6 +14,7 @@ const Accounts = () => {
             <Routes>
                 <Route path="login" element={isLoggedIn ? <Navigate to="/home" replace /> : <Login />} />
                 <Route path="signup" element={isLoggedIn ? <Navigate to="/home" replace /> : <Signup />} />
+                <Route path="*" element={<Navigate to="/404" replace />} />
             </Routes>
         </Box>
     )

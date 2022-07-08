@@ -5,9 +5,15 @@ import { auth } from "../../firebase";
 import { PageLabel } from "../page";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
+import { firebaseErrorHandling } from "../../features/utility";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
+import { useDispatch } from "react-redux";
 
 const SettingsDelete = () => {
     const [passwordInput, setPasswordInput] = useState('');
+    const [errorText, setErrorText] = useState('');
+
+    const dispatch = useDispatch();
     
     const navigate = useNavigate();
     const location = useLocation();
@@ -22,6 +28,12 @@ const SettingsDelete = () => {
             .then(() => {
                 navigate('/');
             })
+            .catch((err) => {
+                dispatch(openSnackbarError(firebaseErrorHandling(err)));
+            })
+        })
+        .catch((err) => {
+            setErrorText(firebaseErrorHandling(err));
         })
     }
 
@@ -38,10 +50,10 @@ const SettingsDelete = () => {
                     Confirm your password
                 </Typography>
                 <Divider />
-                <TextField id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} />
+                <TextField id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} error={errorText ? true : false} helperText={errorText} />
                 <Stack spacing={2} direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent="space-between">
                     <Alert severity="warning">This action will permanently delete your account</Alert>
-                    <Button variant="contained" sx={{ backgroundColor: 'red' }} onClick={handleDeleteAccount}>Delete</Button>
+                    <Button variant="contained" color="error" onClick={handleDeleteAccount}>Delete</Button>
                 </Stack>
             </Stack>
         </Box>

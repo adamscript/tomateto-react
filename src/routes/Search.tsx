@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -83,14 +83,25 @@ const Search = () => {
     }, [postLoaded, userLoaded])
 
     return(
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: !isLoaded ? 'center' : 'start' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: !isLoaded ? 'center' : 'stretch' }}>
             {listSearchUser.length > 0 && <PageLabel>Tomates</PageLabel>}
             {listSearchUser}
             {listSearchPost.length > 0 && <PageLabel>Posts</PageLabel>}
             {listSearchPost}
             {!isLoaded && <CircularProgress />}
             {!searchParams.get('q') && <Navigate to='/explore' />}
-            {listSearchUser.length == 0 && listSearchPost.length == 0 && <Typography variant='h5'>No result found for "{searchParams.get('q')}"</Typography>}
+            {listSearchUser.length == 0 && listSearchPost.length == 0 && <NoSearchFound q={searchParams.get('q')} />}
+        </Box>
+    )
+}
+
+const NoSearchFound = (props: any) => {
+    return(
+        <Box sx={{ p: 5 }}>
+            <Stack spacing={3} alignItems="center" justifyContent="center">    
+                <Typography variant="h5" align="center" sx={{ fontWeight: 700 }}>No results found for "{props.q}"</Typography>
+                <Typography align="center">Try searching with less or different keywords.</Typography>
+            </Stack>
         </Box>
     )
 }

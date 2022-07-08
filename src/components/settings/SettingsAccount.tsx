@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
+import { firebaseErrorHandling } from "../../features/utility";
 
 const PasswordChar = (props: any) => {
     const [password, setPassword] = useState(String);
@@ -33,6 +34,7 @@ const SettingsAccount = () => {
     const [passwordInput, setPasswordInput] = useState('');
     
     const [isLoading, setLoading] = useState(false);
+    const [errorText, setErrorText] = useState('');
     
     const navigate = useNavigate();
     const location = useLocation();
@@ -48,6 +50,11 @@ const SettingsAccount = () => {
         .then(() => {
             setReauthenticated(true);
             setLoading(false);
+            setErrorText('');
+        })
+        .catch((err) => {
+            setLoading(false);
+            setErrorText(firebaseErrorHandling(err));
         })
     }
 
@@ -110,7 +117,7 @@ const SettingsAccount = () => {
                         Confirm your password
                     </Typography>
                     <Divider />
-                    <TextField id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} disabled={isLoading} />
+                    <TextField id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} error={errorText ? true : false} helperText={errorText} disabled={isLoading} />
                     <Stack spacing={2} direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent="end">
                         <Button variant="contained" onClick={handleConfirm} disabled={isLoading}>Confirm</Button>
                     </Stack>

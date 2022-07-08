@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { Box, createTheme, CssBaseline, Paper, styled, ThemeProvider } from '@mui/material';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Accounts, App } from './routes';
 import { auth } from './firebase';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { deleteCurrentUser, setCurrentUser } from './features/user/currentUserSlice';
 import { setAuthState } from './features/user/authStateSlice';
-import { PageSnackbar } from './components/page';
+import { PageNotFound, PageSnackbar } from './components/page';
 
 const lightTheme = createTheme({
   palette: {
@@ -199,6 +199,7 @@ function Page() {
         <Routes>
           <Route path="/*" element={isLoaded ? <App /> : <div>Loading...</div>} />
           <Route path="accounts/*" element={isLoaded ? <Accounts /> : <div>Loading...</div>} />
+          <Route path="*" element={isLoaded ? <Navigate to="/404" replace /> : <div>Loading...</div>} />
         </Routes>
       </Foreground>
       <Background />

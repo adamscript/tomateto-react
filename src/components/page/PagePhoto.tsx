@@ -8,13 +8,25 @@ const PagePhoto = (props: any) => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    console.log(location)
+
     const handleClick = () => {
-        navigate(`/${props.items.user.username}/post/${props.items.id}/photo`, {
-            state: {
-                backgroundLocation: location,
-                photo: props.items.photo
-            }
-        });
+        if(location.pathname == '/search'){
+            navigate(`/${props.items.user.username}/post/${props.items.id}`, {
+                state: {
+                    photo: props.items.photo
+                }
+            })
+        }
+        else{
+            navigate(`/${props.items.user.username}/post/${props.items.id}/photo`, {
+                state: {
+                    backgroundLocation: location,
+                    photo: props.items.photo
+                }
+            })
+        }
+
     }
 
     return(

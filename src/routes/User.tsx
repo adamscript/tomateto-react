@@ -61,8 +61,13 @@ const User = () => {
                 return res.json();
             })
             .then((res) => {
-                setResponse(res.items);
-                setLoaded(true)
+                if(!res.code){
+                    setResponse(res.items);
+                    setLoaded(true)
+                }
+                else{
+                    navigate('/404');
+                }
             })
         }
         
@@ -76,7 +81,7 @@ const User = () => {
             fetchListUser();
         }
 
-    }, [username])
+    }, [location])
 
     return(
         isLoaded ?
