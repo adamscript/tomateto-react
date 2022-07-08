@@ -83,7 +83,7 @@ const Search = () => {
     }, [postLoaded, userLoaded])
 
     return(
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: !isLoaded ? 'center' : 'start' }}>
             {listSearchUser.length > 0 && <PageLabel>Tomates</PageLabel>}
             {listSearchUser}
             {listSearchPost.length > 0 && <PageLabel>Posts</PageLabel>}

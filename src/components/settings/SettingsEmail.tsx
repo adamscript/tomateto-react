@@ -50,7 +50,7 @@ const SettingsEmail = () => {
                 </IconButton>
                 <PageLabel>Change Email</PageLabel>
             </Stack>
-            { isLoading && <LinearProgress /> }
+            { !isLoading && <LinearProgress /> }
             {
                 isReauthenticated ?
                 <Stack spacing={2}>

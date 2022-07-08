@@ -3,7 +3,7 @@ import NewPost from "./NewPost";
 
 const FeedNewPost = () => {
     return(
-        <Box sx={{ mt: 3 }}>
+        <Box>
             <NewPost />
             <Divider variant="middle" />
         </Box>

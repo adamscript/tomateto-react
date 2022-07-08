@@ -203,9 +203,10 @@ const NewPost = () => {
     }, [photoURLPreview])
 
     return(
-        <Box sx={{ p: 2, pb: 1 }}>
+        <Box>
             {isPosting && <LinearProgress />}
             {isUploading && <LinearProgress variant="determinate" value={uploadProgress} />}
+            <Box sx={{ p: 2, pb: 1 }}>
             <Stack spacing={2} direction='row'>
                 <Avatar src={currentUser.avatar.small} />
                 <Stack sx={{ width: 1 }}>
@@ -231,6 +232,7 @@ const NewPost = () => {
                     </Stack>
                 </Stack>
             </Stack>
+        </Box>
         </Box>
     )
 };

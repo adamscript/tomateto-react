@@ -52,7 +52,7 @@ const SettingsAccount = () => {
     }
 
     return(
-        <Box>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isLoading ? 'center' : 'start' }}>
             <Stack spacing={2} direction="row" alignItems="center" sx={{ width: '100%' }}>
                 <IconButton onClick={ () => {navigate('../..')} }>
                     <ArrowBackIcon />
@@ -105,7 +105,7 @@ const SettingsAccount = () => {
                     </List>
                 </Stack>
                 :
-                <Stack spacing={2}>
+                <Stack spacing={2} width='100%'>
                     <Typography variant="h6">
                         Confirm your password
                     </Typography>

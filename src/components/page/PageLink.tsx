@@ -1,4 +1,4 @@
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Slide, Stack, styled, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Slide, Stack, styled, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { forwardRef, ReactElement, Ref, useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
@@ -64,12 +64,15 @@ const PageLink = (props: any) => {
     return(
         <Box zIndex={1}>
             {
-                (props.user && <LinkTypography noWrap component={Link} to={`/${props.items.username}`} state={{ location: location }} sx={{ color: theme => theme.palette.text.primary, fontWeight: '700', fontSize: 16 }}>{props.items.displayName}</LinkTypography>) ||
-                (props.post && <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.id}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>) ||
                 (props.comment && <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.post}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>) ||
                 (props.following && <LinkTypography component={Link} to="following" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followCount}</LinkTypographyNumber> Following{ props.items.followCount > 1 && 's' }</LinkTypography>) ||
                 (props.followers && <LinkTypography component={Link} to="followers" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followersCount}</LinkTypographyNumber> Follower{ props.items.followersCount > 1 && 's' }</LinkTypography>) ||
-                (props.likes && <LinkTypography component={Link} to="likes" state={{ backgroundLocation: location, post: props.items.id }}><LinkTypographyNumber display="inline">{props.items.likesCount}</LinkTypographyNumber> Like{ props.items.likesCount > 1 && 's' }</LinkTypography>)
+                (props.likes && <LinkTypography component={Link} to="likes" state={{ backgroundLocation: location, post: props.items.id }}><LinkTypographyNumber display="inline">{props.items.likesCount}</LinkTypographyNumber> Like{ props.items.likesCount > 1 && 's' }</LinkTypography>) ||
+                (props.user && <LinkTypography noWrap component={Link} to={`/${props.items.username}`} state={{ location: location }} sx={{ color: theme => theme.palette.text.primary, fontWeight: '700', fontSize: 16 }}>{props.items.displayName}</LinkTypography>) ||
+                (props.post && 
+                <Tooltip title={format(parseISO(props.items.date), "PPPP 'at' HH:mm")}>
+                    <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.id}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>
+                </Tooltip>)
             }
         </Box>
     )

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { ExploreFeedLatestPost, ExploreFeedTopPost, ExploreFeedUser } from "../components/explore";
 import { PageLabel, PageSearchInput, PageShowMore } from "../components/page";
+import { PostSkeleton } from "../components/post";
 import { loadPosts } from "../features/post/feedPostSlice";
 import { auth } from "../firebase";
 
@@ -119,29 +120,24 @@ const Explore = () => {
                 </StyledTabs>
                 <Divider />
             </Box>
-            {isLoaded ?
             <Box>
                 <TabPanel index="top" value={value}>
-                    {
-                        authState.isLoggedIn &&
-                        <><PageLabel>Tomates to follow</PageLabel>
-                        <ExploreFeedUser top />
-                        <PageShowMore onClick={() => setValue("user")}>Show more</PageShowMore>
-                        <Divider /></>
-                    }
+                <PageLabel>Tomates to follow</PageLabel>
+                    <ExploreFeedUser top />
+                    <PageShowMore onClick={() => setValue("user")}>Show more</PageShowMore>
+                    <Divider />
                     <PageLabel>Top Posts</PageLabel>
-                    <ExploreFeedTopPost />
+                    { isLoaded ? <ExploreFeedTopPost /> : <PostSkeleton /> }
                 </TabPanel>
                 <TabPanel index="latest" value={value}>
                     <PageLabel>Latest Posts</PageLabel>
-                    <ExploreFeedLatestPost />
+                    { isLoaded ? <ExploreFeedLatestPost /> : <PostSkeleton /> }
                 </TabPanel>
                 <TabPanel index="user" value={value}>
                     <PageLabel>Tomates for you</PageLabel>
                     <ExploreFeedUser />
                 </TabPanel>
             </Box>
-            : <div>Loading...</div>}
         </Box>
     )
 }

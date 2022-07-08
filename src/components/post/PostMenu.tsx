@@ -274,18 +274,18 @@ const PostMenu = (props: any) => {
             <Dialog open={editPostOpen} fullScreen={ smDown ? true : false } onClose={handleEditPostClose} fullWidth maxWidth="sm"
                 PaperProps={{ sx: { position: "absolute", top: smDown ? 0 : 60 } }}
                 TransitionComponent={ smDown ? Transition : undefined }>
-                <Box sx={{ p: 1 }}>
-                    <Stack direction="row" spacing={2} alignItems="center">
+                <Box>
+                    <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 1 }}>
                         <IconButton onClick={handleEditPostClose}>
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6">Edit Post</Typography>
                     </Stack>
                     { isEditSaving && <LinearProgress /> }
-                    <Stack direction="row" spacing={2} sx={{ p: 1 }}>
+                    <Stack direction="row" spacing={2} sx={{ p: 2 }}>
                         <Avatar />
                         <Stack sx={{ width: "100%" }}>
-                            <InputBase inputRef={inputRef} autoFocus multiline fullWidth defaultValue={props.items.content} disabled={isEditSaving} onChange={ (e) => {setEditContent(e.target.value)} } placeholder="What's on your to-mind?" />
+                            <InputBase inputRef={inputRef} autoFocus multiline fullWidth minRows={2} defaultValue={props.items.content} disabled={isEditSaving} onChange={ (e) => {setEditContent(e.target.value)} } placeholder="What's on your to-mind?" />
                             <Stack direction="row" justifyContent={ smDown ? "end" : "space-between" }>
                                 {
                                     !smDown &&

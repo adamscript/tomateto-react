@@ -32,7 +32,7 @@ const ModalNewPost = () => {
                 PaperProps={{ sx: { position: "absolute", top: smDown ? 0 : 60 } }}
                 TransitionComponent={ smDown ? Transition : undefined }>
                 <Box>
-                    <Box sx={{ pt: 1, pl: 1 }}>
+                    <Box sx={{ p: 1 }}>
                         <IconButton onClick={handleClose}>
                             <CloseIcon />
                         </IconButton>

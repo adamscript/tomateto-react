@@ -1,7 +1,7 @@
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { FeedNewPost, FeedPost } from "../components/post";
+import { FeedNewPost, FeedPost, PostSkeleton } from "../components/post";
 import { loadPosts } from "../features/post/feedPostSlice";
 import { auth } from "../firebase";
 
@@ -43,7 +43,7 @@ const Home = () => {
     return(
         <Box>
             { smUp && <FeedNewPost /> }
-            {isLoaded ? listFeedPost : <div>Loading...</div>}
+            { isLoaded ? listFeedPost : <PostSkeleton /> }
         </Box>
     )
 }
