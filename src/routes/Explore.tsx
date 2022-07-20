@@ -81,7 +81,7 @@ const Explore = () => {
     useEffect(() => {
         function fetchListFeedPost(res?: String){
             if(value == "top" || value == "latest"){
-                fetch(`http://localhost:8080/api/feed/${value}`, {
+                fetch(`${process.env.REACT_APP_API_URL}/api/feed/${value}`, {
                     mode: 'cors',
                     headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
                 })

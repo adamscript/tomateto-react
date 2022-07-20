@@ -119,7 +119,7 @@ const NewPost = () => {
         function fetchInsertPost(){
             auth.currentUser?.getIdToken()
             .then((res) => {
-                fetch('http://localhost:8080/api/post', {
+                fetch(`${process.env.REACT_APP_API_URL}/api/post`, {
                     mode: 'cors',
                     method: 'POST',
                     headers: {'Content-Type': 'application/json',

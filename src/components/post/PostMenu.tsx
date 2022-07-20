@@ -120,7 +120,7 @@ const PostMenu = (props: any) => {
         setEditSaving(true);
 
         function fetchEditPost(res: String){
-            fetch('http://localhost:8080/api/post', {
+            fetch(`${process.env.REACT_APP_API_URL}/api/post`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ const PostMenu = (props: any) => {
 
     const handleDelete = () => {
         function fetchDeletePost(res: String){
-            fetch(`http://localhost:8080/api/post/${props.items.id}/delete`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/delete`, {
                     mode: 'cors',
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json',

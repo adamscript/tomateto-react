@@ -29,7 +29,7 @@ const Home = () => {
 
     useEffect(() => {
         function fetchListFeedPost(res: String){
-            fetch("http://localhost:8080/api/feed/following", { 
+            fetch(`${process.env.REACT_APP_API_URL}/api/feed/following`, { 
                 mode: 'cors',
                 headers: {'Authorization': `Bearer ${res}`} 
             })

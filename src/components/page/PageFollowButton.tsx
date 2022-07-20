@@ -29,7 +29,7 @@ const PageFollowButton = (props: any) => {
         setLoading(true);
 
         function fetchFollowUser(res: String){
-            fetch(`http://localhost:8080/api/user/${props.items.id}/follow`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/${props.items.id}/follow`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const PageFollowButton = (props: any) => {
         setLoading(true);
 
         function fetchFollowUser(res: String){
-            fetch(`http://localhost:8080/api/user/${props.items.id}/unfollow`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/${props.items.id}/unfollow`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',

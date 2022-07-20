@@ -83,7 +83,7 @@ const UserPageTabs = (props: any) => {
 
     useEffect(() => {
         function fetchListFeedPost(res?: String){
-            fetch(`http://localhost:8080/api/user/profile/${props.response.id}/${value}`, { 
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/profile/${props.response.id}/${value}`, { 
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'} 
             })

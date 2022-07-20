@@ -85,7 +85,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
     const handleComment = () => {
 
         function fetchInsertComment(res: String){
-            fetch('http://localhost:8080/api/comment', {
+            fetch(`${process.env.REACT_APP_API_URL}/api/comment`, {
                 mode: 'cors',
                 method: 'POST',
                 headers: {'Content-Type': 'application/json',

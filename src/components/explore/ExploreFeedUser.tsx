@@ -16,7 +16,7 @@ const ExploreFeedUser = (props: any) => {
 
     useEffect(() => {
         function fetchListFeedUser(res?: String){
-            fetch("http://localhost:8080/api/user/explore", { 
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/explore`, { 
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'} 
             })

@@ -18,7 +18,7 @@ const PostContentComment = (props: any) => {
     useEffect(() => {
 
         function fetchListComment(res?: String){
-            fetch(`http://localhost:8080/api/post/content/${props.response.id}/comments`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/post/content/${props.response.id}/comments`, {
                     mode: 'cors',
                     headers: {'Content-Type': 'application/json',
                                 'Authorization': res ? `Bearer ${res}` : 'none'}

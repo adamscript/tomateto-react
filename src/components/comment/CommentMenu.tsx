@@ -56,7 +56,7 @@ const CommentMenu = (props: any) => {
 
     const handleDelete = () => {
         function fetchDeleteComment(res: String){
-            fetch(`http://localhost:8080/api/comment/${props.items.id}/delete`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/delete`, {
                     mode: 'cors',
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json',

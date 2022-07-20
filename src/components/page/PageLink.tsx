@@ -101,7 +101,7 @@ const PageLinkModal = (props: any) => {
     useEffect(() => {
 
         function fetchListUserFollowing(res?: String){
-            fetch(`http://localhost:8080/api/user/${username}/follows`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/${username}/follows`, {
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
             })
@@ -114,7 +114,7 @@ const PageLinkModal = (props: any) => {
         }
 
         function fetchListUserFollowers(res?: String){
-            fetch(`http://localhost:8080/api/user/${username}/followers`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/${username}/followers`, {
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
             })
@@ -127,7 +127,7 @@ const PageLinkModal = (props: any) => {
         }
 
         function fetchListPostLikes(res?: String){
-            fetch(`http://localhost:8080/api/post/content/${postId}/likes`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/post/content/${postId}/likes`, {
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
             })

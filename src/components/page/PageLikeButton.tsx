@@ -17,7 +17,7 @@ const PostLikeButton = (props: any) => {
 
     const handleLike = () =>{
         function fetchLikePost(res: String){
-            fetch(`http://localhost:8080/api/post/${props.items.id}/like`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/like`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ const PostLikeButton = (props: any) => {
         }
 
         function fetchUnlikePost(res: String){
-            fetch(`http://localhost:8080/api/post/${props.items.id}/unlike`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/unlike`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ const PostLikeButton = (props: any) => {
         }
 
         function fetchLikeComment(res: String){
-            fetch(`http://localhost:8080/api/comment/${props.items.id}/like`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/like`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ const PostLikeButton = (props: any) => {
         }
 
         function fetchUnlikeComment(res: String){
-            fetch(`http://localhost:8080/api/comment/${props.items.id}/unlike`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/unlike`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',

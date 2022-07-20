@@ -171,7 +171,7 @@ function Page() {
 
         if(user){
           console.log("logged in");
-          fetch(`http://localhost:8080/api/user/${user.uid}`, { mode: 'cors' })
+          fetch(`${process.env.REACT_APP_API_URL}/api/user/${user.uid}`, { mode: 'cors' })
           .then((res) => {
               return res.json();
           })

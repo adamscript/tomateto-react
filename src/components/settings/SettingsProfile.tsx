@@ -139,7 +139,7 @@ const SettingsProfile = (props: any) => {
 
             auth.currentUser?.getIdToken()
             .then((res) => {
-                fetch('http://localhost:8080/api/user', {
+                fetch(`${process.env.REACT_APP_API_URL}/api/user`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',

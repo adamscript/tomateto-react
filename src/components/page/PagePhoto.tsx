@@ -8,8 +8,6 @@ const PagePhoto = (props: any) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    console.log(location)
-
     const handleClick = () => {
         if(location.pathname == '/search'){
             navigate(`/${props.items.user.username}/post/${props.items.id}`, {
@@ -51,7 +49,7 @@ const PagePhotoModal = () => {
 
     useEffect(() => {
         function fetchPostPhoto(){
-            fetch(`http://localhost:8080/api/post/content/${postId}/`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/post/content/${postId}/`, {
                 mode: 'cors'
             })
             .then((res) => {

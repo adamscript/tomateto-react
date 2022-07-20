@@ -32,7 +32,7 @@ const Search = () => {
 
     useEffect(() => {
         function fetchListSearchPost(res?: String){
-            fetch(`http://localhost:8080/api/feed/search?q=${searchParams}`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/feed/search?q=${searchParams}`, {
                     mode: 'cors',
                     headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
                 })
@@ -46,7 +46,7 @@ const Search = () => {
         }
 
         function fetchListSearchUser(res?: String){
-            fetch(`http://localhost:8080/api/user/search?q=${searchParams}`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/search?q=${searchParams}`, {
                     mode: 'cors',
                     headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
                 })
