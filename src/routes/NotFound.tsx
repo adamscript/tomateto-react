@@ -9,7 +9,7 @@ const LinkTypography = styled(Typography)(({ theme }) => ({
     }
 })) as typeof Typography;
 
-const PageNotFound = () => {
+const NotFound = () => {
     return(
         <Box sx={{ p: 5 }}>
             <Stack spacing={5} alignItems="center" justifyContent="center">    
@@ -20,4 +20,4 @@ const PageNotFound = () => {
     )
 }
 
-export default PageNotFound;
+export default NotFound;

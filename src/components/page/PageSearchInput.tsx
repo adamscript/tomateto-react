@@ -1,10 +1,13 @@
-import { alpha, Box, ClickAwayListener, Grow, IconButton, InputBase, MenuItem, MenuList, Paper, Popper, Slide, styled, Typography, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
+import { alpha, Box, ClickAwayListener, Grow, IconButton, InputBase, MenuItem, MenuList, Paper, Popper, SvgIcon, styled, Typography, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
 import { useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import { ReactComponent as TomatetoLightIcon } from "../../logos/tomatetolight-icon.svg";
+import { useAppSelector } from "../../app/hooks";
 
 const Search = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -54,9 +57,8 @@ const SearchContainer = styled(Box)(({ theme }) => ({
 
     [theme.breakpoints.down('sm')]: {
         backgroundColor: theme.palette.background.default,
-        position: 'fixed',
-        width: 'calc(100vw - 24px)',
-        zIndex: 3
+        paddingBottom: 4,
+        width: '100%'
     }
 })) as typeof Box;
 
@@ -92,22 +94,6 @@ const SearchMenu = (props: any) => {
     )
 }
 
-const HideOnScroll = (props: any) => {
-    const { children } = props;
-    const scrollTrigger = useScrollTrigger();
-
-    const theme = useTheme();
-    const smDown = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const location = useLocation();
-  
-    return(
-      <Slide appear={false} direction="down" in={ smDown && location.pathname == '/explore' ? !scrollTrigger : true }>
-        {children}
-      </Slide>
-    )
-  }
-
 const PageSearchInput = () => {
     const [searchMenuOpen, setSearchMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(String);
@@ -116,6 +102,8 @@ const PageSearchInput = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+
+    const isLoggedIn = useAppSelector(state => state.authState.isLoggedIn);
 
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -152,30 +140,32 @@ const PageSearchInput = () => {
     }
 
     return(
-        <Box>
-            <HideOnScroll>
-                <SearchContainer>
-                    {
-                        smDown && location.pathname == '/search' &&
-                        <IconButton onClick={handleSearchBack} size='small'>
-                            <ArrowBackIcon />
-                        </IconButton>
-                    }
-                    <Search ref={searchRef}>
-                        { smDown && location.pathname == '/search' ? <></> : <SearchIconWrapper><SearchIcon /></SearchIconWrapper> }
-                        <SearchInput inputRef={searchInputRef} onChange={handleSearch} value={searchQuery} onKeyPress={(e) => { e.key === 'Enter' && searchQuery && handleSearchSubmit() }} placeholder="Search Tomateto" />
-                        {
-                            searchQuery &&
-                            <IconButtonWrapper>
-                                <IconButton size='small' onClick={handleSearchClear}>
-                                    <ClearIcon />
-                                </IconButton>
-                            </IconButtonWrapper>
-                        }
-                    </Search>
-                    <SearchMenu open={searchMenuOpen} anchorEl={searchRef} onClose={handleSearchClose} onClick={handleSearchSubmit} query={searchQuery} />
-                </SearchContainer>
-            </HideOnScroll>
+        <Box >
+              <SearchContainer>
+                  {
+                      smDown && location.pathname == '/explore' && !isLoggedIn &&
+                      <SvgIcon sx={{ width: '36px', height: '36px' }} component={TomatetoLightIcon} inheritViewBox />
+                  }
+                  {
+                      smDown && location.pathname == '/search' &&
+                      <IconButton onClick={handleSearchBack} size='small'>
+                          <ArrowBackIcon />
+                      </IconButton>
+                  }
+                  <Search ref={searchRef}>
+                      { smDown && location.pathname == '/search' ? <></> : <SearchIconWrapper><SearchIcon /></SearchIconWrapper> }
+                      <SearchInput inputRef={searchInputRef} onChange={handleSearch} value={searchQuery} onKeyPress={(e) => { e.key === 'Enter' && searchQuery && handleSearchSubmit() }} placeholder="Search Tomateto" />
+                      {
+                          searchQuery &&
+                          <IconButtonWrapper>
+                              <IconButton size='small' onClick={handleSearchClear}>
+                                  <ClearIcon />
+                              </IconButton>
+                          </IconButtonWrapper>
+                      }
+                  </Search>
+                  <SearchMenu open={searchMenuOpen} anchorEl={searchRef} onClose={handleSearchClose} onClick={handleSearchSubmit} query={searchQuery} />
+              </SearchContainer>
         </Box>
     )
 }

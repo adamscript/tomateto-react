@@ -6,5 +6,6 @@ import Accounts from "./Accounts";
 import App from "./App";
 import Search from "./Search";
 import Settings from "./Settings";
+import NotFound from "./NotFound";
 
-export { Home, Explore, Post, User, Accounts, App, Search, Settings };
+export { Home, Explore, Post, User, Accounts, App, Search, Settings, NotFound };

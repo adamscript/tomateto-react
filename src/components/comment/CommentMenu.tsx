@@ -32,8 +32,6 @@ const CommentMenu = (props: any) => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const handleMenu = (e: any) => {
-        console.log(props.items.post)
-
         if(menuOpen){
             setMenuOpen(false);
             setAnchorEl(null);

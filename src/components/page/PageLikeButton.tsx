@@ -8,6 +8,7 @@ import { likeComment, unlikeComment } from "../../features/comment/feedCommentSl
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
 
 const PostLikeButton = (props: any) => {
     const dispatch = useDispatch();
@@ -17,50 +18,62 @@ const PostLikeButton = (props: any) => {
 
     const handleLike = () =>{
         function fetchLikePost(res: String){
+            dispatch(likePost(props.items));
+
             fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/like`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${res}`}
                 })
-            .then((res) => {
-                dispatch(likePost(props.items));
+            .catch((res) => {
+                dispatch(unlikePost(props.items));
+                dispatch(openSnackbarError("An error occurred while processing your request"));
             })
         }
 
         function fetchUnlikePost(res: String){
+            dispatch(unlikePost(props.items));
+
             fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/unlike`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${res}`}
                 })
-            .then((res) => {
-                dispatch(unlikePost(props.items));
+            .catch((res) => {
+                dispatch(likePost(props.items));
+                dispatch(openSnackbarError("An error occurred while processing your request"));
             })
         }
 
         function fetchLikeComment(res: String){
+            dispatch(likeComment(props.items));
+
             fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/like`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${res}`}
                 })
-            .then((res) => {
-                dispatch(likeComment(props.items));
+            .catch((res) => {
+                dispatch(unlikeComment(props.items));
+                dispatch(openSnackbarError("An error occurred while processing your request"));
             })
         }
 
         function fetchUnlikeComment(res: String){
+            dispatch(unlikeComment(props.items));
+
             fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/unlike`, {
                     mode: 'cors',
                     method: 'PUT',
                     headers: {'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${res}`}
                 })
-            .then((res) => {
-                dispatch(unlikeComment(props.items));
+            .catch((res) => {
+                dispatch(likeComment(props.items));
+                dispatch(openSnackbarError("An error occurred while processing your request"));
             })
         }
 
@@ -94,10 +107,10 @@ const PostLikeButton = (props: any) => {
     
     return(
         <Stack direction={ (props.feed && "row") || (props.comment && "column") } alignItems="center">
-            <IconButton onClick={handleLike} size={ props.content ? "medium" : "small" } sx={{ color: theme => props.items.isLiked ? "red" : theme.palette.text.secondary, zIndex: 1 }}>
+            <IconButton onClick={handleLike} size={ props.content ? "medium" : "small" } sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary, zIndex: 1 }}>
                 { props.items.isLiked ? <FavoriteIcon fontSize="inherit" /> : <FavoriteBorderOutlinedIcon fontSize="inherit" /> }
             </IconButton>
-            { props.feed || props.comment ? <Typography variant="body2" sx={{ color: theme => props.items.isLiked ? "red" : theme.palette.text.secondary }}>{ props.items.likesCount > 0 && props.items.likesCount }</Typography> : <></> }
+            { props.feed || props.comment ? <Typography variant="body2" sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary }}>{ props.items.likesCount > 0 && props.items.likesCount }</Typography> : <></> }
         </Stack>
     )
 }

@@ -274,9 +274,9 @@ const SettingsProfile = (props: any) => {
                         </IconButton>
                         
                     </label>
-                <TextField fullWidth id="username-input" label="Username" value={usernameInput} onChange={ (e) => { setUsernameInput(e.target.value) } } error={ errorText ? true : false } helperText={errorText} disabled={isSaving} />
-                <TextField fullWidth id="name-input" label="Name" value={nameInput} onChange={ (e) => { setNameInput(e.target.value) } } disabled={isSaving} />
-                <TextField fullWidth multiline minRows={3} id="bio-input" label="Bio" value={bioInput} onChange={ (e) => { setBioInput(e.target.value) } } disabled={isSaving} />
+                <TextField fullWidth id="username-input" label="Username" value={usernameInput} onChange={ (e) => { setUsernameInput(e.target.value) } } error={ errorText ? true : false } helperText={errorText} inputProps={{ maxLength: 20 }} disabled={isSaving} />
+                <TextField fullWidth id="name-input" label="Name" value={nameInput} onChange={ (e) => { setNameInput(e.target.value) } } inputProps={{ maxLength: 60 }}  disabled={isSaving} />
+                <TextField fullWidth multiline minRows={3} id="bio-input" label="Bio" value={bioInput} onChange={ (e) => { setBioInput(e.target.value) } } inputProps={{ maxLength: 300 }}  disabled={isSaving} />
                 {
                     !props.modal &&
                     <><Divider sx={{ width: '100%' }} />

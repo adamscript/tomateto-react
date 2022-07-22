@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ForgotPassword, Login, ResetPassword, Signup } from "../components/accounts";
-import { PageNotFound } from "../components/page";
-import { auth } from "../firebase";
 
 import { ReactComponent as TomatetoLightLogo } from "../logos/tomatetolight-logo.svg";
 import { ReactComponent as TomatetoBgLogo } from "../logos/tomatetobg-logo.svg";

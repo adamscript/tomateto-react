@@ -56,7 +56,7 @@ const UserProfile = (props: any) => {
                     <Typography sx={{ wordWrap: "break-word", whiteSpace: "pre-line" }}>
                         {props.response.bio}
                     </Typography>
-                    <Stack direction="row" spacing={1}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
                         <Typography component='div' sx={{ fontWeight: 500, fontSize: 14 }}>{props.response.postsCount} <Typography display="inline" sx={{ color: theme => theme.palette.text.secondary, fontSize: 14 }}>Post{ props.response.postsCount > 1 && 's' }</Typography></Typography>
                         <PageLink following items={props.response} />
                         <PageLink followers items={props.response} />

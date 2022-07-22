@@ -1,10 +1,10 @@
 import '../App.css';
-import { PageAppBar, PageBottomNavigation, PageFabNewPost, PageLinkModal, PageNotFound, PagePhotoModal, PageSearchInput, PageSideNavigation, PageSnackbar } from '../components/page';
+import { PageAppBar, PageBottomNavigation, PageFabNewPost, PageLinkModal, PagePhotoModal, PageSearchInput, PageSideNavigation, PageSnackbar } from '../components/page';
 import { Box, Divider, Paper, Slide, Stack, useMediaQuery, useScrollTrigger } from '@mui/material';
 import { Container } from '@mui/system';
 import { styled, useTheme } from '@mui/material/styles';
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
-import { Explore, Home, Post, Search, Settings, User } from '.';
+import { Explore, Home, Post, Search, Settings, User, NotFound } from '.';
 import { useAppSelector } from '../app/hooks';
 import { SettingsAccount, SettingsPassword, SettingsProfile, SettingsProfileModal } from '../components/settings';
 import SettingsDelete from '../components/settings/SettingsDelete';
@@ -69,8 +69,7 @@ function App() {
         }
         {
           (!smUp && location.pathname == '/explore') || (!smUp && location.pathname == '/search') ?
-            <><PageSearchInput />
-            <Offset /></>
+          <PageSearchInput />
           :
           <></>
         }
@@ -106,7 +105,7 @@ function App() {
                     </Route>
                   </Route>
                   <Route path="compose/post" element={<Navigate to="/" replace />} />
-                  <Route path="404" element={<PageNotFound />} />
+                  <Route path="404" element={<NotFound />} />
                   <Route path="*" element={<Navigate to="/404" replace />} />
                 </Routes>
                 {
