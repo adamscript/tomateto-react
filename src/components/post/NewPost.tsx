@@ -101,7 +101,12 @@ const NewPost = () => {
     }
 
     const handleEmojiSelect = (emoji: any) => {
-        setContent(inputRef!.current!.value + emoji.native);
+        if(inputRef.current){
+            setContent(inputRef.current.value + emoji.native);
+        }
+        else{
+            //catch
+        }
     }
 
     const handlePost = () => {

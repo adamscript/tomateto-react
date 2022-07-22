@@ -44,18 +44,28 @@ const SettingsAccount = () => {
     const handleConfirm = () => {
         setLoading(true);
         
-        let credential = EmailAuthProvider.credential(auth!.currentUser!.email!, passwordInput);
-
-        reauthenticateWithCredential(auth!.currentUser!, credential)
-        .then(() => {
-            setReauthenticated(true);
-            setLoading(false);
-            setErrorText('');
-        })
-        .catch((err) => {
-            setLoading(false);
-            setErrorText(firebaseErrorHandling(err));
-        })
+        if(auth.currentUser){
+            let credential = auth.currentUser.email ? EmailAuthProvider.credential(auth.currentUser.email, passwordInput) : null;
+    
+            if(credential){
+                reauthenticateWithCredential(auth.currentUser, credential)
+                .then(() => {
+                    setReauthenticated(true);
+                    setLoading(false);
+                    setErrorText('');
+                })
+                .catch((err) => {
+                    setLoading(false);
+                    setErrorText(firebaseErrorHandling(err));
+                })
+            }
+            else{
+                //catch
+            }
+        }
+        else{
+            //catch
+        }
     }
 
     return(

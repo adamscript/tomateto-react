@@ -63,7 +63,12 @@ const NewComment = forwardRef((props: any, ref: any) => {
     const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
     const handleEmojiSelect = (emoji: any) => {
-        setContent(ref!.current!.value + emoji.native);
+        if(ref.current){
+            setContent(ref.current.value + emoji.native);
+        }
+        else{
+            //catch
+        }
     }
 
     const newComment: Comment = {

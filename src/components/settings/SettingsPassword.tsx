@@ -23,40 +23,50 @@ const SettingsPassword = () => {
     const handleChangePassword = () => {
         setLoading(true);
 
-        let credential = EmailAuthProvider.credential(auth!.currentUser!.email!, oldPasswordInput);
-        let user = auth.currentUser;
-
-        reauthenticateWithCredential(user!, credential)
-        .then(() => {
-            updatePassword(user!, newPasswordInput)
-            .then(() => {
-                setLoading(false);
-
-                setOldPasswordInput('');
-                setNewPasswordInput('');
-                setConfirmPasswordInput('');
-                setErrorText('');
-                setErrorAlertMessage('');
-            })
-            .catch((err) => {
-                setLoading(false);
-
-                setErrorAlertMessage(firebaseErrorHandling(err));
-                setErrorText('');
-            })
-        })
-        .catch((err) => {
-            setLoading(false);
-
-            if(err.code == 'auth/wrong-password'){
-                setErrorText(firebaseErrorHandling(err));
-                setErrorAlertMessage('');
+        if(auth.currentUser){
+            let credential = auth.currentUser.email ? EmailAuthProvider.credential(auth.currentUser.email, oldPasswordInput) : null;
+            let user = auth.currentUser;
+    
+            if(credential){
+                reauthenticateWithCredential(user, credential)
+                .then(() => {
+                    updatePassword(user!, newPasswordInput)
+                    .then(() => {
+                        setLoading(false);
+        
+                        setOldPasswordInput('');
+                        setNewPasswordInput('');
+                        setConfirmPasswordInput('');
+                        setErrorText('');
+                        setErrorAlertMessage('');
+                    })
+                    .catch((err) => {
+                        setLoading(false);
+        
+                        setErrorAlertMessage(firebaseErrorHandling(err));
+                        setErrorText('');
+                    })
+                })
+                .catch((err) => {
+                    setLoading(false);
+        
+                    if(err.code == 'auth/wrong-password'){
+                        setErrorText(firebaseErrorHandling(err));
+                        setErrorAlertMessage('');
+                    }
+                    else{
+                        setErrorAlertMessage(firebaseErrorHandling(err));
+                        setErrorText('');
+                    }
+                })
             }
             else{
-                setErrorAlertMessage(firebaseErrorHandling(err));
-                setErrorText('');
+                //catch
             }
-        })
+        }
+        else{
+            //catch
+        }
     }
 
     return(

@@ -49,6 +49,23 @@ const lightTheme = createTheme({
       }
     },
 
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          '&::-webkit-scrollbar': {
+            width: '12px',
+            background: 'rgba(0, 0, 0, 0)',
+          },
+           
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#7D7D7D',
+            border: '3px solid #FFFFFF',
+            borderRadius: '6px',
+          },
+        }
+      }
+    },
+
     MuiDrawer : {
       styleOverrides: {
         root: {
@@ -109,6 +126,23 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 15
+        }
+      }
+    },
+
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          '&::-webkit-scrollbar': {
+            width: '12px',
+            background: 'rgba(0, 0, 0, 0)',
+          },
+           
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#7D7D7D',
+            border: '3px solid #121212',
+            borderRadius: '6px',
+          },
         }
       }
     },
@@ -194,6 +228,7 @@ function Page() {
     
   return (
     <ThemeProvider theme={ darkMode ? darkTheme : lightTheme }>
+      <CssBaseline />
       <PageSnackbar />
       <Foreground>
         <Routes>

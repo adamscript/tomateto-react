@@ -19,22 +19,32 @@ const SettingsDelete = () => {
     const location = useLocation();
 
     const handleDeleteAccount = () => {
-        let credential = EmailAuthProvider.credential(auth!.currentUser!.email!, passwordInput);
-        let user = auth.currentUser;
-
-        reauthenticateWithCredential(user!, credential)
-        .then(() => {
-            deleteUser(user!)
-            .then(() => {
-                navigate('/');
-            })
-            .catch((err) => {
-                dispatch(openSnackbarError(firebaseErrorHandling(err)));
-            })
-        })
-        .catch((err) => {
-            setErrorText(firebaseErrorHandling(err));
-        })
+        if(auth.currentUser){
+            let credential = auth.currentUser.email ? EmailAuthProvider.credential(auth.currentUser.email, passwordInput) : null;
+            let user = auth.currentUser;
+    
+            if(credential){
+                reauthenticateWithCredential(user, credential)
+                .then(() => {
+                    deleteUser(user!)
+                    .then(() => {
+                        navigate('/');
+                    })
+                    .catch((err) => {
+                        dispatch(openSnackbarError(firebaseErrorHandling(err)));
+                    })
+                })
+                .catch((err) => {
+                    setErrorText(firebaseErrorHandling(err));
+                })
+            }
+            else{
+                //catch
+            }
+        }
+        else{
+            //catch
+        }
     }
 
     return(

@@ -155,8 +155,13 @@ const PostMenu = (props: any) => {
     }
 
     const handleEmojiSelect = (emoji: any) => {
-        inputRef!.current!.value = inputRef!.current!.value + emoji.native;
-        setEditContent(inputRef!.current!.value + emoji.native);
+        if(inputRef.current){
+            inputRef.current.value = inputRef.current.value + emoji.native;
+            setEditContent(inputRef.current.value + emoji.native);
+        }
+        else{
+            //catch
+        }
     }
 
     const handleDelete = () => {
