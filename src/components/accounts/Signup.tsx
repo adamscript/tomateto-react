@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
+import { LoadingButton } from "@mui/lab";
 
 interface User {
     id: string;
@@ -87,13 +88,13 @@ const Signup = () => {
         <Stack width="100%" height="100%" justifyContent="space-between">
             <Stack spacing={3} width="100%">
                 { errorText && <Alert severity="error">{errorText}</Alert> }
-                <TextField id="name-input" label="Name" onChange={ (e) => {setNameInput(e.target.value)} } />
+                <TextField id="name-input" label="Name" onChange={ (e) => {setNameInput(e.target.value)} } inputProps={{ maxLength: 60 }} />
                 <TextField id="email-input" label="Email" onChange={ (e) => {setEmailInput(e.target.value)} } />
-                <TextField id="username-input" label="Username" onChange={ (e) => {setUsernameInput(e.target.value)} } />
+                <TextField id="username-input" label="Username" onChange={ (e) => {setUsernameInput(e.target.value)} } inputProps={{ maxLength: 20 }} />
                 <TextField id="password-input" label="Password" type="password" onChange={ (e) => {setPasswordInput(e.target.value)} } />
             </Stack>
             <Stack width="100%" spacing={6}>
-                <Button sx={{ width: '100%', height: '45px' }} onClick={() => {setSignup(true)}} variant="contained">Sign Up</Button>
+                <LoadingButton loading={isSignup} sx={{ width: '100%', height: '45px' }} onClick={() => {setSignup(true)}} variant="contained">Sign Up</LoadingButton>
                 <Stack direction="row" spacing={1}>
                     <Typography>Have an account?</Typography>
                     <LinkTypography component={Link} to="/accounts/login">Log in</LinkTypography>
