@@ -23,6 +23,9 @@ const firebaseErrorHandling = (err: any) => {
     else if(err.code == 'auth/email-already-in-use'){
         return "The provided email is already in use by an existing user.";
     }
+    else if(err.code == 'auth/invalid-action-code' || err.code == 'auth/expired-action-code'){
+        return "Your request to reset your password has expired or the link has already been used.";
+    }
     else{
         console.log(err);
         return "Sorry, something went wrong. Please try again soon."

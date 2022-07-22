@@ -62,3 +62,7 @@ em-emoji-picker {
     width: 100vw;
   }
 }
+
+svg {
+  fill: currentColor;
+}

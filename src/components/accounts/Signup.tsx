@@ -1,4 +1,4 @@
-import { Stack, TextField, Button, Alert } from "@mui/material";
+import { Stack, TextField, Button, Alert, Typography, styled } from "@mui/material";
 import { createUserWithEmailAndPassword, deleteUser, getIdToken } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,6 +10,14 @@ interface User {
     displayName: string;
     username: string;
 };
+
+const LinkTypography = styled(Typography)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+    '&:hover': {
+        textDecoration: 'underline'
+    }
+})) as typeof Typography;
 
 const Signup = () => {
     const [nameInput, setNameInput] = useState('');
@@ -76,13 +84,21 @@ const Signup = () => {
     }, [isSignup])
 
     return(
-        <Stack alignItems="center" justifyContent="center" spacing={3} sx={{ height: "100%" }}>
-            { errorText && <Alert severity="error">{errorText}</Alert> }
-            <TextField id="name-input" label="Name" onChange={ (e) => {setNameInput(e.target.value)} } />
-            <TextField id="email-input" label="Email" onChange={ (e) => {setEmailInput(e.target.value)} } />
-            <TextField id="username-input" label="Username" onChange={ (e) => {setUsernameInput(e.target.value)} } />
-            <TextField id="password-input" label="Password" type="password" onChange={ (e) => {setPasswordInput(e.target.value)} } />
-            <Button onClick={() => {setSignup(true)}} variant="contained">Sign Up</Button>
+        <Stack width="100%" height="100%" justifyContent="space-between">
+            <Stack spacing={3} width="100%">
+                { errorText && <Alert severity="error">{errorText}</Alert> }
+                <TextField id="name-input" label="Name" onChange={ (e) => {setNameInput(e.target.value)} } />
+                <TextField id="email-input" label="Email" onChange={ (e) => {setEmailInput(e.target.value)} } />
+                <TextField id="username-input" label="Username" onChange={ (e) => {setUsernameInput(e.target.value)} } />
+                <TextField id="password-input" label="Password" type="password" onChange={ (e) => {setPasswordInput(e.target.value)} } />
+            </Stack>
+            <Stack width="100%" spacing={6}>
+                <Button sx={{ width: '100%', height: '45px' }} onClick={() => {setSignup(true)}} variant="contained">Sign Up</Button>
+                <Stack direction="row" spacing={1}>
+                    <Typography>Have an account?</Typography>
+                    <LinkTypography component={Link} to="/accounts/login">Log in</LinkTypography>
+                </Stack>
+            </Stack>
         </Stack>
     )
 }

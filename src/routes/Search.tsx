@@ -30,9 +30,11 @@ const Search = () => {
         <UserRecommendation key={index} items={items} />
     )
 
+    console.log(searchParams.get('q'))
+
     useEffect(() => {
         function fetchListSearchPost(res?: String){
-            fetch(`${process.env.REACT_APP_API_URL}/api/feed/search?q=${searchParams}`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/feed/search?q=${searchParams.get('q')}`, {
                     mode: 'cors',
                     headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
                 })
@@ -46,7 +48,7 @@ const Search = () => {
         }
 
         function fetchListSearchUser(res?: String){
-            fetch(`${process.env.REACT_APP_API_URL}/api/user/search?q=${searchParams}`, {
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/search?q=${searchParams.get('q')}`, {
                     mode: 'cors',
                     headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
                 })

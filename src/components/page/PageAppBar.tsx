@@ -1,8 +1,9 @@
-import { AppBar, Box, Typography, InputBase, Stack, IconButton, Button, Menu, MenuItem, Popper, Popover, Grow, ClickAwayListener, MenuList, Paper, useMediaQuery } from "@mui/material";
+import { AppBar, Box, Typography, InputBase, Stack, SvgIcon, IconButton, Button, Menu, MenuItem, Popper, Popover, Grow, ClickAwayListener, MenuList, Paper, useMediaQuery } from "@mui/material";
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import { Container, shadows } from '@mui/system';
 
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import { ReactComponent as TomatetoLightLogo } from "../../logos/tomatetolight-logo.svg";
 
 import { useEffect, useRef, useState } from "react";
 import { auth } from "../../firebase";
@@ -51,7 +52,7 @@ const PageAppBar = () => {
           <StyledAppBar elevation={ smUp ? 1 : 0 }>
               <Container maxWidth="md">
                   <Stack direction="row" alignItems="center" justifyContent={ "space-between" }>
-                      { !smUp && location.pathname != '/' ? <></> : <Logo>tomateto</Logo> }
+                      { !smUp && location.pathname != '/' ? <></> : <SvgIcon sx={{ width: '160px', height: '60px' }} component={TomatetoLightLogo} inheritViewBox /> }
                       {
                         smUp &&
                         <>{

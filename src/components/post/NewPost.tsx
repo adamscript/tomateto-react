@@ -141,7 +141,7 @@ const NewPost = () => {
 
         function handlePostSuccess(){
             dispatch(insertPost(newPost));
-            dispatch(openSnackbarInfo("Your post was sent"))
+            dispatch(openSnackbarInfo("Your post was sent"));
             console.log(newPost)
 
             setContent("");
