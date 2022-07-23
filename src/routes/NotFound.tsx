@@ -1,4 +1,5 @@
 import { Typography, Box, Stack, styled } from "@mui/material";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const LinkTypography = styled(Typography)(({ theme }) => ({
@@ -10,6 +11,11 @@ const LinkTypography = styled(Typography)(({ theme }) => ({
 })) as typeof Typography;
 
 const NotFound = () => {
+    
+    useEffect(() => {
+        document.title = "404 Not Found :( - Tomateto"
+    })
+
     return(
         <Box sx={{ p: 5 }}>
             <Stack spacing={5} alignItems="center" justifyContent="center">    

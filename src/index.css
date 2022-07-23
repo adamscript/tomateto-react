@@ -27,3 +27,7 @@ em-emoji-picker {
 svg {
   fill: currentColor;
 }
+
+[hidden]{
+  display: none !important;
+}

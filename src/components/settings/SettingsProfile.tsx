@@ -15,7 +15,7 @@ import { forwardRef, ReactElement, Ref, useEffect, useRef, useState } from "reac
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setCurrentUser } from "../../features/user/currentUserSlice";
 
-import { getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import { auth, storage } from "../../firebase";
 import { TransitionProps } from '@mui/material/transitions';
 import { resizePhoto } from '../../features/utility';
@@ -72,6 +72,10 @@ const SettingsProfile = (props: any) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
+    useEffect(() => {
+        document.title = "Edit Profile - Tomateto";
+    }, [])
+
     const handleImageChange = (e: any) => {
         setPhotoFile(e.target.files[0]);
         setPhotoURLPreview(URL.createObjectURL(e.target.files[0]));
@@ -102,6 +106,13 @@ const SettingsProfile = (props: any) => {
         followCount: currentUser.followCount,
         followersCount: currentUser.followersCount,
         postsCount: currentUser.postsCount
+    }
+
+    const currentUserAvatar: Avatar = {
+        default: currentUser.avatar.default,
+        medium: currentUser.avatar.medium,
+        small: currentUser.avatar.small,
+        extraSmall: currentUser.avatar.extraSmall
     }
 
     const handleEdit = () => {
@@ -179,10 +190,18 @@ const SettingsProfile = (props: any) => {
             dispatch(setCurrentUser(editedUser));
             dispatch(openSnackbarInfo("Profile saved"))
             console.log(editedUser)
+            
+            if(currentUserAvatar.default && photoFile){
+                console.log('deleteing avatars')
+                Object.values(currentUserAvatar).forEach(value => {
+                    deletePhoto(value);
+                });
+            }
 
             setPhotoFile(null);
             setSaving(false)
             setErrorText('');
+
         }
 
         function uploadPhoto(photoFile: any, name: string, dimension: number){
@@ -217,6 +236,20 @@ const SettingsProfile = (props: any) => {
                     uploadPhoto(result.blob, photoFileName, result.dimension);
                 })
             }
+        }
+
+        function deletePhoto(url: string){
+            const photoRef = ref(storage, url);
+
+            deleteObject(photoRef)
+            .then((res) => {
+                //success
+                console.log('post photo deleted successfully')
+            })
+            .catch((err) => {
+                //error
+                console.log('photo deletion failed')
+            })
         }
 
         if(photoFile){

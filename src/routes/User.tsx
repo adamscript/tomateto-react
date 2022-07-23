@@ -1,4 +1,4 @@
-import { Box, IconButton, Stack, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Box, IconButton, LinearProgress, Stack, styled, useMediaQuery, useTheme } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
@@ -51,7 +51,7 @@ const User = () => {
         }
     }
 
-    useEffect(() => {        
+    useEffect(() => {      
         function fetchListUser(res?: String){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/profile/${username}`, {
                 mode: 'cors',
@@ -64,6 +64,8 @@ const User = () => {
                 if(!res.code){
                     setResponse(res.items);
                     setLoaded(true)
+
+                    document.title = `${res.items.displayName} (@${res.items.username}) - Tomateto`;
                 }
                 else{
                     navigate('/404');
@@ -99,7 +101,7 @@ const User = () => {
             <UserProfile response={response} />
             <UserPageTabs response={response} />
         </Box>
-        : <div>Loading...</div>
+        : <LinearProgress />
     )
 }
 

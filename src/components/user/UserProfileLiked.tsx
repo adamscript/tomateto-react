@@ -12,11 +12,9 @@ const UserProfileLiked = (props: any) => {
     )
 
     return(
-        isLoaded ?
-        <List>
+        <List sx={{ width: '100%' }}>
             {listProfileLiked}
         </List>
-        : <div>Loading...</div>
     )
 }
 

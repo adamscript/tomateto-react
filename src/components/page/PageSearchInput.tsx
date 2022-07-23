@@ -1,6 +1,6 @@
 import { alpha, Box, ClickAwayListener, Grow, IconButton, InputBase, MenuItem, MenuList, Paper, Popper, SvgIcon, styled, Typography, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
 import { useState, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -102,6 +102,7 @@ const PageSearchInput = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const isLoggedIn = useAppSelector(state => state.authState.isLoggedIn);
 
@@ -111,8 +112,16 @@ const PageSearchInput = () => {
     const handleSearch = (e: any) => {
         setSearchQuery(e.target.value);
 
-        if(location.pathname == '/search' || location.pathname == '/explore'){
-            navigate(`search?q=${e.target.value}`, {replace: true});
+        e.preventDefault();
+        
+        if(location.pathname == '/search'){
+
+            setSearchParams({q: e.target.value}, {replace: true});
+            console.log(searchParams)
+            
+        }
+        else if(location.pathname == '/explore'){
+            navigate(`search?q=${e.target.value}`);
         }
         else{
             setSearchMenuOpen(e.target.value ? true : false);

@@ -1,7 +1,5 @@
 import { Fab, styled } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import AddCommentRoundedIcon from '@mui/icons-material/AddCommentRounded';
-import AddCommentOutlinedIcon from '@mui/icons-material/AddCommentOutlined';
 import { useLocation, useNavigate } from "react-router-dom";
 
 const StyledFab = styled(Fab)(({theme}) => ({
@@ -26,8 +24,8 @@ const PageFabNewPost = () => {
 
     return(
         !location.pathname.includes("/settings") && !location.pathname.includes("/post/") ?
-        <StyledFab onClick={handleNewPost} size="large" color="error">
-            <AddCommentOutlinedIcon />
+        <StyledFab onClick={handleNewPost} size="large" sx={{ color: 'white', backgroundColor: "tomato" }}>
+            <AddIcon />
         </StyledFab> :
         <></>
     )

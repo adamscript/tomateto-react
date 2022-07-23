@@ -1,4 +1,4 @@
-import { Divider, IconButton, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Divider, IconButton, LinearProgress, styled, useMediaQuery, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -69,6 +69,8 @@ const Post = () => {
             .then((res) => {
                 dispatch(loadPosts(new Array(res.items)));
                 setLoaded(true)
+
+                document.title = `${res.items.user.displayName} on Tomateto: "${res.items.content.length > 64 ? res.items.content.substring(0, 60) + "..." : res.items.content}" - Tomateto`;
             })
         }
         
@@ -100,7 +102,7 @@ const Post = () => {
             <Divider variant="middle" />
             <PostContentComment response={response[0]} />
         </Box>
-        : <div>Loading...</div>
+        : <LinearProgress />
     )
 }
 

@@ -5,6 +5,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
+import { LoadingButton } from "@mui/lab";
+
+const StyledForm = styled('form')(() => ({
+    width: '100%',
+    height: '100%'
+}))
 
 const LinkTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -23,11 +29,12 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    useEffect(() => {
-        console.log("login effect called")
+    const handleLogin = (e: any) => {
+        setLogin(true);
+        
+        e.preventDefault();
 
-        if(isLogin){
-            signInWithEmailAndPassword(auth, emailInput, passwordInput)
+        signInWithEmailAndPassword(auth, emailInput, passwordInput)
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
@@ -37,32 +44,30 @@ const Login = () => {
             .catch((err) => {
                 setErrorText(firebaseErrorHandling(err));
                 setLogin(false);
-            }) 
-        }
-        else{
-            console.log("not logged in");
-        }
-    }, [isLogin]);
+            })
+    }
 
     return(
-        <Stack width="100%" height="100%" justifyContent="space-between">
-            <Stack width="100%" spacing={3}>
-                { errorText && <Alert severity="error">{errorText}</Alert> }
-                { location.state && !errorText && <Alert severity="info">Log in to continue</Alert> }
-                <TextField id="email-input" label="Email" onChange={ (e) => {setEmailInput(e.target.value)} } />
-                <Stack width="100%" spacing={1}>
-                    <TextField id="password-input" label="Password" type="password" onChange={ (e) => {setPasswordInput(e.target.value)} } />
-                    <LinkTypography component={Link} to="/accounts/recover" sx={{ fontSize: '14px' }}>Forgot password?</LinkTypography>
+        <StyledForm onSubmit={handleLogin}>
+            <Stack width="100%" height="100%" justifyContent="space-between">
+                <Stack width="100%" spacing={3}>
+                    { errorText && <Alert severity="error">{errorText}</Alert> }
+                    { location.state && !errorText && <Alert severity="info">Log in to continue</Alert> }
+                    <TextField id="email-input" label="Email" type="text" onChange={ (e) => {setEmailInput(e.target.value)} } />
+                    <Stack width="100%" spacing={1}>
+                        <TextField id="password-input" label="Password" type="password" onChange={ (e) => {setPasswordInput(e.target.value)} } />
+                        <LinkTypography component={Link} to="/accounts/recover" sx={{ fontSize: '14px' }}>Forgot password?</LinkTypography>
+                    </Stack>
+                </Stack>
+                <Stack width="100%" spacing={3}>
+                    <LoadingButton loading={isLogin} sx={{ width: '100%', height: '45px' }} type="submit" variant="contained">Log in</LoadingButton>
+                    <Stack direction="row" spacing={1}>
+                        <Typography>Don't have an account?</Typography>
+                        <LinkTypography component={Link} to="/accounts/signup">Sign up</LinkTypography>
+                    </Stack>
                 </Stack>
             </Stack>
-            <Stack width="100%" spacing={6}>
-                <Button sx={{ width: '100%', height: '45px' }} onClick={() => {setLogin(true)}} variant="contained">Log in</Button>
-                <Stack direction="row" spacing={1}>
-                    <Typography>Don't have an account?</Typography>
-                    <LinkTypography component={Link} to="/accounts/signup">Sign up</LinkTypography>
-                </Stack>
-            </Stack>
-        </Stack>
+        </StyledForm>
     )
 }
 

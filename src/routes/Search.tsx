@@ -30,9 +30,9 @@ const Search = () => {
         <UserRecommendation key={index} items={items} />
     )
 
-    console.log(searchParams.get('q'))
-
     useEffect(() => {
+        document.title = `${searchParams.get('q')} - Tomateto`;
+
         function fetchListSearchPost(res?: String){
             fetch(`${process.env.REACT_APP_API_URL}/api/feed/search?q=${searchParams.get('q')}`, {
                     mode: 'cors',

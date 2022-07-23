@@ -79,6 +79,8 @@ const Explore = () => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     useEffect(() => {
+        document.title = "Explore - Tomateto"
+
         function fetchListFeedPost(res?: String){
             if(value == "top" || value == "latest"){
                 fetch(`${process.env.REACT_APP_API_URL}/api/feed/${value}`, {

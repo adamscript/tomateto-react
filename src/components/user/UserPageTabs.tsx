@@ -1,5 +1,5 @@
-import { Box, Tabs, Tab, styled, Divider, useMediaQuery, useTheme } from "@mui/material";
-import React, { useEffect } from "react";
+import { Box, Tabs, Tab, Stack, styled, Divider, useMediaQuery, useTheme, CircularProgress } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { loadPosts } from "../../features/post/feedPostSlice";
 import { loadComments } from "../../features/comment/feedCommentSlice";
@@ -14,17 +14,24 @@ function TabPanel(props: any) {
     const { value, index } = props;
   
     return (
-      <div
+      <StyledTabPanel
         role="tabpanel"
         hidden={value !== index}
         id={`simple-tabpanel-${index}`}
       >
         {props.children}
-      </div>
+      </StyledTabPanel>
     );
   }
 
-  interface StyledTabsProps {
+const StyledTabPanel = styled('div')(() => ({
+    display: 'flex',
+    
+    width: '100%',
+    justifyContent: 'center'
+}));
+
+interface StyledTabsProps {
     children?: React.ReactNode;
     value: string;
     onChange: (event: React.SyntheticEvent, newValue: string) => void;
@@ -70,8 +77,8 @@ const StyledTab = styled((props: StyledTabProps) => (
   }));
 
 const UserPageTabs = (props: any) => {
-    const [value, setValue] = React.useState("posts");
-    const [isLoaded, setLoaded] = React.useState(false);
+    const [value, setValue] = useState("posts");
+    const [isLoaded, setLoaded] = useState(false);
 
     const authState = useAppSelector((state) => state.authState);
     const dispatch = useAppDispatch();
@@ -81,7 +88,13 @@ const UserPageTabs = (props: any) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const handleChange = (e: any, value: string) => {
+        setLoaded(false);
+        setValue(value);
+    }
+
     useEffect(() => {
+        console.log(isLoaded)
         function fetchListFeedPost(res?: String){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/profile/${props.response.id}/${value}`, { 
                 mode: 'cors',
@@ -113,9 +126,9 @@ const UserPageTabs = (props: any) => {
     })
     
     return(
-        <Box>
+        <Box width="100%">
             <Box sx={{ position: smDown ? 'sticky' : 'static', top: 60, backgroundColor: theme => theme.palette.background.default, zIndex: 2 }}>
-                <StyledTabs value={value} onChange={(e, value) => setValue(value)} variant="fullWidth">
+                <StyledTabs value={value} onChange={handleChange} variant="fullWidth">
                     <StyledTab value="posts" label="Posts" />
                     <StyledTab value="comments" label="Comments" />
                     <StyledTab value="liked" label="Liked" />
@@ -123,13 +136,13 @@ const UserPageTabs = (props: any) => {
                 <Divider />
             </Box>
             <TabPanel index="posts" value={value}>
-                <UserProfilePost />
+                { isLoaded ? <UserProfilePost /> : <CircularProgress /> }
             </TabPanel>
             <TabPanel index="comments" value={value}>
-                <UserProfileComment />
+                { isLoaded ? <UserProfileComment /> : <CircularProgress /> }
             </TabPanel>
             <TabPanel index="liked" value={value}>
-                <UserProfileLiked />
+                { isLoaded ? <UserProfileLiked /> : <CircularProgress /> }
             </TabPanel>
         </Box>
     )

@@ -12,11 +12,9 @@ const UserProfileComment = (props: any) => {
     )
 
     return(
-        isLoaded ?
-        <List>
+        <List sx={{ width: '100%' }}>
             {listProfileComment}
         </List>
-        : <div>Loading...</div>
     )
 }
 

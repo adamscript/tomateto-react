@@ -1,12 +1,17 @@
 import { Box } from "@mui/system";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Stack, IconButton, TextField, Divider, Button, Alert, LinearProgress } from "@mui/material";
+import { Stack, IconButton, TextField, Divider, Button, Alert, LinearProgress, styled } from "@mui/material";
 import { PageLabel } from "../page";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
+
+const StyledForm = styled('form')(() => ({
+    width: '100%',
+    height: '100%'
+}))
 
 const SettingsPassword = () => {
     const [oldPasswordInput, setOldPasswordInput] = useState('');
@@ -20,8 +25,14 @@ const SettingsPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleChangePassword = () => {
+    useEffect(() => {
+        document.title = "Change Password - Tomateto";
+    }, [])
+
+    const handleChangePassword = (e: any) => {
         setLoading(true);
+
+        e.preventDefault();
 
         if(auth.currentUser){
             let credential = auth.currentUser.email ? EmailAuthProvider.credential(auth.currentUser.email, oldPasswordInput) : null;
@@ -70,26 +81,28 @@ const SettingsPassword = () => {
     }
 
     return(
-        <Box>
+        <Box padding="0 16px">
             <Stack spacing={2} direction="row" alignItems="center" sx={{ width: '100%' }}>
-                <IconButton onClick={ () => { location.state ? navigate('..', { state: { reaunthenticated: true }}) : navigate('/settings') } }>
+                <IconButton size="small" onClick={ () => { location.state ? navigate('..', { state: { reaunthenticated: true }}) : navigate('/settings') } }>
                     <ArrowBackIcon />
                 </IconButton>
                 <PageLabel>Change Password</PageLabel>
             </Stack>
-            <Stack spacing={2}>
-                { isLoading && <LinearProgress /> }
-                <TextField id="oldpassword-input" label="Old password" value={oldPasswordInput} type="password" onChange={ (e) => {setOldPasswordInput(e.target.value)} } error={errorText ? true : false} helperText={errorText} />
-                <Divider />
-                <TextField id="newpassword-input" label="New password" value={newPasswordInput} type="password" onChange={ (e) => {setNewPasswordInput(e.target.value)} } />
-                <TextField id="confirmpassword-input" label="Confirm new password" value={confirmPasswordInput} type="password" onChange={ (e) => {setConfirmPasswordInput(e.target.value)} } />
-                <Divider />
-                <Stack direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent={ confirmPasswordInput ? "space-between" : "end" }>
-                    { !errorAlertMessage && confirmPasswordInput && <Alert severity={ newPasswordInput != confirmPasswordInput ? "warning" : "success" }>{ newPasswordInput != confirmPasswordInput ? "Password does not match" : "Password matched" }</Alert> }
-                    { errorAlertMessage && <Alert severity="error">{errorAlertMessage}</Alert> }
-                    <Button variant="contained" onClick={handleChangePassword} disabled={ !oldPasswordInput || !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Update password</Button>
+            <StyledForm onSubmit={handleChangePassword}>
+                <Stack spacing={2}>
+                    { isLoading && <LinearProgress /> }
+                    <TextField id="oldpassword-input" label="Old password" value={oldPasswordInput} type="password" onChange={ (e) => {setOldPasswordInput(e.target.value)} } error={errorText ? true : false} helperText={errorText} />
+                    <Divider />
+                    <TextField id="newpassword-input" label="New password" value={newPasswordInput} type="password" onChange={ (e) => {setNewPasswordInput(e.target.value)} } />
+                    <TextField id="confirmpassword-input" label="Confirm new password" value={confirmPasswordInput} type="password" onChange={ (e) => {setConfirmPasswordInput(e.target.value)} } />
+                    <Divider />
+                    <Stack direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent={ confirmPasswordInput ? "space-between" : "end" }>
+                        { !errorAlertMessage && confirmPasswordInput && <Alert severity={ newPasswordInput != confirmPasswordInput ? "warning" : "success" }>{ newPasswordInput != confirmPasswordInput ? "Password does not match" : "Password matched" }</Alert> }
+                        { errorAlertMessage && <Alert severity="error">{errorAlertMessage}</Alert> }
+                        <Button variant="contained" type="submit" disabled={ !oldPasswordInput || !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Update password</Button>
+                    </Stack>
                 </Stack>
-            </Stack>
+            </StyledForm>
         </Box>
     )
 }

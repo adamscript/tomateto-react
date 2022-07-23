@@ -16,7 +16,7 @@ const ModalUserEdit = () => {
                             <CloseIcon />
                         </IconButton>
                         <Stack sx={{ width: "100%" }} direction="row" alignItems="center" justifyContent="space-between">
-                            <Typography variant="h5">Edit Profile</Typography>
+                            <Typography variant="h5">Edit Profileee</Typography>
                             <Button variant="contained">Save</Button>
                         </Stack>
                     </Stack>

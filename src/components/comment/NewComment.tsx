@@ -1,4 +1,4 @@
-import { Avatar, Button, Box, IconButton, InputBase, Stack, styled, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Button, Box, IconButton, InputBase, Stack, styled, useMediaQuery, useTheme, LinearProgress } from "@mui/material";
 import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import { forwardRef, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
@@ -7,6 +7,7 @@ import { insertComment } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
 import { incrementCommentsCount } from "../../features/post/feedPostSlice";
 import { PageEmojiButton } from "../page";
+import { LoadingButton } from "@mui/lab";
 
 interface Avatar{
     default: string;
@@ -39,7 +40,7 @@ const NewCommentContainer = styled(Box)(({theme}) => ({
     backgroundColor: theme.palette.background.default,
     
     [theme.breakpoints.down('sm')]: {
-        width: 'calc(100% - 24px)',
+        width: '100%',
         position: 'fixed',
         bottom: 0,
         zIndex: 2
@@ -55,6 +56,7 @@ const StyledAvatar = styled(Avatar)(({theme}) => ({
 
 const NewComment = forwardRef((props: any, ref: any) => {
     const [content, setContent] = useState(String);
+    const [isPosting, setPosting] = useState(false);
 
     const currentUser = useAppSelector((state) => state.currentUser);
     const dispatch = useDispatch();
@@ -88,6 +90,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
     }
 
     const handleComment = () => {
+        setPosting(true);
 
         function fetchInsertComment(res: String){
             fetch(`${process.env.REACT_APP_API_URL}/api/comment`, {
@@ -108,8 +111,12 @@ const NewComment = forwardRef((props: any, ref: any) => {
                 dispatch(insertComment(newComment));
                 dispatch(incrementCommentsCount(props.post.id));
                 setContent("");
+                setPosting(false);
 
                 console.log(newComment)
+            })
+            .catch((err) => {
+                setPosting(false);
             })
         }
 
@@ -117,25 +124,31 @@ const NewComment = forwardRef((props: any, ref: any) => {
         .then((res) => {
             fetchInsertComment(res);
         })
+        .catch((err) => {
+            setPosting(false);
+        })
 
     }
 
     return(
-        <NewCommentContainer>
-            <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
-                <StyledAvatar src={currentUser.avatar.small} />
-                <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" spacing={1}>
-                    <InputBase inputRef={ref} fullWidth multiline value={content} inputProps={{ maxLength: 2200 }} onChange={(e) => {setContent(e.target.value)}} placeholder="Add a tomathought..." />
-                    <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
-                        {
-                            smUp && 
-                            <PageEmojiButton onEmojiSelect={handleEmojiSelect} />
-                        }
-                        <Button disabled={content ? false : true} onClick={handleComment} variant="contained">Comment</Button>
+        <Box>
+            { isPosting && <LinearProgress /> }
+            <NewCommentContainer>
+                <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
+                    <StyledAvatar src={currentUser.avatar.small} />
+                    <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" spacing={1}>
+                        <InputBase inputRef={ref} fullWidth multiline value={content} inputProps={{ maxLength: 2200 }} onChange={(e) => {setContent(e.target.value)}} placeholder="Add a tomathought..." />
+                        <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
+                            {
+                                smUp && 
+                                <PageEmojiButton onEmojiSelect={handleEmojiSelect} />
+                            }
+                            <LoadingButton loading={isPosting} disabled={content ? false : true} onClick={handleComment} variant="contained">Comment</LoadingButton>
+                        </Stack>
                     </Stack>
                 </Stack>
-            </Stack>
-        </NewCommentContainer>
+            </NewCommentContainer>
+        </Box>
     )
 })
 

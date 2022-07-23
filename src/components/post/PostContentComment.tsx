@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { CircularProgress, Stack } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Comment } from "../comment";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -40,11 +40,15 @@ const PostContentComment = (props: any) => {
     }, [])
 
     return(
-        isLoaded ?
-        <Stack>
-            {listPostComment}
+        <Stack alignItems="center">
+            {        
+                isLoaded ?
+                <Stack width="100%">
+                    {listPostComment}
+                </Stack>
+                : <CircularProgress />
+            }
         </Stack>
-        : <div>Loading...</div>
     )
 }
 

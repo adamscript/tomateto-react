@@ -12,6 +12,11 @@ interface User {
     username: string;
 };
 
+const StyledForm = styled('form')(() => ({
+    width: '100%',
+    height: '100%'
+}))
+
 const LinkTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.main,
     textDecoration: 'none',
@@ -30,77 +35,78 @@ const Signup = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if(isSignup){
-            createUserWithEmailAndPassword(auth, emailInput, passwordInput)
-            .then((userCredential) => {
-                //Signed in
-                const user = userCredential.user;
+    const handleSignup = (e: any) => {
+        setSignup(true);
 
-                console.log(user)
+        e.preventDefault();
 
-                const userBody: User = {
-                    id: user.uid,
-                    displayName: nameInput,
-                    username: usernameInput
-                }
-                
-                getIdToken(user)
+        createUserWithEmailAndPassword(auth, emailInput, passwordInput)
+        .then((userCredential) => {
+            //Signed in
+            const user = userCredential.user;
+
+            console.log(user)
+
+            const userBody: User = {
+                id: user.uid,
+                displayName: nameInput,
+                username: usernameInput
+            }
+            
+            getIdToken(user)
+            .then(res => {
+                fetch(`${process.env.REACT_APP_API_URL}/api/user`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${res}`},
+                body: JSON.stringify(userBody)
+                })
                 .then(res => {
-                    fetch(`${process.env.REACT_APP_API_URL}/api/user`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${res}`},
-                    body: JSON.stringify(userBody)
-                    })
-                    .then(res => {
-                        if(res.ok){
-                            console.log(res)
-                            navigate('/')
-                        }
-                        else{
-                            deleteUser(user);
-                            setSignup(false);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log(error)
+                    if(res.ok){
+                        console.log(res)
+                        navigate('/')
+                    }
+                    else{
+                        deleteUser(user);
                         setSignup(false);
-                    })
+                    }
                 })
                 .catch((error) => {
-                    deleteUser(user);
+                    console.log(error)
                     setSignup(false);
                 })
-                
             })
             .catch((error) => {
-                setErrorText(firebaseErrorHandling(error));
+                deleteUser(user);
                 setSignup(false);
             })
-        }
-        else{
-            console.log("not signed up")
-        }
-    }, [isSignup])
+            
+        })
+        .catch((error) => {
+            setErrorText(firebaseErrorHandling(error));
+            setSignup(false);
+        })
+    }
 
     return(
-        <Stack width="100%" height="100%" justifyContent="space-between">
-            <Stack spacing={3} width="100%">
-                { errorText && <Alert severity="error">{errorText}</Alert> }
-                <TextField id="name-input" label="Name" onChange={ (e) => {setNameInput(e.target.value)} } inputProps={{ maxLength: 60 }} />
-                <TextField id="email-input" label="Email" onChange={ (e) => {setEmailInput(e.target.value)} } />
-                <TextField id="username-input" label="Username" onChange={ (e) => {setUsernameInput(e.target.value)} } inputProps={{ maxLength: 20 }} />
-                <TextField id="password-input" label="Password" type="password" onChange={ (e) => {setPasswordInput(e.target.value)} } />
-            </Stack>
-            <Stack width="100%" spacing={6}>
-                <LoadingButton loading={isSignup} sx={{ width: '100%', height: '45px' }} onClick={() => {setSignup(true)}} variant="contained">Sign Up</LoadingButton>
-                <Stack direction="row" spacing={1}>
-                    <Typography>Have an account?</Typography>
-                    <LinkTypography component={Link} to="/accounts/login">Log in</LinkTypography>
+        <StyledForm onSubmit={handleSignup}>
+            <Stack width="100%" height="100%" justifyContent="space-between">
+                <Stack spacing={3} width="100%">
+                    { errorText && <Alert severity="error">{errorText}</Alert> }
+                    <TextField id="name-input" label="Name" onChange={ (e) => {setNameInput(e.target.value)} } inputProps={{ maxLength: 60 }} />
+                    <TextField id="email-input" label="Email" onChange={ (e) => {setEmailInput(e.target.value)} } />
+                    <TextField id="username-input" label="Username" onChange={ (e) => {setUsernameInput(e.target.value)} } inputProps={{ maxLength: 20 }} />
+                    <TextField id="password-input" label="Password" type="password" onChange={ (e) => {setPasswordInput(e.target.value)} } />
+                </Stack>
+                <Stack width="100%" spacing={3}>
+                    <LoadingButton type="submit" loading={isSignup} sx={{ width: '100%', height: '45px' }} variant="contained">Sign Up</LoadingButton>
+                    <Stack direction="row" spacing={1}>
+                        <Typography>Have an account?</Typography>
+                        <LinkTypography component={Link} to="/accounts/login">Log in</LinkTypography>
+                    </Stack>
                 </Stack>
             </Stack>
-        </Stack>
+        </StyledForm>
     )
 }
 

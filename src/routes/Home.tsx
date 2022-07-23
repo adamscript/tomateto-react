@@ -28,6 +28,8 @@ const Home = () => {
     )
 
     useEffect(() => {
+        document.title = "Tomateto";
+
         function fetchListFeedPost(res: String){
             fetch(`${process.env.REACT_APP_API_URL}/api/feed/following`, { 
                 mode: 'cors',

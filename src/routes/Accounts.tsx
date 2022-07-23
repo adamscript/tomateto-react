@@ -1,6 +1,6 @@
 import { Box, Paper, Stack, styled, SvgIcon, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ForgotPassword, Login, ResetPassword, Signup } from "../components/accounts";
 
@@ -26,11 +26,13 @@ const Accounts = () => {
 
     const bgSvg = encodeURIComponent(renderToStaticMarkup(<TomatetoBgLogo />));
 
+    const navigate = useNavigate();
+
     return(
         <StyledBackground sx={{ backgroundImage: `url("data:image/svg+xml,${bgSvg}")` }}>
             <Paper elevation={ smUp ? 3 : 0 } sx={{ width: '540px', height: '600px', borderRadius: '30px', padding: "10px 30px 30px" }}>
-                <Stack height="100%" alignItems="center" justifyContent="space-between" spacing={9}>
-                    <SvgIcon sx={{ width: '160px', height: '60px' }} component={TomatetoLightLogo} inheritViewBox />
+                <Stack height="100%" alignItems="center" justifyContent="space-between" spacing={1}>
+                    <SvgIcon onClick={() => {navigate('/')}} sx={{ width: '160px', height: '60px', cursor: 'pointer' }} component={TomatetoLightLogo} inheritViewBox />
                     <Box width="100%" height="100%">            
                         <Routes>
                             <Route path="login" element={isLoggedIn ? <Navigate to="/home" replace /> : <Login />} />

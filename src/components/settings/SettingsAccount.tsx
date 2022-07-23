@@ -1,4 +1,4 @@
-import { Stack, IconButton, List, ListItem, ListItemText, Typography, Divider, TextField, Alert, Button, LinearProgress, CircularProgress } from "@mui/material";
+import { Stack, IconButton, List, ListItem, ListItemText, Typography, Divider, TextField, Alert, Button, LinearProgress, CircularProgress, styled } from "@mui/material";
 import { Box } from "@mui/system";
 import { PageLabel } from "../page";
 
@@ -9,6 +9,11 @@ import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { firebaseErrorHandling } from "../../features/utility";
+
+const StyledForm = styled('form')(() => ({
+    width: '100%',
+    height: '100%'
+}))
 
 const PasswordChar = (props: any) => {
     const [password, setPassword] = useState(String);
@@ -40,9 +45,15 @@ const SettingsAccount = () => {
     const location = useLocation();
     
     const [isReauthenticated, setReauthenticated] = useState(location.state ? true : false);
+
+    useEffect(() => {
+        document.title = "Account Information - Tomateto"
+    }, [])
     
-    const handleConfirm = () => {
+    const handleConfirm = (e: any) => {
         setLoading(true);
+
+        e.preventDefault();
         
         if(auth.currentUser){
             let credential = auth.currentUser.email ? EmailAuthProvider.credential(auth.currentUser.email, passwordInput) : null;
@@ -69,9 +80,9 @@ const SettingsAccount = () => {
     }
 
     return(
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isLoading ? 'center' : 'start' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isLoading ? 'center' : 'start', padding: '0 16px' }}>
             <Stack spacing={2} direction="row" alignItems="center" sx={{ width: '100%' }}>
-                <IconButton onClick={ () => {navigate('../..')} }>
+                <IconButton size="small" onClick={ () => {navigate('../..')} }>
                     <ArrowBackIcon />
                 </IconButton>
                 <PageLabel>Account Information</PageLabel>
@@ -122,16 +133,18 @@ const SettingsAccount = () => {
                     </List>
                 </Stack>
                 :
-                <Stack spacing={2} width='100%'>
-                    <Typography variant="h6">
-                        Confirm your password
-                    </Typography>
-                    <Divider />
-                    <TextField id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} error={errorText ? true : false} helperText={errorText} disabled={isLoading} />
-                    <Stack spacing={2} direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent="end">
-                        <Button variant="contained" onClick={handleConfirm} disabled={isLoading}>Confirm</Button>
+                <StyledForm onSubmit={handleConfirm}>
+                    <Stack spacing={2} width='100%'>
+                        <Typography variant="h6">
+                            Confirm your password
+                        </Typography>
+                        <Divider />
+                        <TextField id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} error={errorText ? true : false} helperText={errorText} disabled={isLoading} />
+                        <Stack spacing={2} direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent="end">
+                            <Button variant="contained" type="submit" disabled={isLoading}>Confirm</Button>
+                        </Stack>
                     </Stack>
-                </Stack>
+                </StyledForm>
             }
         </Box>
     )

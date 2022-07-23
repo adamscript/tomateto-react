@@ -7,7 +7,7 @@ import { auth } from './firebase';
 import { useAppDispatch, useAppSelector } from './app/hooks';
 import { deleteCurrentUser, setCurrentUser } from './features/user/currentUserSlice';
 import { setAuthState } from './features/user/authStateSlice';
-import { PageSnackbar } from './components/page';
+import { PageLoading, PageSnackbar } from './components/page';
 
 const lightTheme = createTheme({
   palette: {
@@ -45,6 +45,18 @@ const lightTheme = createTheme({
           '&:hover': {
             borderRadius: 15
           }
+        }
+      }
+    },
+
+    MuiCircularProgress : {
+      defaultProps: {
+        size: 32,
+        thickness: 5
+      },
+      styleOverrides: {
+        root: {
+          margin: '24px'
         }
       }
     },
@@ -130,6 +142,18 @@ const darkTheme = createTheme({
       }
     },
 
+    MuiCircularProgress : {
+      defaultProps: {
+        size: 32,
+        thickness: 5
+      },
+      styleOverrides: {
+        root: {
+          margin: '24px'
+        }
+      }
+    },
+
     MuiCssBaseline: {
       styleOverrides: {
         body: {
@@ -190,7 +214,6 @@ const Background = styled(Box)(({ theme }) => ({
   zIndex: -1
 })) as typeof Box;
 
-
 function Page() {
   const [isLoaded, setLoaded] = useState(false);
   const dispatch = useAppDispatch();
@@ -232,9 +255,9 @@ function Page() {
       <PageSnackbar />
       <Foreground>
         <Routes>
-          <Route path="/*" element={isLoaded ? <App /> : <div>Loading...</div>} />
-          <Route path="accounts/*" element={isLoaded ? <Accounts /> : <div>Loading...</div>} />
-          <Route path="*" element={isLoaded ? <Navigate to="/404" replace /> : <div>Loading...</div>} />
+          <Route path="/*" element={isLoaded ? <App /> : <PageLoading />} />
+          <Route path="accounts/*" element={isLoaded ? <Accounts /> : <PageLoading />} />
+          <Route path="*" element={isLoaded ? <Navigate to="/404" replace /> : <PageLoading />} />
         </Routes>
       </Foreground>
       <Background />

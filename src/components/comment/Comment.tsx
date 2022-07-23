@@ -12,7 +12,7 @@ const Comment = (props: any) => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     return(
-        <Card onMouseEnter={() => { setHover(true) }} onMouseLeave={() => { setHover(false) }} elevation={0} sx={{ position: 'relative' }}>
+        <Card onMouseEnter={() => { setHover(true) }} onMouseLeave={() => { setHover(false) }} elevation={0}>
             <CardContent>
                 <Stack direction="row" alignItems="start" spacing={1}>
                     <PageAvatarButton items={props.items.user} />

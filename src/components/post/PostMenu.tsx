@@ -6,7 +6,6 @@ import { deletePost, editPost } from "../../features/post/feedPostSlice";
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
-import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -15,6 +14,7 @@ import { TransitionProps } from "@mui/material/transitions";
 import { PageEmojiButton } from "../page";
 import { openSnackbarInfo } from "../../features/app/snackbarSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import { deleteObject, getStorage, ref } from "firebase/storage";
 
 interface Avatar{
     default: string;
@@ -42,6 +42,8 @@ interface Post{
     isLiked: boolean;
     isMine: boolean;
 }
+
+const storage = getStorage();
 
 const Puller = styled(Box)(({ theme }) => ({
     width: 30,
@@ -181,9 +183,27 @@ const PostMenu = (props: any) => {
 
                 dispatch(deletePost(props.items));
                 dispatch(openSnackbarInfo("Your post was deleted"));
+
+                if(props.items.photo){
+                    deletePhoto();
+                }
             })
         }
-        
+
+        function deletePhoto(){
+            const photoRef = ref(storage, props.items.photo);
+
+            deleteObject(photoRef)
+            .then((res) => {
+                //success
+                console.log('post photo deleted successfully')
+            })
+            .catch((err) => {
+                //error
+                console.log('photo deletion failed')
+            })
+        }
+
         auth.currentUser?.getIdToken()
         .then((res) => {
             fetchDeletePost(res);
