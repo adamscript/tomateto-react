@@ -86,7 +86,7 @@ const CommentMenu = (props: any) => {
             <>
             {
                 props.area ?
-                <ButtonBase component={Box} onClick={handleMenu} sx={{ position: 'absolute', top: 0, width: '100%', height: '100%' }} /> :
+                <ButtonBase component={Box} onClick={handleMenu} sx={{ position: 'absolute', top: 0, width: '100%', height: '100%', background: menuOpen ? 'rgba(125, 125, 125, 0.2)' : 'rgba(0, 0, 0, 0)' }} /> :
                 <IconButton onClick={handleMenu} size="small">
                     <MoreHorizIcon fontSize="inherit" />
                 </IconButton>

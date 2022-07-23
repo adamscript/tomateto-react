@@ -5,6 +5,7 @@ import { PageLabel } from "../components/page";
 
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 import { ReactComponent as TomatetoDarkIcon } from "../logos/tomatetodark-icon.svg";
 import { useEffect } from "react";
@@ -26,6 +27,10 @@ const Settings = () => {
 
     const handlePassword = () => {
         navigate('account/password');
+    }
+
+    const handleAbout = () => {
+        navigate('about');
     }
 
     return(
@@ -63,6 +68,16 @@ const Settings = () => {
                             <ListItemText
                                 primary="Change Password"
                                 secondary="Change your password at any time"
+                            />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemButton onClick={handleAbout}>
+                            <ListItemIcon>
+                                <InfoOutlinedIcon />
+                            </ListItemIcon>
+                            <ListItemText
+                                primary="About"
                             />
                         </ListItemButton>
                     </ListItem>

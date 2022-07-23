@@ -6,7 +6,7 @@ import { styled, useTheme } from '@mui/material/styles';
 import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { Explore, Home, Post, Search, Settings, User, NotFound } from '.';
 import { useAppSelector } from '../app/hooks';
-import { SettingsAccount, SettingsPassword, SettingsProfile, SettingsProfileModal } from '../components/settings';
+import { SettingsAbout, SettingsAccount, SettingsPassword, SettingsProfile, SettingsProfileModal } from '../components/settings';
 import SettingsDelete from '../components/settings/SettingsDelete';
 import SettingsEmail from '../components/settings/SettingsEmail';
 import { ModalNewPost } from '../components/post';
@@ -103,6 +103,7 @@ function App() {
                       <Route path="password" element={isLoggedIn ? <SettingsPassword /> : <Navigate to="/explore" replace />} />
                       <Route path="delete" element={isLoggedIn ? <SettingsDelete /> : <Navigate to="/explore" replace />} />
                     </Route>
+                    <Route path="about" element={isLoggedIn ? <SettingsAbout /> : <Navigate to="/explore" replace />} />
                   </Route>
                   <Route path="compose/post" element={<Navigate to="/" replace />} />
                   <Route path="404" element={<NotFound />} />

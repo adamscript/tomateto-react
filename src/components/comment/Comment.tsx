@@ -1,5 +1,4 @@
-import { Avatar, Box, ButtonBase, Card, CardActionArea, CardContent, Divider, IconButton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Card, CardContent, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 import { useState } from "react";
 import CommentMenu from "./CommentMenu";
@@ -12,7 +11,7 @@ const Comment = (props: any) => {
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     return(
-        <Card onMouseEnter={() => { setHover(true) }} onMouseLeave={() => { setHover(false) }} elevation={0}>
+        <Card onMouseEnter={() => { setHover(true) }} onMouseLeave={() => { setHover(false) }} elevation={0} sx={{ position: 'relative' }}>
             <CardContent>
                 <Stack direction="row" alignItems="start" spacing={1}>
                     <PageAvatarButton items={props.items.user} />

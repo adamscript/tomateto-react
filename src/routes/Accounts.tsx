@@ -1,5 +1,4 @@
 import { Box, Paper, Stack, styled, SvgIcon, useMediaQuery, useTheme } from "@mui/material";
-import { useEffect, useState } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
 import { ForgotPassword, Login, ResetPassword, Signup } from "../components/accounts";

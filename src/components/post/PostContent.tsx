@@ -46,7 +46,7 @@ const PostContent = (props: any) => {
                 <Divider light />
                 {    
                     props.response.likesCount || props.response.commentsCount ?
-                    <><Stack direction="row" spacing={2}>
+                    <><Stack direction="row" alignItems="center" spacing={2}>
                         { props.response.likesCount ? <PageLink likes items={props.response} /> : <></> }
                         {
                             props.response.commentsCount ?

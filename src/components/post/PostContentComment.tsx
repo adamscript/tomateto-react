@@ -40,15 +40,11 @@ const PostContentComment = (props: any) => {
     }, [])
 
     return(
-        <Stack alignItems="center">
-            {        
-                isLoaded ?
-                <Stack width="100%">
-                    {listPostComment}
-                </Stack>
-                : <CircularProgress />
-            }
+        isLoaded ?
+        <Stack>
+            {listPostComment}
         </Stack>
+        : <CircularProgress />
     )
 }
 

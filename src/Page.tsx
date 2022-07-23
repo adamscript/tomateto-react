@@ -82,8 +82,7 @@ const lightTheme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiDrawer-paper': {
-            borderRadius: '30px 30px 0 0',
-            minHeight: 150
+            borderRadius: '30px 30px 0 0'
           }
         }
       }
@@ -175,8 +174,7 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           '& .MuiDrawer-paper': {
-            borderRadius: '30px 30px 0 0',
-            minHeight: 150
+            borderRadius: '30px 30px 0 0'
           }
         }
       }
@@ -216,8 +214,10 @@ const Background = styled(Box)(({ theme }) => ({
 
 function Page() {
   const [isLoaded, setLoaded] = useState(false);
-  const dispatch = useAppDispatch();
+  const [loadMessage, setLoadMessage] = useState('');
+  const [spinner, setSpinner] = useState(false);
 
+  const dispatch = useAppDispatch();
   const darkMode = useAppSelector((state) => state.darkMode.value);
 
   console.log("loaded " + isLoaded)
@@ -225,6 +225,14 @@ function Page() {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
         setLoaded(false);
+
+        const spinnerTimeout = setTimeout(() => { setSpinner(true) }, 6000);
+        const messageTimeout = setTimeout(() => { setSpinner(false); setLoadMessage("Sorry this is taking a bit longer than expected. You can wait a little longer or come back later.") }, 12000);
+
+        function clearTimeouts(){
+          clearTimeout(spinnerTimeout);
+          clearTimeout(messageTimeout);
+        }
 
         if(user){
           console.log("logged in");
@@ -235,7 +243,12 @@ function Page() {
           .then((res) => {
               dispatch(setCurrentUser(res.items));
               dispatch(setAuthState(true));
+              clearTimeouts();
               setLoaded(true);
+          })
+          .catch((err) => {
+            setLoadMessage('Oops, something went wrong. Please try again later.');
+            clearTimeouts();
           })
         }
         else{
@@ -244,6 +257,7 @@ function Page() {
             dispatch(setAuthState(false));
             dispatch(deleteCurrentUser());
             setLoaded(true);
+            clearTimeouts();
           }, 1)
         }
       });
@@ -255,9 +269,9 @@ function Page() {
       <PageSnackbar />
       <Foreground>
         <Routes>
-          <Route path="/*" element={isLoaded ? <App /> : <PageLoading />} />
-          <Route path="accounts/*" element={isLoaded ? <Accounts /> : <PageLoading />} />
-          <Route path="*" element={isLoaded ? <Navigate to="/404" replace /> : <PageLoading />} />
+          <Route path="/*" element={isLoaded ? <App /> : <PageLoading message={loadMessage} spinner={spinner} />} />
+          <Route path="accounts/*" element={isLoaded ? <Accounts /> : <PageLoading message={loadMessage} spinner={spinner} />} />
+          <Route path="*" element={isLoaded ? <Navigate to="/404" replace /> : <PageLoading message={loadMessage} spinner={spinner} />} />
         </Routes>
       </Foreground>
       <Background />

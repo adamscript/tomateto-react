@@ -99,7 +99,7 @@ const Post = () => {
             <PostContent inputRef={inputRef} response={response[0]} />
             <Divider variant="middle" />
             <NewComment ref={inputRef} post={response[0]} />
-            <Divider variant="middle" />
+            { !smDown && <Divider variant="middle" /> }
             <PostContentComment response={response[0]} />
         </Box>
         : <LinearProgress />

@@ -1,5 +1,6 @@
+import SettingsAbout from "./SettingsAbout";
 import SettingsAccount from "./SettingsAccount";
 import SettingsPassword from "./SettingsPassword";
 import { SettingsProfile, SettingsProfileModal } from "./SettingsProfile";
 
-export { SettingsProfile, SettingsAccount, SettingsProfileModal, SettingsPassword }
+export { SettingsProfile, SettingsAccount, SettingsProfileModal, SettingsPassword, SettingsAbout }
