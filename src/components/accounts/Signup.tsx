@@ -5,12 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
 import { LoadingButton } from "@mui/lab";
-
-interface User {
-    id: string;
-    displayName: string;
-    username: string;
-};
+import { User } from "../../features/utility/types";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -35,7 +30,7 @@ const Signup = () => {
 
     const navigate = useNavigate();
 
-    const handleSignup = (e: any) => {
+    const handleSignup = (e: React.FormEvent) => {
         setSignup(true);
 
         e.preventDefault();

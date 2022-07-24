@@ -9,72 +9,104 @@ import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import { openSnackbarError } from "../../features/app/snackbarSlice";
+import { Comment, Post } from "../../features/utility/types";
 
-const PostLikeButton = (props: any) => {
+interface PostLikeButtonProps {
+    items: Post | Comment;
+    comment?: boolean;
+    feed?: boolean;
+    content?: boolean;
+}
+
+function instanceOfPost(object:any): object is Post {
+    return 'id' in object;
+}
+
+function instanceOfComment(object:any): object is Comment {
+    return 'id' in object;
+} 
+
+const PostLikeButton = (props: PostLikeButtonProps) => {
     const dispatch = useDispatch();
     const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
 
     const navigate = useNavigate();
 
     const handleLike = () =>{
-        function fetchLikePost(res: String){
-            dispatch(likePost(props.items));
-
-            fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/like`, {
-                    mode: 'cors',
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${res}`}
-                })
-            .catch((res) => {
-                dispatch(unlikePost(props.items));
-                dispatch(openSnackbarError("An error occurred while processing your request"));
-            })
-        }
-
-        function fetchUnlikePost(res: String){
-            dispatch(unlikePost(props.items));
-
-            fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/unlike`, {
-                    mode: 'cors',
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${res}`}
-                })
-            .catch((res) => {
+        function fetchLikePost(res: string){
+            if(instanceOfPost(props.items)){
                 dispatch(likePost(props.items));
-                dispatch(openSnackbarError("An error occurred while processing your request"));
-            })
+    
+                fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/like`, {
+                        mode: 'cors',
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${res}`}
+                    })
+                .catch((res) => {
+                    if(instanceOfPost(props.items)){
+                        dispatch(unlikePost(props.items));
+                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                    }
+                })
+            }
         }
 
-        function fetchLikeComment(res: String){
-            dispatch(likeComment(props.items));
-
-            fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/like`, {
-                    mode: 'cors',
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${res}`}
+        function fetchUnlikePost(res: string){
+            if(instanceOfPost(props.items)){
+                dispatch(unlikePost(props.items));
+    
+                fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/unlike`, {
+                        mode: 'cors',
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${res}`}
+                    })
+                .catch((res) => {
+                    if(instanceOfPost(props.items)){
+                        dispatch(likePost(props.items));
+                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                    }
                 })
-            .catch((res) => {
-                dispatch(unlikeComment(props.items));
-                dispatch(openSnackbarError("An error occurred while processing your request"));
-            })
+            }
         }
 
-        function fetchUnlikeComment(res: String){
-            dispatch(unlikeComment(props.items));
-
-            fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/unlike`, {
-                    mode: 'cors',
-                    method: 'PUT',
-                    headers: {'Content-Type': 'application/json',
-                                'Authorization': `Bearer ${res}`}
-                })
-            .catch((res) => {
+        function fetchLikeComment(res: string){
+            if(instanceOfComment(props.items)){
                 dispatch(likeComment(props.items));
-                dispatch(openSnackbarError("An error occurred while processing your request"));
-            })
+    
+                fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/like`, {
+                        mode: 'cors',
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${res}`}
+                    })
+                .catch((res) => {
+                    if(instanceOfComment(props.items)){
+                        dispatch(unlikeComment(props.items));
+                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                    }
+                })
+            }
+        }
+
+        function fetchUnlikeComment(res: string){
+            if(instanceOfComment(props.items)){
+                dispatch(unlikeComment(props.items));
+    
+                fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/unlike`, {
+                        mode: 'cors',
+                        method: 'PUT',
+                        headers: {'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${res}`}
+                    })
+                .catch((res) => {
+                    if(instanceOfComment(props.items)){
+                        dispatch(likeComment(props.items));
+                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                    }
+                })
+            }
         }
 
         if(isLoggedIn){
@@ -106,11 +138,11 @@ const PostLikeButton = (props: any) => {
     }
     
     return(
-        <Stack direction={ (props.feed && "row") || (props.comment && "column") } alignItems="center">
+        <Stack direction={ props.feed ? "row" : "column" } alignItems="center">
             <IconButton onClick={handleLike} size={ props.content ? "medium" : "small" } sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary, zIndex: 1 }}>
                 { props.items.isLiked ? <FavoriteIcon fontSize="inherit" /> : <FavoriteBorderOutlinedIcon fontSize="inherit" /> }
             </IconButton>
-            { props.feed || props.comment ? <Typography variant="body2" sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary }}>{ props.items.likesCount > 0 && props.items.likesCount }</Typography> : <></> }
+            { props.feed || props.comment ? <Typography variant="body2" sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary }}>{ props.items.likesCount && props.items.likesCount > 0 && props.items.likesCount }</Typography> : <></> }
         </Stack>
     )
 }

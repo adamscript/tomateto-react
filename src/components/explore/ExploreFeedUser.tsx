@@ -4,7 +4,11 @@ import { useAppSelector } from "../../app/hooks";
 import { auth } from "../../firebase";
 import { UserRecommendation, UserSkeleton } from "../user";
 
-const ExploreFeedUser = (props: any) => {
+interface ExploreFeedUserProps {
+    top?: boolean;
+}
+
+const ExploreFeedUser = (props: ExploreFeedUserProps) => {
     const [response, setResponse] = useState([]);
     const [isLoaded, setLoaded] = useState(false);
 
@@ -15,7 +19,7 @@ const ExploreFeedUser = (props: any) => {
     )
 
     useEffect(() => {
-        function fetchListFeedUser(res?: String){
+        function fetchListFeedUser(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/explore`, { 
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'} 

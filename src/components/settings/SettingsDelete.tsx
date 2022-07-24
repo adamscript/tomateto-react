@@ -27,7 +27,7 @@ const SettingsDelete = () => {
         document.title = "Delete Account - Tomateto";
     }, [])
 
-    const handleDeleteAccount = (e: any) => {
+    const handleDeleteAccount = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if(auth.currentUser){

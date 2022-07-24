@@ -4,8 +4,13 @@ import { Comment } from "../comment";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loadComments } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
+import { Post } from "../../features/utility/types";
 
-const PostContentComment = (props: any) => {
+interface PostContentCommentProps {
+    response: Post;
+}
+
+const PostContentComment = (props: PostContentCommentProps) => {
     const [isLoaded, setLoaded] = useState(false);
 
     const response = useAppSelector((state) => state.feedComment);
@@ -17,7 +22,7 @@ const PostContentComment = (props: any) => {
 
     useEffect(() => {
 
-        function fetchListComment(res?: String){
+        function fetchListComment(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/post/content/${props.response.id}/comments`, {
                     mode: 'cors',
                     headers: {'Content-Type': 'application/json',

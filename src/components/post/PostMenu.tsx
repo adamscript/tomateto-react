@@ -15,33 +15,7 @@ import { PageEmojiButton } from "../page";
 import { openSnackbarInfo } from "../../features/app/snackbarSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { deleteObject, getStorage, ref } from "firebase/storage";
-
-interface Avatar{
-    default: string;
-    medium: string;
-    small: string;
-    extraSmall: string;
-}
-
-interface User{
-    id: String;
-    displayName: String;
-    username: String;
-    avatar: Avatar;
-}
-
-interface Post{
-    id: number;
-    user: User;
-    content: String;
-    photo: String;
-    date: String;
-    likesCount: number;
-    commentsCount: number;
-    isEdited: boolean;
-    isLiked: boolean;
-    isMine: boolean;
-}
+import { Post } from "../../features/utility/types";
 
 const storage = getStorage();
 
@@ -64,7 +38,11 @@ const Transition = forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
   });
 
-const PostMenu = (props: any) => {
+interface PostMenuProps {
+    items: Post;
+}
+
+const PostMenu = (props: PostMenuProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -84,7 +62,7 @@ const PostMenu = (props: any) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleMenu = (e: any) => {
+    const handleMenu = (e: React.MouseEvent<HTMLElement>) => {
         if(menuOpen){
             setMenuOpen(false);
             setAnchorEl(null);
@@ -106,7 +84,11 @@ const PostMenu = (props: any) => {
             id: props.items.user.id,
             displayName: props.items.user.displayName,
             username: props.items.user.username,
-            avatar: props.items.user.avatar
+            avatar: props.items.user.avatar,
+            followCount: props.items.user.followCount,
+            followersCount: props.items.user.followersCount,
+            postsCount: props.items.user.postsCount,
+            isMine: props.items.user.isMine
         },
         content: editContent,
         photo: props.items.photo,
@@ -121,7 +103,7 @@ const PostMenu = (props: any) => {
     const handleEdit = () => {
         setEditSaving(true);
 
-        function fetchEditPost(res: String){
+        function fetchEditPost(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/post`, {
                     mode: 'cors',
                     method: 'PUT',
@@ -161,13 +143,10 @@ const PostMenu = (props: any) => {
             inputRef.current.value = inputRef.current.value + emoji.native;
             setEditContent(inputRef.current.value + emoji.native);
         }
-        else{
-            //catch
-        }
     }
 
     const handleDelete = () => {
-        function fetchDeletePost(res: String){
+        function fetchDeletePost(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/delete`, {
                     mode: 'cors',
                     method: 'DELETE',

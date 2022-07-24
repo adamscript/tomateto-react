@@ -52,7 +52,7 @@ const User = () => {
     }
 
     useEffect(() => {      
-        function fetchListUser(res?: String){
+        function fetchListUser(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/profile/${username}`, {
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'}

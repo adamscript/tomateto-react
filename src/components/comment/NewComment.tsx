@@ -1,6 +1,5 @@
 import { Avatar, Button, Box, IconButton, InputBase, Stack, styled, useMediaQuery, useTheme, LinearProgress } from "@mui/material";
-import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
-import { forwardRef, useState } from "react";
+import React, { ForwardedRef, forwardRef, MutableRefObject, ReactElement, RefObject, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { useDispatch } from "react-redux";
 import { insertComment } from "../../features/comment/feedCommentSlice";
@@ -8,31 +7,7 @@ import { auth } from "../../firebase";
 import { incrementCommentsCount } from "../../features/post/feedPostSlice";
 import { PageEmojiButton } from "../page";
 import { LoadingButton } from "@mui/lab";
-
-interface Avatar{
-    default: string;
-    medium: string;
-    small: string;
-    extraSmall: string;
-}
-
-interface User{
-    id: String;
-    displayName: String;
-    username: String;
-    avatar: Avatar;
-}
-
-interface Comment{
-    id: number;
-    user: User;
-    post: number;
-    content: String;
-    date: String;
-    likesCount: number;
-    isLiked: boolean;
-    isMine: boolean;
-}
+import { Comment, Post } from "../../features/utility/types";
 
 const NewCommentContainer = styled(Box)(({theme}) => ({
     padding: 16,
@@ -54,7 +29,11 @@ const StyledAvatar = styled(Avatar)(({theme}) => ({
     }
 })) as typeof Avatar;
 
-const NewComment = forwardRef((props: any, ref: any) => {
+interface NewCommentProps {
+    post: Post;
+}
+
+const NewComment = forwardRef<HTMLInputElement, NewCommentProps>((props, ref) => {
     const [content, setContent] = useState(String);
     const [isPosting, setPosting] = useState(false);
 
@@ -65,11 +44,8 @@ const NewComment = forwardRef((props: any, ref: any) => {
     const smUp = useMediaQuery(theme.breakpoints.up('sm'));
 
     const handleEmojiSelect = (emoji: any) => {
-        if(ref.current){
-            setContent(ref.current.value + emoji.native);
-        }
-        else{
-            //catch
+        if(ref && typeof ref !== 'function'){
+            setContent(ref.current?.value + emoji.native);
         }
     }
 
@@ -79,7 +55,11 @@ const NewComment = forwardRef((props: any, ref: any) => {
             id: currentUser.id,
             displayName: currentUser.displayName,
             username: currentUser.username,
-            avatar: currentUser.avatar
+            avatar: currentUser.avatar,
+            followCount: currentUser.followCount,
+            followersCount: currentUser.followersCount,
+            postsCount: currentUser.postsCount,
+            isMine: currentUser.isMine 
         },
         post: props.post.id,
         content: content,
@@ -92,7 +72,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
     const handleComment = () => {
         setPosting(true);
 
-        function fetchInsertComment(res: String){
+        function fetchInsertComment(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/comment`, {
                 mode: 'cors',
                 method: 'POST',
@@ -106,7 +86,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
             .then((res) => {
                 return res.json();
             })
-            .then((res: any) => {
+            .then((res) => {
                 newComment.id = res.items.id;
                 dispatch(insertComment(newComment));
                 dispatch(incrementCommentsCount(props.post.id));
@@ -135,7 +115,7 @@ const NewComment = forwardRef((props: any, ref: any) => {
             { isPosting && <LinearProgress /> }
             <NewCommentContainer>
                 <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>
-                    <StyledAvatar src={currentUser.avatar.small} />
+                    <StyledAvatar src={currentUser?.avatar?.small} />
                     <Stack sx={{ width: "100%" }} direction="row" justifyContent="space-between" spacing={1}>
                         <InputBase inputRef={ref} fullWidth multiline value={content} inputProps={{ maxLength: 2200 }} onChange={(e) => {setContent(e.target.value)}} placeholder="Add a tomathought..." />
                         <Stack direction="row" alignItems={ smUp ? "start" : "end" } spacing={1}>

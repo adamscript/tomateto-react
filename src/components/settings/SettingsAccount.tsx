@@ -15,7 +15,11 @@ const StyledForm = styled('form')(() => ({
     height: '100%'
 }))
 
-const PasswordChar = (props: any) => {
+interface PasswordCharProps {
+    children: string;
+}
+
+const PasswordChar = (props: PasswordCharProps) => {
     const [password, setPassword] = useState(String);
 
     useEffect(() => {
@@ -50,7 +54,7 @@ const SettingsAccount = () => {
         document.title = "Account Information - Tomateto"
     }, [])
     
-    const handleConfirm = (e: any) => {
+    const handleConfirm = (e: React.FormEvent<HTMLFormElement>) => {
         setLoading(true);
 
         e.preventDefault();

@@ -4,6 +4,7 @@ import { auth } from "../../firebase";
 import { LoadingButton } from '@mui/lab';
 import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
+import { User } from "../../features/utility/types";
 
 const UnfollowButton = styled(LoadingButton)(({ theme }) => ({
     color: theme.palette.text.primary, 
@@ -16,7 +17,11 @@ const UnfollowButton = styled(LoadingButton)(({ theme }) => ({
     }
 })) as typeof LoadingButton;
 
-const PageFollowButton = (props: any) => {
+interface PageFollowButtonProps {
+    items: User;
+}
+
+const PageFollowButton = (props: PageFollowButtonProps) => {
     const [isLoading, setLoading] = useState(false);
     const [isFollowed, setFollowed] = useState(props.items.isFollowed);
     const [followedLabel, setFollowedLabel] = useState('Followed');
@@ -28,7 +33,7 @@ const PageFollowButton = (props: any) => {
     const handleFollow = () => {
         setLoading(true);
 
-        function fetchFollowUser(res: String){
+        function fetchFollowUser(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/${props.items.id}/follow`, {
                     mode: 'cors',
                     method: 'PUT',
@@ -57,7 +62,7 @@ const PageFollowButton = (props: any) => {
     const handleUnfollow = () => {
         setLoading(true);
 
-        function fetchFollowUser(res: String){
+        function fetchFollowUser(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/${props.items.id}/unfollow`, {
                     mode: 'cors',
                     method: 'PUT',

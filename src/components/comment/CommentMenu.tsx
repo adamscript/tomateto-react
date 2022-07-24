@@ -9,6 +9,12 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import { deleteComment } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
+import { Comment } from "../../features/utility/types";
+
+interface CommentMenuProps {
+    items: Comment;
+    area?: boolean;
+}
 
 const Puller = styled(Box)(({ theme }) => ({
     width: 30,
@@ -20,7 +26,7 @@ const Puller = styled(Box)(({ theme }) => ({
     left: 'calc(50% - 15px)',
   }));
 
-const CommentMenu = (props: any) => {
+const CommentMenu = (props: CommentMenuProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -31,7 +37,7 @@ const CommentMenu = (props: any) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleMenu = (e: any) => {
+    const handleMenu = (e: React.MouseEvent<HTMLElement>) => {
         if(menuOpen){
             setMenuOpen(false);
             setAnchorEl(null);
@@ -53,7 +59,7 @@ const CommentMenu = (props: any) => {
     };
 
     const handleDelete = () => {
-        function fetchDeleteComment(res: String){
+        function fetchDeleteComment(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/delete`, {
                     mode: 'cors',
                     method: 'DELETE',

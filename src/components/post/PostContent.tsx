@@ -5,15 +5,22 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import PostMenu from "./PostMenu";
 import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton } from "../page";
 import { format, parseISO } from "date-fns";
+import { Post } from "../../features/utility/types";
+import { RefObject } from "react";
 
 const SecondaryTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary
 })) as typeof Typography;
 
-const PostContent = (props: any) => {
+interface PostContentProps {
+    response: Post;
+    inputRef: RefObject<HTMLInputElement>;
+}
+
+const PostContent = (props: PostContentProps) => {
 
     const handleComment = () => {
-        props.inputRef.current.focus();
+        props.inputRef?.current?.focus();
     };
 
     return(

@@ -1,29 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Avatar{
-    default: string;
-    medium: string;
-    small: string;
-    extraSmall: string;
-}
-
-interface User{
-    id: String;
-    displayName: String;
-    username: String;
-    avatar: Avatar;
-}
-
-interface Comment{
-    id: number;
-    user: User;
-    post: number;
-    content: String;
-    date: String;
-    likesCount: number;
-    isLiked: boolean;
-    isMine: boolean;
-}
+import { Comment } from "../utility/types";
 
 const initialState: Comment[] = [];
 
@@ -35,11 +11,11 @@ export const feedCommentSlice = createSlice({
             state.unshift(action.payload);
         },
         likeComment(state, action: PayloadAction<Comment>){
-            state[state.map(comment => comment.id).indexOf(action.payload.id)].likesCount += 1;
+            state[state.map(comment => comment.id).indexOf(action.payload.id)].likesCount! += 1;
             state[state.map(comment => comment.id).indexOf(action.payload.id)].isLiked = true;
         },
         unlikeComment(state, action: PayloadAction<Comment>){
-            state[state.map(comment => comment.id).indexOf(action.payload.id)].likesCount -= 1;
+            state[state.map(comment => comment.id).indexOf(action.payload.id)].likesCount! -= 1;
             state[state.map(comment => comment.id).indexOf(action.payload.id)].isLiked = false;
         },
         deleteComment(state, action: PayloadAction<Comment>){

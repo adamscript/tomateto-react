@@ -2,6 +2,7 @@ import { Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, M
 import IosShareIcon from '@mui/icons-material/IosShare';
 import LinkIcon from '@mui/icons-material/Link';
 import { useState } from "react";
+import { Post } from "../../features/utility/types";
 
 const Puller = styled(Box)(({ theme }) => ({
     width: 30,
@@ -13,14 +14,19 @@ const Puller = styled(Box)(({ theme }) => ({
     left: 'calc(50% - 15px)',
   }));
 
-const PageShareButton = (props: any) => {
+interface PageShareButtonProps {
+    items: Post;
+    content?: boolean;
+}
+
+const PageShareButton = (props: PageShareButtonProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleMenu = (e: any) => {
+    const handleMenu = (e: React.MouseEvent<HTMLElement>) => {
         if(menuOpen){
             setMenuOpen(false);
             setAnchorEl(null);

@@ -22,7 +22,7 @@ const PageBottomNavigation = () => {
                 <BottomNavigation>
                     <BottomNavigationAction onClick={() => { navigate('/') }} icon={ location.pathname == '/' ? <HomeRoundedIcon sx={{ color: theme => theme.palette.text.primary }} fontSize="large" /> : <HomeOutlinedIcon sx={{ color: theme => theme.palette.text.primary }} fontSize="large" /> } />
                     <BottomNavigationAction onClick={() => { navigate('/explore') }} icon={<SearchIcon sx={{ color: theme => theme.palette.text.primary, stroke: theme => theme.palette.text.primary, strokeWidth: location.pathname == '/explore' ? 1 : 0 }} fontSize="large" />} />
-                    <BottomNavigationAction onClick={() => { navigate(`/${currentUser.username}`) }} icon={<Avatar src={currentUser.avatar.extraSmall} sx={{ width: 32, height: 32 }} />} />
+                    <BottomNavigationAction onClick={() => { navigate(`/${currentUser.username}`) }} icon={<Avatar src={currentUser?.avatar?.extraSmall} sx={{ width: 32, height: 32 }} />} />
                 </BottomNavigation> :
                 <Stack spacing={2} direction="row" alignItems="center" justifyContent="center" padding={2}>
                     <Button variant="outlined" onClick={() => { navigate('/accounts/login') }} sx={{ width: '100%' }}>Log in</Button>

@@ -1,10 +1,12 @@
-import { Avatar, ButtonBase, Card, CardContent, Stack, styled, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { User } from "../../features/utility/types";
 import { PageAvatarButton, PageFollowButton, PageLink } from "../page";
 
-const UserRecommendation = (props: any) => {
-    const navigate = useNavigate();
+interface UserRecommendationProps {
+    items: User;
+}
 
+const UserRecommendation = (props: UserRecommendationProps) => {
     return(
         <Card elevation={0}>
             <CardContent>

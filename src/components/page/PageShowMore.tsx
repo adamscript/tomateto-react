@@ -10,7 +10,14 @@ const TextButton = styled(Button)(({ theme }) => ({
     }
 })) as typeof Button;
 
-const PageShowMore = (props:any) => {
+interface PageShowMoreProps {
+    height: number;
+    onClick: () => void;
+    textPadding: number;
+    children: string;
+}
+
+const PageShowMore = (props: PageShowMoreProps) => {
     return(
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <TextButton sx={{ height: props.height }} onClick={props.onClick}>

@@ -4,7 +4,12 @@ import { ReactComponent as TomatetoLightLogo } from "../../logos/tomatetolight-l
 import { ReactComponent as TomatetoLightIcon } from "../../logos/tomatetolight-icon.svg";
 import { useEffect } from "react";
 
-const PageLoading = (props: any) => {
+interface PageLoadingProps {
+    message: string;
+    spinner: boolean;
+}
+
+const PageLoading = (props: PageLoadingProps) => {
 
     const theme = useTheme();
     const smUp = useMediaQuery(theme.breakpoints.up('sm'));

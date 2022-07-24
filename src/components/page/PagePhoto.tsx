@@ -3,8 +3,13 @@ import { Box } from "@mui/system";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
+import { Post } from "../../features/utility/types";
 
-const PagePhoto = (props: any) => {
+interface PagePhotoProps {
+    items: Post;
+}
+
+const PagePhoto = (props: PagePhotoProps) => {
     const navigate = useNavigate();
     const location = useLocation();
 

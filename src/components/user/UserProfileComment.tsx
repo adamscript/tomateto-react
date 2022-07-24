@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { useAppSelector } from "../../app/hooks";
 import { Comment } from "../comment";
 
-const UserProfileComment = (props: any) => {
-    const [isLoaded, setLoaded] = useState(true);
+const UserProfileComment = () => {
     const response = useAppSelector((state) => state.feedComment);
 
     const listProfileComment = response.map((items, index) => 

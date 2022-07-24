@@ -9,39 +9,13 @@ import { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { insertPost } from "../../features/post/feedPostSlice";
 
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, StorageReference, uploadBytesResumable } from "firebase/storage";
 import { auth, storage } from '../../firebase';
 import { PageEmojiButton } from '../page';
 import { compressPhoto } from '../../features/utility';
 import { openSnackbarInfo } from '../../features/app/snackbarSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-interface Avatar{
-    default: string;
-    medium: string;
-    small: string;
-    extraSmall: string;
-}
-
-interface User{
-    id: String;
-    displayName: String;
-    username: String;
-    avatar: Avatar;
-}
-
-interface Post{
-    id: number;
-    user: User;
-    content: String;
-    photo: String;
-    date: String;
-    likesCount: number;
-    commentsCount: number;
-    isEdited: boolean;
-    isLiked: boolean;
-    isMine: boolean;
-}
+import { Post } from '../../features/utility/types';
 
 const Input = styled('input')({
     display: 'none',
@@ -66,11 +40,11 @@ const NewPost = () => {
     const currentUser = useAppSelector((state) => state.currentUser);
     const dispatch = useAppDispatch();
 
-    const handleImageChange = (e: any) => {
-        setPhotoFile(e.target.files[0]);
-        setPhotoURLPreview(URL.createObjectURL(e.target.files[0]));
-
-        compressPhoto(photoFile).then((res) => { console.log(res) });
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files){
+            setPhotoFile(e.target.files[0]);
+            setPhotoURLPreview(URL.createObjectURL(e.target.files[0]));
+        }
     }
 
     const handleCancelPhoto = () => {
@@ -93,25 +67,18 @@ const NewPost = () => {
         content: content,
         photo: "",
         date: new Date().toISOString(),
-        likesCount: 0,
-        commentsCount: 0,
-        isEdited: false,
-        isLiked: false,
-        isMine: true,
+        isEdited: false
     }
 
     const handleEmojiSelect = (emoji: any) => {
         if(inputRef.current){
             setContent(inputRef.current.value + emoji.native);
         }
-        else{
-            //catch
-        }
     }
 
     const handlePost = () => {
 
-        function getPhotoURL(photoUploadRef: any){
+        function getPhotoURL(photoUploadRef: StorageReference){
             getDownloadURL(photoUploadRef)
                 .then((url) => {
                     console.log(url)
@@ -137,7 +104,7 @@ const NewPost = () => {
                 .then((res) => {
                     return res.json();
                 })
-                .then((res: any) => {
+                .then((res) => {
                     newPost.id = res.items.id;
                     handlePostSuccess();
                 })
@@ -164,7 +131,7 @@ const NewPost = () => {
             setPosting(false)
         }
 
-        function uploadPhoto(photoUploadRef: any, photoFile: any, metadata: any){
+        function uploadPhoto(photoUploadRef: StorageReference, photoFile: Blob, metadata: { contentType: string }){
             uploadBytesResumable(photoUploadRef, photoFile, metadata)
             .on('state_changed', (snapshot) => {
                 setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
@@ -193,7 +160,9 @@ const NewPost = () => {
 
             compressPhoto(photoFile)
             .then((res) => {
-                uploadPhoto(photoUploadRef, res, metadata);
+                if(res instanceof Blob){
+                    uploadPhoto(photoUploadRef, res, metadata);
+                }
             })
 
         }
@@ -213,7 +182,7 @@ const NewPost = () => {
             {isUploading && <LinearProgress variant="determinate" value={uploadProgress} />}
             <Box sx={{ p: 2, pb: 1 }}>
             <Stack spacing={2} direction='row'>
-                <Avatar src={currentUser.avatar.small} />
+                <Avatar src={currentUser?.avatar?.small} />
                 <Stack sx={{ width: 1 }}>
                     <InputBase inputRef={inputRef} multiline fullWidth minRows={2} value={content} inputProps={{ maxLength: 8000 }} disabled={isPosting || isUploading} onChange={ (e) => {setContent(e.target.value)} } placeholder="What's on your to-mind?" />
                     {

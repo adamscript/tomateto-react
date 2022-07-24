@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { TransitionProps } from "@mui/material/transitions";
 import { format, intervalToDuration, parseISO } from "date-fns";
+import { Comment, Post, User } from "../../features/utility/types";
 
 const LinkTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -34,42 +35,67 @@ const Transition = forwardRef(function Transition(
     return <Slide direction="left" ref={ref} {...props} />;
   });
 
-const PageLink = (props: any) => {
+interface PageLinkProps {
+    items: Post | Comment | User;
+    comment?: boolean;
+    following?: boolean;
+    followers?: boolean;
+    likes?: boolean;
+    user?: boolean;
+    post?: boolean;
+}
+
+function instanceOfPost(object:any): object is Post {
+    return 'id' in object;
+}
+
+function instanceOfComment(object:any): object is Comment {
+    return 'id' in object;
+} 
+
+function instanceOfUser(object:any): object is User {
+    return 'id' in object;
+}
+
+const PageLink = (props: PageLinkProps) => {
     const location = useLocation();
 
     const getPostDate = () => {
-        let postDate = parseISO(props.items.date);
-        let interval = intervalToDuration({ start: postDate, end: Date.now() });
+        if(instanceOfPost(props.items) || instanceOfComment(props.items)){
+            let postDate = parseISO(props.items.date);
+            let interval = intervalToDuration({ start: postDate, end: Date.now() });
+    
+            if(interval.years){
+                return (format(postDate, 'PP'));
+            }
+            else if(interval.days && interval.days >= 7 || interval.months){
+                return (format(postDate, 'MMM d'));
+            }
+            else if(interval.days){
+                return (`${interval.days}d`);
+            }
+            else if(interval.hours){
+                return (`${interval.hours}h`);
+            }
+            else if(interval.minutes){
+                return (`${interval.minutes}m`);
+            }
+            else if(interval.seconds){
+                return (`${interval.seconds}s`);
+            }
+        }
 
-        if(interval.years){
-            return (format(postDate, 'PP'));
-        }
-        else if(interval.days && interval.days >= 7 || interval.months){
-            return (format(postDate, 'MMM d'));
-        }
-        else if(interval.days){
-            return (`${interval.days}d`);
-        }
-        else if(interval.hours){
-            return (`${interval.hours}h`);
-        }
-        else if(interval.minutes){
-            return (`${interval.minutes}m`);
-        }
-        else if(interval.seconds){
-            return (`${interval.seconds}s`);
-        }
     }
 
     return(
         <Box zIndex={1}>
             {
-                (props.comment && <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.post}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>) ||
-                (props.following && <LinkTypography component={Link} to="following" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followCount}</LinkTypographyNumber> Following{ props.items.followCount > 1 && 's' }</LinkTypography>) ||
-                (props.followers && <LinkTypography component={Link} to="followers" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followersCount}</LinkTypographyNumber> Follower{ props.items.followersCount > 1 && 's' }</LinkTypography>) ||
-                (props.likes && <LinkTypography component={Link} to="likes" state={{ backgroundLocation: location, post: props.items.id }}><LinkTypographyNumber display="inline">{props.items.likesCount}</LinkTypographyNumber> Like{ props.items.likesCount > 1 && 's' }</LinkTypography>) ||
-                (props.user && <LinkTypography noWrap component={Link} to={`/${props.items.username}`} state={{ location: location }} sx={{ color: theme => theme.palette.text.primary, fontWeight: '700', fontSize: 16 }}>{props.items.displayName}</LinkTypography>) ||
-                (props.post && 
+                (props.comment && instanceOfComment(props.items) && <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.post}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>) ||
+                (props.following && instanceOfUser(props.items) && props.items.followCount && <LinkTypography component={Link} to="following" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followCount}</LinkTypographyNumber> Following{ props.items.followCount > 1 && 's' }</LinkTypography>) ||
+                (props.followers && instanceOfUser(props.items) && props.items.followersCount && <LinkTypography component={Link} to="followers" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followersCount}</LinkTypographyNumber> Follower{ props.items.followersCount > 1 && 's' }</LinkTypography>) ||
+                (props.likes && instanceOfPost(props.items) && props.items.likesCount && <LinkTypography component={Link} to="likes" state={{ backgroundLocation: location, post: props.items.id }}><LinkTypographyNumber display="inline">{props.items.likesCount}</LinkTypographyNumber> Like{ props.items.likesCount > 1 && 's' }</LinkTypography>) ||
+                (props.user && instanceOfUser(props.items) && <LinkTypography noWrap component={Link} to={`/${props.items.username}`} state={{ location: location }} sx={{ color: theme => theme.palette.text.primary, fontWeight: '700', fontSize: 16 }}>{props.items.displayName}</LinkTypography>) ||
+                (props.post && instanceOfPost(props.items) &&
                 <Tooltip title={format(parseISO(props.items.date), "PPPP 'at' HH:mm")}>
                     <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.id}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>
                 </Tooltip>)
@@ -78,8 +104,14 @@ const PageLink = (props: any) => {
     )
 }
 
-const PageLinkModal = (props: any) => {
-    const [response, setResponse] = useState([]);
+interface PageLinkModalProps {
+    following?: boolean;
+    followers?: boolean;
+    likes?: boolean;
+}
+
+const PageLinkModal = (props: PageLinkModalProps) => {
+    const [response, setResponse] = useState<User[]>([]);
     const [isLoaded, setLoaded] = useState(false);
 
     const authState = useAppSelector((state) => state.authState)
@@ -100,7 +132,7 @@ const PageLinkModal = (props: any) => {
 
     useEffect(() => {
 
-        function fetchListUserFollowing(res?: String){
+        function fetchListUserFollowing(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/${username}/follows`, {
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
@@ -109,11 +141,11 @@ const PageLinkModal = (props: any) => {
                 return res.json();
             })
             .then((res) => {
-                handleFetchSuccess(res);
+                handleFetchSuccess(res.items);
             })
         }
 
-        function fetchListUserFollowers(res?: String){
+        function fetchListUserFollowers(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/${username}/followers`, {
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
@@ -122,11 +154,11 @@ const PageLinkModal = (props: any) => {
                 return res.json();
             })
             .then((res) => {
-                handleFetchSuccess(res);
+                handleFetchSuccess(res.items);
             })
         }
 
-        function fetchListPostLikes(res?: String){
+        function fetchListPostLikes(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/post/content/${postId}/likes`, {
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
@@ -135,16 +167,16 @@ const PageLinkModal = (props: any) => {
                 return res.json();
             })
             .then((res) => {
-                handleFetchSuccess(res);
+                handleFetchSuccess(res.items);
             })
         }
 
-        function handleFetchSuccess(res: any){
-            setResponse(res.items);
+        function handleFetchSuccess(res: User[]){
+            setResponse(res);
             setLoaded(true)
         }
 
-        function handleFetch(res?: String){
+        function handleFetch(res?: string){
             if(props.following){
                 res ? fetchListUserFollowing(res) : fetchListUserFollowing();
             }

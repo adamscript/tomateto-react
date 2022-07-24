@@ -29,7 +29,7 @@ const SettingsPassword = () => {
         document.title = "Change Password - Tomateto";
     }, [])
 
-    const handleChangePassword = (e: any) => {
+    const handleChangePassword = (e: React.FormEvent<HTMLFormElement>) => {
         setLoading(true);
 
         e.preventDefault();

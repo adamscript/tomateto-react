@@ -1,31 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface Avatar{
-    default: string;
-    medium: string;
-    small: string;
-    extraSmall: string;
-}
-
-interface User{
-    id: String;
-    displayName: String;
-    username: String;
-    avatar: Avatar;
-}
-
-interface Post{
-    id: number;
-    user: User;
-    content: String;
-    photo: String;
-    date: String;
-    likesCount: number;
-    commentsCount: number;
-    isEdited: boolean;
-    isLiked: boolean;
-    isMine: boolean;
-}
+import { Post } from "../utility/types";
 
 const initialState: Post[] = [];
 
@@ -41,11 +15,11 @@ export const feedPostSlice = createSlice({
             state[state.map(post => post.id).indexOf(action.payload.id)].isEdited = true;
         },
         likePost(state, action: PayloadAction<Post>){
-            state[state.map(post => post.id).indexOf(action.payload.id)].likesCount += 1;
+            state[state.map(post => post.id).indexOf(action.payload.id)].likesCount! += 1;
             state[state.map(post => post.id).indexOf(action.payload.id)].isLiked = true;
         },
         unlikePost(state, action: PayloadAction<Post>){
-            state[state.map(post => post.id).indexOf(action.payload.id)].likesCount -= 1;
+            state[state.map(post => post.id).indexOf(action.payload.id)].likesCount! -= 1;
             state[state.map(post => post.id).indexOf(action.payload.id)].isLiked = false;
         },
         deletePost(state, action: PayloadAction<Post>){
@@ -59,10 +33,10 @@ export const feedPostSlice = createSlice({
             }
         },
         incrementCommentsCount(state, action: PayloadAction<number>){
-            state[state.map(post => post.id).indexOf(action.payload)].commentsCount += 1;
+            state[state.map(post => post.id).indexOf(action.payload)].commentsCount! += 1;
         },
         decrementCommentsCount(state, action: PayloadAction<number>){
-            state[state.map(post => post.id).indexOf(action.payload)].commentsCount -= 1;
+            state[state.map(post => post.id).indexOf(action.payload)].commentsCount! -= 1;
         }
     }
 })

@@ -31,7 +31,7 @@ const SettingsEmail = () => {
         document.title = "Change Email - Tomateto";
     }, [])
 
-    const handleConfirm = (e: any) => {
+    const handleConfirm = (e: React.FormEvent<HTMLFormElement>) => {
         setLoading(true);
 
         e.preventDefault();
@@ -56,7 +56,7 @@ const SettingsEmail = () => {
         }
     }
 
-    const handleChangeEmail = (e: any) => {
+    const handleChangeEmail = (e: React.FormEvent<HTMLFormElement>) => {
         setLoading(true);
 
         e.preventDefault();

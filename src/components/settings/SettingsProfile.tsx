@@ -15,29 +15,12 @@ import { forwardRef, ReactElement, Ref, useEffect, useRef, useState } from "reac
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setCurrentUser } from "../../features/user/currentUserSlice";
 
-import { deleteObject, getDownloadURL, ref, uploadBytes, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, StorageReference, uploadBytes, uploadBytesResumable } from "firebase/storage";
 import { auth, storage } from "../../firebase";
 import { TransitionProps } from '@mui/material/transitions';
 import { resizePhoto } from '../../features/utility';
 import { openSnackbarError, openSnackbarInfo } from '../../features/app/snackbarSlice';
-
-interface Avatar{
-    default: string;
-    medium: string;
-    small: string;
-    extraSmall: string;
-}
-
-interface User{
-    id: string;
-    displayName: string;
-    username: string;
-    avatar: Avatar;
-    bio: string;
-    followCount: Number;
-    followersCount: Number;
-    postsCount: Number;
-}
+import { Avatar as AvatarType, User } from '../../features/utility/types';
 
 const Input = styled('input')({
     display: 'none',
@@ -52,16 +35,20 @@ const Transition = forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const SettingsProfile = (props: any) => {
+interface SettingsProfileProps {
+    modal?: boolean;
+}
+
+const SettingsProfile = (props: SettingsProfileProps) => {
     const [usernameInput, setUsernameInput] = useState('');
     const [nameInput, setNameInput] = useState('');
-    const [bioInput, setBioInput] = useState('');
+    const [bioInput, setBioInput] = useState<string | undefined>('');
 
     const [isSaving, setSaving] = useState(false);
     const [errorText, setErrorText] = useState('');
     
-    let [photoFile, setPhotoFile] = useState<File | null>();
-    let [photoURLPreview, setPhotoURLPreview] = useState(String)
+    let [photoFile, setPhotoFile] = useState<File | null >();
+    let [photoURLPreview, setPhotoURLPreview] = useState<string | undefined>(String)
     let photoInputRef = useRef<HTMLInputElement>(null);
     
     const navigate = useNavigate();
@@ -76,9 +63,11 @@ const SettingsProfile = (props: any) => {
         document.title = "Edit Profile - Tomateto";
     }, [])
 
-    const handleImageChange = (e: any) => {
-        setPhotoFile(e.target.files[0]);
-        setPhotoURLPreview(URL.createObjectURL(e.target.files[0]));
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(e.target.files){
+            setPhotoFile(e.target.files[0]);
+            setPhotoURLPreview(URL.createObjectURL(e.target.files[0]));
+        }
     }
 
     const handleCancelPhoto = () => {
@@ -97,44 +86,45 @@ const SettingsProfile = (props: any) => {
         displayName: nameInput,
         username: usernameInput,
         avatar: {
-            default: currentUser.avatar.default,
-            medium: currentUser.avatar.medium,
-            small: currentUser.avatar.small,
-            extraSmall: currentUser.avatar.extraSmall
+            default: currentUser?.avatar?.default,
+            medium: currentUser?.avatar?.medium,
+            small: currentUser?.avatar?.small,
+            extraSmall: currentUser?.avatar?.extraSmall
         },
         bio: bioInput,
         followCount: currentUser.followCount,
         followersCount: currentUser.followersCount,
-        postsCount: currentUser.postsCount
+        postsCount: currentUser.postsCount,
+        isMine: true
     }
 
-    const currentUserAvatar: Avatar = {
-        default: currentUser.avatar.default,
-        medium: currentUser.avatar.medium,
-        small: currentUser.avatar.small,
-        extraSmall: currentUser.avatar.extraSmall
+    const currentUserAvatar: AvatarType = {
+        default: currentUser?.avatar?.default,
+        medium: currentUser?.avatar?.medium,
+        small: currentUser?.avatar?.small,
+        extraSmall: currentUser?.avatar?.extraSmall
     }
 
     const handleEdit = () => {
         let uploadedPhotoList: number[] = [];
 
-        function getPhotoURL(photoUploadRef: any, dimension: number){
+        function getPhotoURL(photoUploadRef: StorageReference, dimension: number){
             getDownloadURL(photoUploadRef)
                 .then((url) => {
                     console.log(url)
-                    if(dimension == 270){
+                    if(dimension == 270 && editedUser.avatar){
                         editedUser.avatar.default = url;
                         uploadedPhotoList.push(dimension);
                     }
-                    else if(dimension == 160){
+                    else if(dimension == 160 && editedUser.avatar){
                         editedUser.avatar.medium = url;
                         uploadedPhotoList.push(dimension);
                     }
-                    else if(dimension == 96){
+                    else if(dimension == 96 && editedUser.avatar){
                         editedUser.avatar.small = url;
                         uploadedPhotoList.push(dimension);
                     }
-                    else if(dimension == 64){
+                    else if(dimension == 64 && editedUser.avatar){
                         editedUser.avatar.extraSmall = url;
                         uploadedPhotoList.push(dimension);
                     }
@@ -159,16 +149,16 @@ const SettingsProfile = (props: any) => {
                         username: editedUser.username,
                         displayName : editedUser.displayName,
                         bio : editedUser.bio,
-                        avatarDefault: editedUser.avatar.default,
-                        avatarMedium: editedUser.avatar.medium,
-                        avatarSmall: editedUser.avatar.small,
-                        avatarExtrasmall: editedUser.avatar.extraSmall,
+                        avatarDefault: editedUser?.avatar?.default,
+                        avatarMedium: editedUser?.avatar?.medium,
+                        avatarSmall: editedUser?.avatar?.small,
+                        avatarExtrasmall: editedUser?.avatar?.extraSmall,
                     })
                 })
                 .then((res) => {
                     return res.json();
                 })
-                .then((res: any) => {
+                .then((res) => {
                     console.log(res)
                     if(!res.code){
                         handleEditSuccess();
@@ -204,7 +194,7 @@ const SettingsProfile = (props: any) => {
 
         }
 
-        function uploadPhoto(photoFile: any, name: string, dimension: number){
+        function uploadPhoto(photoFile: Blob, name: string, dimension: number){
             const photoUploadRef = ref(storage, `photo/${currentUser.id}/profile/${name}-${dimension}x${dimension}`);
             const metadata = {
                 contentType: 'image/jpeg'
@@ -223,15 +213,19 @@ const SettingsProfile = (props: any) => {
             const photoFileName = uuid();
             const photoDimensionList = [270, 160, 96, 64];
 
-            let resizedPhotoList: any = [];
+            let resizedPhotoList: { blob: Blob, dimension: number }[] = [];
 
             for(let dimension of photoDimensionList){
-                const resizedPhoto = await resizePhoto(photoFile, dimension);
-                resizedPhotoList.push({ blob: resizedPhoto, dimension: dimension })
+                if(photoFile){
+                    const resizedPhoto = await resizePhoto(photoFile, dimension);
+                    if(resizedPhoto instanceof Blob){
+                        resizedPhotoList.push({ blob: resizedPhoto, dimension: dimension });
+                    }
+                }
             }
 
             if(resizedPhotoList.length == 4){
-                resizedPhotoList.forEach((result: any) => {
+                resizedPhotoList.forEach((result: { blob: Blob, dimension: number }) => {
                     console.log(result)
                     uploadPhoto(result.blob, photoFileName, result.dimension);
                 })
@@ -268,7 +262,7 @@ const SettingsProfile = (props: any) => {
         setUsernameInput(currentUser.username);
         setNameInput(currentUser.displayName);
         setBioInput(currentUser.bio);
-        setPhotoURLPreview(currentUser.avatar.default);
+        setPhotoURLPreview(currentUser?.avatar?.default);
     }, [])
 
     return(

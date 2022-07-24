@@ -1,5 +1,5 @@
 import { Box, Tabs, Tab, Stack, styled, Divider, useMediaQuery, useTheme, CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { loadPosts } from "../../features/post/feedPostSlice";
 import { loadComments } from "../../features/comment/feedCommentSlice";
@@ -9,8 +9,15 @@ import UserProfileLiked from "./UserProfileLiked";
 import UserProfilePost from "./UserProfilePost";
 import { useLocation, useParams } from "react-router-dom";
 import { auth } from "../../firebase";
+import { Comment, Post } from "../../features/utility/types";
 
-function TabPanel(props: any) {
+interface TabPanelProps {
+    value: string;
+    index: string;
+    children: ReactElement;
+}
+
+function TabPanel(props: TabPanelProps) {
     const { value, index } = props;
   
     return (
@@ -76,26 +83,28 @@ const StyledTab = styled((props: StyledTabProps) => (
     },
   }));
 
-const UserPageTabs = (props: any) => {
+interface UserPageTabsProps {
+    response: Post | Comment;
+}
+
+const UserPageTabs = (props: UserPageTabsProps) => {
     const [value, setValue] = useState("posts");
     const [isLoaded, setLoaded] = useState(false);
 
     const authState = useAppSelector((state) => state.authState);
     const dispatch = useAppDispatch();
 
-    const location = useLocation();
-
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleChange = (e: any, value: string) => {
+    const handleChange = (e: React.SyntheticEvent, value: string) => {
         setLoaded(false);
         setValue(value);
     }
 
     useEffect(() => {
         console.log(isLoaded)
-        function fetchListFeedPost(res?: String){
+        function fetchListFeedPost(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/profile/${props.response.id}/${value}`, { 
                 mode: 'cors',
                 headers: {'Authorization': res ? `Bearer ${res}` : 'none'} 

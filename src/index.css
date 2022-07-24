@@ -16,6 +16,7 @@ code {
 em-emoji-picker {
   display: flex;
   justify-content: center;
+  --rgb-background: rgba(0,0,0,0);
 }
 
 @media only screen and (max-width: 600px) {
@@ -30,8 +31,4 @@ svg {
 
 [hidden]{
   display: none !important;
-}
-
-em-emoji-picker{
-  --rgb-background: rgba(0,0,0,0);
 }

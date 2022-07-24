@@ -29,7 +29,7 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleLogin = (e: any) => {
+    const handleLogin = (e: React.FormEvent) => {
         setLogin(true);
         
         e.preventDefault();

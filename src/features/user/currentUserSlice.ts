@@ -1,21 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { User } from "../utility/types";
 
-interface Avatar{
-    default: string;
-    medium: string;
-    small: string;
-    extraSmall: string;
-}
-
-interface User{
+interface UserRaw{
     id: string;
     displayName: string;
     username: string;
-    avatar: Avatar;
-    bio: string;
-    followCount: Number;
-    followersCount: Number;
-    postsCount: Number;
+    avatarDefault?: string;
+    avatarMedium?: string;
+    avatarSmall?: string;
+    avatarExtrasmall?: string;
+    bio?: string;
+    followCount?: number;
+    followersCount?: number;
+    postsCount?: number;
 }
 
 const initialState: User = {
@@ -31,14 +28,15 @@ const initialState: User = {
                                 bio: "", 
                                 followCount: 0, 
                                 followersCount: 0, 
-                                postsCount: 0
+                                postsCount: 0,
+                                isMine: true
                             };
 
 export const currentUserSlice = createSlice({
     name: 'currentUser',
     initialState,
     reducers:{
-        setCurrentUser(state, action: any){
+        setCurrentUser(state, action){
             state.id = action.payload.id;
             state.displayName = action.payload.displayName;
             state.username = action.payload.username;

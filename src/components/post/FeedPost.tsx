@@ -5,6 +5,7 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import { useNavigate } from "react-router-dom";
 import PostMenu from "./PostMenu";
 import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton, PageShowMore } from "../page";
+import { Post } from "../../features/utility/types";
 
 const Content = styled(Typography)(({ theme }) => ({
 
@@ -18,7 +19,11 @@ const Content = styled(Typography)(({ theme }) => ({
 
 })) as typeof Typography;
 
-const FeedPost = (props: any) => {
+interface FeedPostProps {
+    items: Post;
+}
+
+const FeedPost = (props: FeedPostProps) => {
     const navigate = useNavigate();
 
     return(
@@ -49,7 +54,7 @@ const FeedPost = (props: any) => {
                             <Stack direction="row" justifyContent="space-between">
                                 <Stack spacing={1} direction="row" alignItems="center">
                                     <IconButton size="small" onClick={ () => { navigate(`/${props.items.user.username}/post/${props.items.id}`) }}><ModeCommentOutlinedIcon fontSize="inherit" /></IconButton>
-                                    <Typography variant="body2" sx={{ color: theme => theme.palette.text.secondary }}>{ props.items.commentsCount > 0 && props.items.commentsCount }</Typography>
+                                    <Typography variant="body2" sx={{ color: theme => theme.palette.text.secondary }}>{ props.items.commentsCount && props.items.commentsCount > 0 && props.items.commentsCount }</Typography>
                                 </Stack>
                                 <PageLikeButton feed items={props.items} />
                                 <PageShareButton items={props.items} />
@@ -58,7 +63,7 @@ const FeedPost = (props: any) => {
                     </Stack>
                 </Stack>
             </CardContent>
-            { props.items.content.length > 280 || props.items.content.match(/\r\n|\r|\n/g) && props.items.content.match(/\r\n|\r|\n/g).length >= 4 ? <PageShowMore textPadding={8} height={40} onClick={ () => { navigate(`/${props.items.user.username}/post/${props.items.id}`) }}>Show this post</PageShowMore> : <></> }
+            { props.items.content.length > 280 || props.items.content && props.items.content.match(/\r\n|\r|\n/g) && props.items.content.match(/\r\n|\r|\n/g)!.length >= 4 ? <PageShowMore textPadding={8} height={40} onClick={ () => { navigate(`/${props.items.user.username}/post/${props.items.id}`) }}>Show this post</PageShowMore> : <></> }
             <Divider variant="middle" />
         </Card>
         </>

@@ -33,7 +33,7 @@ const Search = () => {
     useEffect(() => {
         document.title = `${searchParams.get('q')} - Tomateto`;
 
-        function fetchListSearchPost(res?: String){
+        function fetchListSearchPost(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/feed/search?q=${searchParams.get('q')}`, {
                     mode: 'cors',
                     headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
@@ -47,7 +47,7 @@ const Search = () => {
                 })
         }
 
-        function fetchListSearchUser(res?: String){
+        function fetchListSearchUser(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/search?q=${searchParams.get('q')}`, {
                     mode: 'cors',
                     headers: {'Authorization': res ? `Bearer ${res}` : 'none'}
@@ -97,7 +97,11 @@ const Search = () => {
     )
 }
 
-const NoSearchFound = (props: any) => {
+interface NoSearchFoundProps {
+    q: string | null;
+}
+
+const NoSearchFound = (props: NoSearchFoundProps) => {
     return(
         <Box sx={{ p: 5 }}>
             <Stack spacing={3} alignItems="center" justifyContent="center">    

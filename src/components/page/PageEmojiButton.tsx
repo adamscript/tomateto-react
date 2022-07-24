@@ -23,7 +23,7 @@ const EmojiDrawer = styled(SwipeableDrawer)(({ theme }) => ({
      }
 })) as typeof SwipeableDrawer;
 
-const PageEmojiButton = (props: any) => {
+const PageEmojiButton = (props:any) => {
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

@@ -1,5 +1,5 @@
 import { alpha, Box, ClickAwayListener, Grow, IconButton, InputBase, MenuItem, MenuList, Paper, Popper, SvgIcon, styled, Typography, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
-import { useState, useRef } from "react";
+import { useState, useRef, ReactElement, RefObject } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import SearchIcon from '@mui/icons-material/Search';
@@ -62,7 +62,15 @@ const SearchContainer = styled(Box)(({ theme }) => ({
     }
 })) as typeof Box;
 
-const SearchMenu = (props: any) => {
+interface SearchMenuProps {
+    open: boolean;
+    anchorEl: RefObject<HTMLDivElement>;
+    onClose: () => void;
+    onClick: () => void;
+    query: string;
+}
+
+const SearchMenu = (props: SearchMenuProps) => {
     return(
         <Popper
           open={props.open}
@@ -97,7 +105,7 @@ const SearchMenu = (props: any) => {
 const PageSearchInput = () => {
     const [searchMenuOpen, setSearchMenuOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState(String);
-    const searchRef = useRef(null);
+    const searchRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
@@ -109,7 +117,7 @@ const PageSearchInput = () => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleSearch = (e: any) => {
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
 
         e.preventDefault();

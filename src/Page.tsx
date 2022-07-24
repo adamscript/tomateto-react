@@ -107,7 +107,11 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           width: 48,
-          height: 48
+          height: 48,
+
+          '& .MuiAvatar-fallback': {
+            color: 'white'
+          }
         }
       }
     },

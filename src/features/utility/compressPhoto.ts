@@ -4,7 +4,7 @@ const img = new Image();
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d");
 
-function compressPhoto(photoFile: any){
+function compressPhoto(photoFile: File | Blob){
 
     return new Promise((resolve) => {
         reader.onload = (e) => {
@@ -15,7 +15,7 @@ function compressPhoto(photoFile: any){
                 context?.drawImage(img, 0, 0, img.width, img.height);
                 URL.revokeObjectURL(img.src);
 
-                canvas.toBlob((blob: any) => {
+                canvas.toBlob((blob: Blob | null) => {
                     resolve(blob)
                 }, "image/jpeg", 0.6)
             }

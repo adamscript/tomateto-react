@@ -8,7 +8,7 @@ let img = new Image();
 
 let canvas = document.createElement("canvas");
 
-const resizePhoto = (photoFile: any, dimension: number) => {
+const resizePhoto = (photoFile: File, dimension: number) => {
     
     return new Promise((resolve) => {
         console.log('resizing')

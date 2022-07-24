@@ -1,5 +1,5 @@
 import { Avatar, Box, Divider, IconButton, List, ListItem, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, styled, SwipeableDrawer, useMediaQuery, useTheme } from "@mui/material";
-import { createContext, useContext, useState } from "react";
+import { createContext, ReactElement, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
@@ -22,7 +22,11 @@ const Puller = styled(Box)(({ theme }) => ({
     left: 'calc(50% - 15px)',
   }));
 
-const PageAccountMenu = (props: any) => {
+interface PageAccountMenuProps {
+    drawer?: boolean;
+}
+
+const PageAccountMenu = (props: PageAccountMenuProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
 
@@ -35,7 +39,7 @@ const PageAccountMenu = (props: any) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const handleMenu = (e: any) => {
+    const handleMenu = (e: React.MouseEvent<HTMLElement>) => {
         if(menuOpen){
             setMenuOpen(false);
             setAnchorEl(null);
@@ -84,7 +88,7 @@ const PageAccountMenu = (props: any) => {
                 {
                     props.drawer ?
                     <MenuIcon /> :
-                    <Avatar src={currentUser.avatar.extraSmall} sx={{ width: 28, height: 28 }} />
+                    <Avatar src={currentUser?.avatar?.extraSmall} sx={{ width: 28, height: 28 }} />
                 }
             </IconButton>
             <Menu anchorEl={anchorEl} 

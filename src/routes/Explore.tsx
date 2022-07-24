@@ -1,6 +1,6 @@
 import { Tabs, Tab, Divider, styled, Slide, useMediaQuery, useScrollTrigger, useTheme } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useRef, useState } from "react";
+import React, { ReactElement, useRef, useState } from "react";
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { ExploreFeedLatestPost, ExploreFeedTopPost, ExploreFeedUser } from "../components/explore";
@@ -9,7 +9,13 @@ import { PostSkeleton } from "../components/post";
 import { loadPosts } from "../features/post/feedPostSlice";
 import { auth } from "../firebase";
 
-function TabPanel(props: any) {
+interface TabPanelProps {
+    value: string;
+    index: string;
+    children: ReactElement[];
+}
+
+function TabPanel(props: TabPanelProps) {
     const { value, index } = props;
   
     return (
@@ -81,7 +87,7 @@ const Explore = () => {
     useEffect(() => {
         document.title = "Explore - Tomateto"
 
-        function fetchListFeedPost(res?: String){
+        function fetchListFeedPost(res?: string){
             if(value == "top" || value == "latest"){
                 fetch(`${process.env.REACT_APP_API_URL}/api/feed/${value}`, {
                     mode: 'cors',
@@ -126,7 +132,7 @@ const Explore = () => {
                 <TabPanel index="top" value={value}>
                 <PageLabel>Tomates to follow</PageLabel>
                     <ExploreFeedUser top />
-                    <PageShowMore textPadding={1} height={60} onClick={() => setValue("user")}>Show more</PageShowMore>
+                    <PageShowMore textPadding={1} height={60} onClick={() => { setValue("user") }}>Show more</PageShowMore>
                     <Divider />
                     <PageLabel>Top Posts</PageLabel>
                     { isLoaded ? <ExploreFeedTopPost /> : <PostSkeleton /> }

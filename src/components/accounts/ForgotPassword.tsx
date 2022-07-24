@@ -1,6 +1,6 @@
 import { Stack, Alert, TextField, Button, Typography, styled } from "@mui/material"
 import { confirmPasswordReset, sendPasswordResetEmail, verifyPasswordResetCode } from "firebase/auth";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
 import { useAppDispatch } from "../../app/hooks";
@@ -20,7 +20,7 @@ const ForgotPassword = () => {
 
     const dispatch = useAppDispatch();
 
-    const handleSendLink = (e: any) => {
+    const handleSendLink = (e: React.FormEvent) => {
         setLoading(true);
 
         e.preventDefault();
@@ -84,7 +84,7 @@ const ResetPassword = () => {
         }
     }, [])
 
-    const handleResetPassword = (e: any) => {
+    const handleResetPassword = (e: React.FormEvent) => {
         setLoading(true);
 
         e.preventDefault();

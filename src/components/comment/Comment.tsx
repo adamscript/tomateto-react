@@ -3,8 +3,13 @@ import { Card, CardContent, Stack, Typography, useMediaQuery, useTheme } from "@
 import { useState } from "react";
 import CommentMenu from "./CommentMenu";
 import { PageAvatarButton, PageLikeButton, PageLink } from "../page";
+import { Comment as CommentType } from "../../features/utility/types";
 
-const Comment = (props: any) => {
+interface CommentProps {
+    items: CommentType;
+}
+
+const Comment = (props: CommentProps) => {
     const [hover, setHover] = useState(false);
 
     const theme = useTheme();

@@ -32,7 +32,7 @@ const Offset = styled('div')(({theme}) => theme.mixins.toolbar);
 
 const Post = () => {
     const [isLoaded, setLoaded] = useState(false);
-    const inputRef = useRef();
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const response = useAppSelector((state) => state.feedPost);
     const dispatch = useAppDispatch();
@@ -58,7 +58,7 @@ const Post = () => {
 
     useEffect(() => {
 
-        function fetchListPost(res?: String){
+        function fetchListPost(res?: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/post/content/${postId}`, { 
             mode: 'cors',
             headers: {'Authorization': res ? `Bearer ${res}` : 'none'} 
