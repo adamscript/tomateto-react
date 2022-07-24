@@ -4,8 +4,8 @@ import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined
 
 import data from '@emoji-mart/data';
 import { Picker } from 'emoji-mart';
-import { Box, IconButton, Menu, Popover, styled, SwipeableDrawer, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Container } from "@mui/system";
+import { Box, IconButton, Popover, styled, SwipeableDrawer, useMediaQuery, useTheme } from "@mui/material";
+import { useAppSelector } from "../../app/hooks";
 
 const Puller = styled(Box)(({ theme }) => ({
     width: 30,
@@ -32,6 +32,8 @@ const PageEmojiButton = (props: any) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const darkMode = useAppSelector((state) => state.darkMode.value);
+
     useEffect(() => {
         new Picker({ ...props, data, ref })
     }, [])
@@ -39,6 +41,12 @@ const PageEmojiButton = (props: any) => {
     const handleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
         setOpen(true);
         setAnchorEl(e.currentTarget);
+        
+        const emojiPickerElements = document.getElementsByTagName("em-emoji-picker");
+
+        for(let i = 0; i < emojiPickerElements.length; i++){
+            emojiPickerElements[i].shadowRoot?.children[0].setAttribute("data-theme", darkMode ? "dark" : "light");
+        }
     }
 
     const handleClose = () => {

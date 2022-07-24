@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './App.css';
-import { Box, createTheme, CssBaseline, Paper, styled, ThemeProvider } from '@mui/material';
+import { Box, createTheme, CssBaseline, Paper, styled, ThemeProvider, useMediaQuery } from '@mui/material';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Accounts, App } from './routes';
 import { auth } from './firebase';
@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import { deleteCurrentUser, setCurrentUser } from './features/user/currentUserSlice';
 import { setAuthState } from './features/user/authStateSlice';
 import { PageLoading, PageSnackbar } from './components/page';
+import { setDarkMode, setLightMode } from './features/app/darkModeSlice';
 
 const lightTheme = createTheme({
   palette: {
@@ -165,7 +166,7 @@ const darkTheme = createTheme({
             backgroundColor: '#7D7D7D',
             border: '3px solid #121212',
             borderRadius: '6px',
-          },
+          }
         }
       }
     },
@@ -220,9 +221,28 @@ function Page() {
   const dispatch = useAppDispatch();
   const darkMode = useAppSelector((state) => state.darkMode.value);
 
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
+  const storedTheme = JSON.parse(localStorage.getItem('currentTheme') || '{}');
+
   console.log("loaded " + isLoaded)
-  
+
   useEffect(() => {
+    localStorage.setItem('currentTheme', JSON.stringify(darkMode ? 'dark' : 'light'));
+  }, [darkMode])
+
+  useEffect(() => {
+    if(storedTheme.length){
+      if(storedTheme == 'dark'){
+        dispatch(setDarkMode());
+      }
+      else if(storedTheme == 'light'){
+        dispatch(setLightMode());
+      }
+    }
+    else{
+      dispatch(prefersDarkMode ? setDarkMode() : setLightMode());
+    }
+
     auth.onAuthStateChanged((user) => {
         setLoaded(false);
 

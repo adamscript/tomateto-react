@@ -31,3 +31,7 @@ svg {
 [hidden]{
   display: none !important;
 }
+
+em-emoji-picker{
+  --rgb-background: rgba(0,0,0,0);
+}

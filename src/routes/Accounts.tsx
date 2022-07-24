@@ -8,8 +8,8 @@ import { ReactComponent as TomatetoBgLogo } from "../logos/tomatetobg-logo.svg";
 import { renderToStaticMarkup } from "react-dom/server";
 
 const StyledBackground = styled(Box)(({ theme }) => ({
-    display: 'flex', 
-    height: '100vh', 
+    display: 'flex',
+    minHeight: '100vh', 
     alignItems: 'center', 
     justifyContent: 'center',
 
@@ -29,7 +29,7 @@ const Accounts = () => {
 
     return(
         <StyledBackground sx={{ backgroundImage: `url("data:image/svg+xml,${bgSvg}")` }}>
-            <Paper elevation={ smUp ? 3 : 0 } sx={{ width: '540px', height: '600px', borderRadius: '30px', padding: "10px 30px 30px" }}>
+            <Paper elevation={ smUp ? 3 : 0 } sx={{ maxWidth: '540px', width: '100%', height: '600px', borderRadius: '30px', padding: "10px 30px 30px" }}>
                 <Stack height="100%" alignItems="center" justifyContent="space-between" spacing={1}>
                     <SvgIcon onClick={() => {navigate('/')}} sx={{ width: '160px', height: '60px', cursor: 'pointer' }} component={TomatetoLightLogo} inheritViewBox />
                     <Box width="100%" height="100%">            
