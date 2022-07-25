@@ -6,6 +6,17 @@ import { useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { User } from "../../features/utility/types";
 
+const FollowButton = styled(LoadingButton)(({ theme }) => ({
+    color: '#FFFFFF',
+    backgroundColor: '#FF6347',
+    borderColor: theme.palette.action.focus,
+    '&:hover': {
+        borderColor: alpha(theme.palette.error.main, theme.palette.action.focusOpacity),
+        backgroundColor: '#B21807'
+
+    }
+})) as typeof LoadingButton;
+
 const UnfollowButton = styled(LoadingButton)(({ theme }) => ({
     color: theme.palette.text.primary, 
     borderColor: theme.palette.action.focus,
@@ -84,7 +95,7 @@ const PageFollowButton = (props: PageFollowButtonProps) => {
     return(
         isFollowed ?
             <UnfollowButton loading={isLoading} variant="outlined" onClick={handleUnfollow} onMouseOver={() => setFollowedLabel('Unfollow')} onMouseOut={() => setFollowedLabel('Followed')}>{ followedLabel }</UnfollowButton> :
-            <LoadingButton loading={isLoading} variant="contained" onClick={handleFollow}>Follow</LoadingButton>
+            <FollowButton loading={isLoading} variant="contained" onClick={handleFollow}>Follow</FollowButton>
     )
 }
 

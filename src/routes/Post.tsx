@@ -35,6 +35,7 @@ const Post = () => {
     const inputRef = useRef<HTMLInputElement>(null);
 
     const response = useAppSelector((state) => state.feedPost);
+    const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
     const dispatch = useAppDispatch();
 
     const authState = useAppSelector((state) => state.authState);
@@ -98,8 +99,13 @@ const Post = () => {
             { smDown && <Offset /> }
             <PostContent inputRef={inputRef} response={response[0]} />
             <Divider variant="middle" />
-            <NewComment ref={inputRef} post={response[0]} />
-            { !smDown && <Divider variant="middle" /> }
+            {
+                isLoggedIn &&
+                <Box>
+                    <NewComment ref={inputRef} post={response[0]} />
+                    { !smDown && <Divider variant="middle" /> }
+                </Box>
+            }
             <PostContentComment response={response[0]} />
         </Box>
         : <LinearProgress />

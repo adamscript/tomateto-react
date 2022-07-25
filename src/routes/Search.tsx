@@ -86,13 +86,18 @@ const Search = () => {
 
     return(
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: !isLoaded ? 'center' : 'stretch' }}>
-            {listSearchUser.length > 0 && <PageLabel>Tomates</PageLabel>}
-            {listSearchUser}
-            {listSearchPost.length > 0 && <PageLabel>Posts</PageLabel>}
-            {listSearchPost}
-            {!isLoaded && <CircularProgress />}
-            {!searchParams.get('q') && <Navigate to='/explore' />}
-            {listSearchUser.length == 0 && listSearchPost.length == 0 && <NoSearchFound q={searchParams.get('q')} />}
+            {
+                !isLoaded ? 
+                <CircularProgress /> :
+                <Box>
+                    {listSearchUser.length > 0 && <PageLabel>Tomates</PageLabel>}
+                    {listSearchUser}
+                    {listSearchPost.length > 0 && <PageLabel>Posts</PageLabel>}
+                    {listSearchPost}
+                    {!searchParams.get('q') && <Navigate to='/explore' />}
+                    {listSearchUser.length == 0 && listSearchPost.length == 0 && <NoSearchFound q={searchParams.get('q')} />}
+                </Box>
+            }
         </Box>
     )
 }

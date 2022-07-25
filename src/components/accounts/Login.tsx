@@ -29,6 +29,10 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    useEffect(() => {
+        document.title = "Log in - Tomateto";
+    }, [])
+
     const handleLogin = (e: React.FormEvent) => {
         setLogin(true);
         

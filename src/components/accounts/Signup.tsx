@@ -30,6 +30,10 @@ const Signup = () => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        document.title = "Sign up - Tomateto";
+    }, [])
+
     const handleSignup = (e: React.FormEvent) => {
         setSignup(true);
 

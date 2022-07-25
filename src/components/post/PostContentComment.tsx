@@ -14,10 +14,11 @@ const PostContentComment = (props: PostContentCommentProps) => {
     const [isLoaded, setLoaded] = useState(false);
 
     const response = useAppSelector((state) => state.feedComment);
+    const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
     const dispatch = useAppDispatch();
 
     const listPostComment = response.map((items, index) => 
-    <Comment key={index} items={items} />
+        <Comment key={index} items={items} />
     )
 
     useEffect(() => {
@@ -34,13 +35,24 @@ const PostContentComment = (props: PostContentCommentProps) => {
             .then((res) => {
                 dispatch(loadComments(res.items));
                 setLoaded(true);
+                console.log(res)
+            })
+            .catch((err) => {
+                console.log(err);
+                setLoaded(true);
             })
         }
 
-        auth.currentUser?.getIdToken()
-        .then((res) => {
-            fetchListComment(res);
-        })
+        if(isLoggedIn){
+            auth.currentUser?.getIdToken()
+            .then((res) => {
+                fetchListComment(res);
+            })
+        }
+        else{
+            fetchListComment();
+        }
+
 
     }, [])
 

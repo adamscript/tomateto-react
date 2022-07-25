@@ -67,6 +67,7 @@ const NewPost = () => {
         content: content,
         photo: "",
         date: new Date().toISOString(),
+        isMine: true,
         isEdited: false
     }
 
@@ -188,7 +189,7 @@ const NewPost = () => {
                     {
                         photoURLPreview &&
                         <Box sx={{ position: 'relative', m: 1 }}>
-                            <IconButton sx={{ position: 'absolute', top: 6, left: 6, color: 'white', background: 'rgba(125, 125, 125, 0.6)', '&:hover': { background: 'rgba(100, 100, 100, 0.6)' } }} onClick={handleCancelPhoto} size="small"><CloseIcon /></IconButton>
+                            <IconButton disabled={isUploading || isPosting} sx={{ position: 'absolute', top: 6, left: 6, color: 'white', background: 'rgba(125, 125, 125, 0.6)', '&:hover': { background: 'rgba(100, 100, 100, 0.6)' } }} onClick={handleCancelPhoto} size="small"><CloseIcon /></IconButton>
                             <CardMedia ref={photoRef} component="img" image={photoURLPreview} />
                         </Box>
                     }

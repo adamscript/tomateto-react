@@ -12,7 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { auth } from "../../firebase";
 import { TransitionProps } from "@mui/material/transitions";
 import { PageEmojiButton } from "../page";
-import { openSnackbarInfo } from "../../features/app/snackbarSlice";
+import { openSnackbarError, openSnackbarInfo } from "../../features/app/snackbarSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import { Post } from "../../features/utility/types";
@@ -146,6 +146,15 @@ const PostMenu = (props: PostMenuProps) => {
     }
 
     const handleDelete = () => {
+        setDeleteAlertOpen(false);
+
+        if(location.pathname.includes('/post/')){
+            navigate('/');
+        }
+
+        dispatch(deletePost(props.items));
+        dispatch(openSnackbarInfo("Your post was deleted"));
+
         function fetchDeletePost(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/post/${props.items.id}/delete`, {
                     mode: 'cors',
@@ -154,18 +163,12 @@ const PostMenu = (props: PostMenuProps) => {
                                 'Authorization': `Bearer ${res}`}
                 })
             .then((res) => {
-                setDeleteAlertOpen(false);
-
-                if(location.pathname.includes('/post/')){
-                    navigate('/');
-                }
-
-                dispatch(deletePost(props.items));
-                dispatch(openSnackbarInfo("Your post was deleted"));
-
                 if(props.items.photo){
                     deletePhoto();
                 }
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request"))
             })
         }
 

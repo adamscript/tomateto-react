@@ -7,6 +7,7 @@ import { PageAvatarButton, PageLikeButton, PageLink, PagePhoto, PageShareButton 
 import { format, parseISO } from "date-fns";
 import { Post } from "../../features/utility/types";
 import { RefObject } from "react";
+import { useAppSelector } from "../../app/hooks";
 
 const SecondaryTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary
@@ -19,8 +20,20 @@ interface PostContentProps {
 
 const PostContent = (props: PostContentProps) => {
 
+    const navigate = useNavigate();
+    const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
+
     const handleComment = () => {
-        props.inputRef?.current?.focus();
+        { 
+            if(isLoggedIn){
+                props.inputRef?.current?.focus();
+            }
+            else{
+                navigate('/accounts/login', { state: { 
+                    isLoggedIn: false
+                } })
+            }
+        }
     };
 
     return(

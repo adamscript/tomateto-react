@@ -20,6 +20,10 @@ const ForgotPassword = () => {
 
     const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        document.title = "Forgot Password - Tomateto";
+    }, [])
+
     const handleSendLink = (e: React.FormEvent) => {
         setLoading(true);
 
@@ -63,6 +67,10 @@ const ResetPassword = () => {
     const dispatch = useAppDispatch();
 
     const actionCode = searchParams.get('oobCode');
+
+    useEffect(() => {
+        document.title = "Reset Password - Tomateto";
+    }, [])
 
     useEffect(() => {
         if(actionCode){

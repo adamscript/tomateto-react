@@ -10,6 +10,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { deleteComment } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
 import { Comment } from "../../features/utility/types";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
 
 interface CommentMenuProps {
     items: Comment;
@@ -59,17 +60,22 @@ const CommentMenu = (props: CommentMenuProps) => {
     };
 
     const handleDelete = () => {
+        setDeleteAlertOpen(false);
+
+        dispatch(deleteComment(props.items));
+        dispatch(decrementCommentsCount(props.items.post));
+
         function fetchDeleteComment(res: string){
+
             fetch(`${process.env.REACT_APP_API_URL}/api/comment/${props.items.id}/delete`, {
                     mode: 'cors',
                     method: 'DELETE',
                     headers: {'Content-Type': 'application/json',
                                 'Authorization': `Bearer ${res}`}
                 })
-            .then((res) => {
-                setDeleteAlertOpen(false);
-                dispatch(deleteComment(props.items));
-                dispatch(decrementCommentsCount(props.items.post));
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request"));
+                console.log(err)
             })
         }
         
