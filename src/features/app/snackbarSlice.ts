@@ -17,6 +17,11 @@ export const snackbarSlice = createSlice({
             state.snackbarMessage = action.payload;
             state.snackbarSeverity = 'info';
         },
+        openSnackbarWarning(state, action: PayloadAction<string>){
+            state.snackbarOpen = true;
+            state.snackbarMessage = action.payload;
+            state.snackbarSeverity = 'warning';
+        },
         openSnackbarError(state, action: PayloadAction<string>){
             state.snackbarOpen = true;
             state.snackbarMessage = action.payload;
@@ -28,6 +33,6 @@ export const snackbarSlice = createSlice({
     }
 })
 
-export const { openSnackbarInfo, openSnackbarError, closeSnackbar } = snackbarSlice.actions;
+export const { openSnackbarInfo, openSnackbarWarning, openSnackbarError, closeSnackbar } = snackbarSlice.actions;
 
 export default snackbarSlice.reducer;

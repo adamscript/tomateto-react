@@ -118,6 +118,7 @@ const PostMenu = (props: PostMenuProps) => {
                 setEditPostOpen(false);
                 setEditSaving(false);
                 dispatch(editPost(editedPost));
+                dispatch(openSnackbarInfo('Post saved'));
             })
         }
         

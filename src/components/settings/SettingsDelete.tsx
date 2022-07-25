@@ -6,7 +6,7 @@ import { PageLabel } from "../page";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "firebase/auth";
 import { firebaseErrorHandling } from "../../features/utility";
-import { openSnackbarError } from "../../features/app/snackbarSlice";
+import { openSnackbarError, openSnackbarWarning } from "../../features/app/snackbarSlice";
 import { useDispatch } from "react-redux";
 
 const StyledForm = styled('form')(() => ({
@@ -40,6 +40,7 @@ const SettingsDelete = () => {
                     deleteUser(user!)
                     .then(() => {
                         navigate('/');
+                        dispatch(openSnackbarWarning('Account deleted successfully. Goodbye :('))
                     })
                     .catch((err) => {
                         dispatch(openSnackbarError(firebaseErrorHandling(err)));

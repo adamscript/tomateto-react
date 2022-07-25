@@ -3,6 +3,8 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import LinkIcon from '@mui/icons-material/Link';
 import { useState } from "react";
 import { Post } from "../../features/utility/types";
+import { useAppDispatch } from "../../app/hooks";
+import { openSnackbarInfo } from "../../features/app/snackbarSlice";
 
 const Puller = styled(Box)(({ theme }) => ({
     width: 30,
@@ -26,6 +28,8 @@ const PageShareButton = (props: PageShareButtonProps) => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const dispatch = useAppDispatch();
+
     const handleMenu = (e: React.MouseEvent<HTMLElement>) => {
         if(menuOpen){
             setMenuOpen(false);
@@ -45,6 +49,8 @@ const PageShareButton = (props: PageShareButtonProps) => {
     const handleCopyLink = () => {
         navigator.clipboard.writeText(`https://tomateto.com/${props.items.user.username}/post/${props.items.id}`);
         setMenuOpen(false);
+
+        dispatch(openSnackbarInfo('Link copied to clipboard'));
     };
 
     return(

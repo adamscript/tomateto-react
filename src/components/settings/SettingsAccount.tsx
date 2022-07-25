@@ -15,6 +15,16 @@ const StyledForm = styled('form')(() => ({
     height: '100%'
 }))
 
+const LinkTypography = styled(Typography)(({ theme }) => ({
+    display: 'inline',
+    color: theme.palette.primary.main,
+    textDecoration: 'none',
+    fontSize: 14,
+    '&:hover': {
+        textDecoration: 'underline'
+    }
+})) as typeof Typography;
+
 interface PasswordCharProps {
     children: string;
 }
@@ -84,7 +94,7 @@ const SettingsAccount = () => {
     }
 
     return(
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isLoading ? 'center' : 'start', padding: '0 16px' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: isLoading ? 'center' : 'start', padding: '0 16px', width: '100%' }}>
             <Stack spacing={2} direction="row" alignItems="center" sx={{ width: '100%' }}>
                 <IconButton size="small" onClick={ () => {navigate('../..')} }>
                     <ArrowBackIcon />
@@ -99,40 +109,32 @@ const SettingsAccount = () => {
                 isReauthenticated ? 
                 <Stack direction="row" spacing={2}>
                     <List>
-                        <ListItem>
-                            <ListItemText>
+                        <ListItem sx={{ alignItems: 'flex-start' }}>
+                            <ListItemText sx={{ maxWidth: '160px', width: '100%' }}>
                                 Email address
                             </ListItemText>
+                            <Typography noWrap>{auth?.currentUser?.email}</Typography>
+                            <LinkTypography component={Link} to="email" state={{ getInformation: true }}>Change</LinkTypography>
                         </ListItem>
-                        <ListItem>
-                            <ListItemText>
+                        <ListItem sx={{ alignItems: 'flex-start' }}>
+                            <ListItemText sx={{ maxWidth: '160px', width: '100%' }}>
                                 Account creation
                             </ListItemText>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText>
-                                Password
-                            </ListItemText>
-                        </ListItem>
-                    </List>
-                    <List>
-                        <ListItem>
-                            <ListItemText>
-                                {auth?.currentUser?.email} <Link to="email" state={{ getInformation: true }}>Change</Link>
-                            </ListItemText>
-                        </ListItem>
-                        <ListItem>
                             <ListItemText>
                                 {auth?.currentUser?.metadata.creationTime}
                             </ListItemText>
                         </ListItem>
-                        <ListItem>
+                        <ListItem sx={{ alignItems: 'flex-start' }}>
+                            <ListItemText sx={{ maxWidth: '160px', width: '100%' }}>
+                                Password
+                            </ListItemText>
                             <ListItemText>
-                                <PasswordChar>younaughtynaughtyhacker:P</PasswordChar> <Link to="password" state={{ getInformation: true }}>Change password</Link>
+                                <PasswordChar>younaughtynaughtyhacker:P</PasswordChar> <LinkTypography component={Link} to="password" state={{ getInformation: true }}>Change password</LinkTypography>
                             </ListItemText>
                         </ListItem>
-                        <ListItem>
-                                <Link to="delete" state={{ getInformation: true }}>Delete account</Link>
+                        <ListItem sx={{ alignItems: 'flex-start' }}>
+                            <Box sx={{ maxWidth: '160px', width: '100%' }} />
+                            <LinkTypography component={Link} to="delete" state={{ getInformation: true }} sx={{ color: theme => theme.palette.error.dark }}>Delete account</LinkTypography>
                         </ListItem>
                     </List>
                 </Stack>

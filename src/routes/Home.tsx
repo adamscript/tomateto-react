@@ -1,4 +1,4 @@
-import { Box, Button, Stack, styled, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { alpha, Box, Button, Stack, styled, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
@@ -6,13 +6,16 @@ import { FeedNewPost, FeedPost, PostSkeleton } from "../components/post";
 import { loadPosts } from "../features/post/feedPostSlice";
 import { auth } from "../firebase";
 
-const LinkTypography = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    textDecoration: 'none',
+const StyledButton = styled(Button)(({ theme }) => ({
+    color: '#FFFFFF',
+    backgroundColor: '#FF6347',
+    borderColor: theme.palette.action.focus,
     '&:hover': {
-        textDecoration: 'underline'
+        borderColor: alpha(theme.palette.error.main, theme.palette.action.focusOpacity),
+        backgroundColor: '#B21807'
+
     }
-})) as typeof Typography;
+})) as typeof Button;
 
 const Home = () => {
     const [isLoaded, setLoaded] = useState(false);
@@ -68,7 +71,7 @@ const NoFeedPostFound = () => {
             <Stack spacing={3} alignItems="center" justifyContent="center">    
                 <Typography variant="h5" align="center" sx={{ fontWeight: 700 }}>Looks like you haven't followed anyone.</Typography>
                 <Typography align="center">Explore and find Tomates to follow!</Typography>
-                <Button onClick={() => { navigate('/explore') }} variant="contained" sx={{ width: 120 }}>Explore</Button>
+                <StyledButton onClick={() => { navigate('/explore') }} variant="contained" sx={{ width: 120 }}>Explore</StyledButton>
             </Stack>
         </Box>
     )

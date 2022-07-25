@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
+import { openSnackbarInfo } from "../../features/app/snackbarSlice";
+import { useAppDispatch } from "../../app/hooks";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -25,11 +27,15 @@ const SettingsPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const dispatch = useAppDispatch();
+
     useEffect(() => {
         document.title = "Change Password - Tomateto";
     }, [])
 
     const handleChangePassword = (e: React.FormEvent<HTMLFormElement>) => {
+        
+
         setLoading(true);
 
         e.preventDefault();
@@ -50,6 +56,8 @@ const SettingsPassword = () => {
                         setConfirmPasswordInput('');
                         setErrorText('');
                         setErrorAlertMessage('');
+
+                        dispatch(openSnackbarInfo("Password saved"));
                     })
                     .catch((err) => {
                         setLoading(false);
@@ -96,10 +104,10 @@ const SettingsPassword = () => {
                     <TextField id="newpassword-input" label="New password" value={newPasswordInput} type="password" onChange={ (e) => {setNewPasswordInput(e.target.value)} } />
                     <TextField id="confirmpassword-input" label="Confirm new password" value={confirmPasswordInput} type="password" onChange={ (e) => {setConfirmPasswordInput(e.target.value)} } />
                     <Divider />
-                    <Stack direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent={ confirmPasswordInput ? "space-between" : "end" }>
+                    <Stack direction="row" sx={{ width: '100%' }} alignItems="start" justifyContent={ confirmPasswordInput ? "space-between" : "end" } spacing={3}>
                         { !errorAlertMessage && confirmPasswordInput && <Alert severity={ newPasswordInput != confirmPasswordInput ? "warning" : "success" }>{ newPasswordInput != confirmPasswordInput ? "Password does not match" : "Password matched" }</Alert> }
                         { errorAlertMessage && <Alert severity="error">{errorAlertMessage}</Alert> }
-                        <Button variant="contained" type="submit" disabled={ !oldPasswordInput || !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Update password</Button>
+                        <Button sx={{ minWidth: '150px' }} variant="contained" type="submit" disabled={ !oldPasswordInput || !newPasswordInput || newPasswordInput != confirmPasswordInput ? true : false }>Update password</Button>
                     </Stack>
                 </Stack>
             </StyledForm>

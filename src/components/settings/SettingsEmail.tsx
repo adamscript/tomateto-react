@@ -7,6 +7,8 @@ import { PageLabel } from "../page";
 import { useLocation, useNavigate } from "react-router-dom";
 import { EmailAuthProvider, reauthenticateWithCredential, updateEmail } from "firebase/auth";
 import { firebaseErrorHandling } from "../../features/utility";
+import { useAppDispatch } from "../../app/hooks";
+import { openSnackbarInfo } from "../../features/app/snackbarSlice";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -24,6 +26,8 @@ const SettingsEmail = () => {
     
     const navigate = useNavigate();
     const location = useLocation();
+
+    const dispatch = useAppDispatch();
     
     const [isReauthenticated, setReauthenticated] = useState(location.state ? true : false);
 
@@ -69,6 +73,8 @@ const SettingsEmail = () => {
                 setNewEmailInput('');
                 setErrorText('');
                 setErrorAlertMessage('');
+
+                dispatch(openSnackbarInfo('Email saved'));
             })
             .catch((err) => {
                 setLoading(false);
