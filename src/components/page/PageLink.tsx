@@ -91,8 +91,8 @@ const PageLink = (props: PageLinkProps) => {
         <Box zIndex={1}>
             {
                 (props.comment && instanceOfComment(props.items) && <LinkTypography noWrap component={Link} to={`/${props.items.user.username}/post/${props.items.post}`} state={{ location: location }} sx={{ fontSize: 16 }}>{getPostDate()}</LinkTypography>) ||
-                (props.following && instanceOfUser(props.items) && props.items.followCount && <LinkTypography component={Link} to="following" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followCount}</LinkTypographyNumber> Following{ props.items.followCount > 1 && 's' }</LinkTypography>) ||
-                (props.followers && instanceOfUser(props.items) && props.items.followersCount && <LinkTypography component={Link} to="followers" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followersCount}</LinkTypographyNumber> Follower{ props.items.followersCount > 1 && 's' }</LinkTypography>) ||
+                (props.following && instanceOfUser(props.items) && <LinkTypography component={Link} to="following" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followCount}</LinkTypographyNumber> Following{ props.items.followCount && props.items.followCount > 1 ? 's' : '' }</LinkTypography>) ||
+                (props.followers && instanceOfUser(props.items) && <LinkTypography component={Link} to="followers" state={{ backgroundLocation: location, user: props.items.id }}><LinkTypographyNumber display="inline">{props.items.followersCount}</LinkTypographyNumber> Follower{ props.items.followersCount && props.items.followersCount > 1 ? 's' : '' }</LinkTypography>) ||
                 (props.likes && instanceOfPost(props.items) && props.items.likesCount && <LinkTypography component={Link} to="likes" state={{ backgroundLocation: location, post: props.items.id }}><LinkTypographyNumber display="inline">{props.items.likesCount}</LinkTypographyNumber> Like{ props.items.likesCount > 1 && 's' }</LinkTypography>) ||
                 (props.user && instanceOfUser(props.items) && <LinkTypography noWrap component={Link} to={`/${props.items.username}`} state={{ location: location }} sx={{ color: theme => theme.palette.text.primary, fontWeight: '700', fontSize: 16 }}>{props.items.displayName}</LinkTypography>) ||
                 (props.post && instanceOfPost(props.items) &&
@@ -193,6 +193,9 @@ const PageLinkModal = (props: PageLinkModalProps) => {
             .then((res) => {
                 handleFetch(res);
             })
+        }
+        else{
+            handleFetch();
         }
 
     }, []);
