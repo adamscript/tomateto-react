@@ -8,6 +8,7 @@ import { EmailAuthProvider, reauthenticateWithCredential, deleteUser } from "fir
 import { firebaseErrorHandling } from "../../features/utility";
 import { openSnackbarError, openSnackbarWarning } from "../../features/app/snackbarSlice";
 import { useDispatch } from "react-redux";
+import { LoadingButton } from "@mui/lab";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -17,6 +18,7 @@ const StyledForm = styled('form')(() => ({
 const SettingsDelete = () => {
     const [passwordInput, setPasswordInput] = useState('');
     const [errorText, setErrorText] = useState('');
+    const [isLoading, setLoading] = useState(false);
 
     const dispatch = useDispatch();
     
@@ -29,34 +31,57 @@ const SettingsDelete = () => {
 
     const handleDeleteAccount = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true);
 
-        if(auth.currentUser){
-            let credential = auth.currentUser.email ? EmailAuthProvider.credential(auth.currentUser.email, passwordInput) : null;
-            let user = auth.currentUser;
-    
-            if(credential){
-                reauthenticateWithCredential(user, credential)
-                .then(() => {
-                    deleteUser(user!)
+        function fetchDeleteUser(res: string){
+            fetch(`${process.env.REACT_APP_API_URL}/api/user/delete`, {
+                mode: 'cors',
+                method: 'DELETE',
+                headers: {'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${res}`}
+            })
+            .then((res) => {
+                deleteAccount();
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request"))
+            })
+        }
+        
+        function deleteAccount(){
+            if(auth.currentUser){
+                let credential = auth.currentUser.email ? EmailAuthProvider.credential(auth.currentUser.email, passwordInput) : null;
+                let user = auth.currentUser;
+        
+                if(credential){
+                    reauthenticateWithCredential(user, credential)
                     .then(() => {
-                        navigate('/');
-                        dispatch(openSnackbarWarning('Account deleted successfully. Goodbye :('))
+                        deleteUser(user!)
+                        .then(() => {
+                            navigate('/');
+                            dispatch(openSnackbarWarning('Account deleted successfully. Goodbye :('))
+                        })
+                        .catch((err) => {
+                            dispatch(openSnackbarError(firebaseErrorHandling(err)));
+                        })
                     })
                     .catch((err) => {
-                        dispatch(openSnackbarError(firebaseErrorHandling(err)));
+                        setErrorText(firebaseErrorHandling(err));
                     })
-                })
-                .catch((err) => {
-                    setErrorText(firebaseErrorHandling(err));
-                })
+                }
+                else{
+                    //catch
+                }
             }
             else{
                 //catch
             }
         }
-        else{
-            //catch
-        }
+
+        auth.currentUser?.getIdToken()
+        .then((res) => {
+            fetchDeleteUser(res);
+        })
     }
 
     return(
@@ -73,10 +98,10 @@ const SettingsDelete = () => {
                         Confirm your password
                     </Typography>
                     <Divider />
-                    <TextField id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} error={errorText ? true : false} helperText={errorText} />
+                    <TextField disabled={isLoading} id="password-input" label="Password" type="password" value={passwordInput} onChange={(e) => {setPasswordInput(e.target.value)}} error={errorText ? true : false} helperText={errorText} />
                     <Stack spacing={2} direction="row" sx={{ width: '100%' }} alignItems="center" justifyContent="space-between">
                         <Alert severity="warning">This action will permanently delete your account</Alert>
-                        <Button variant="contained" color="error" type="submit">Delete</Button>
+                        <LoadingButton loading={isLoading} variant="contained" color="error" type="submit">Delete</LoadingButton>
                     </Stack>
                 </Stack>
             </StyledForm>

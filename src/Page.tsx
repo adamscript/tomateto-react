@@ -9,6 +9,7 @@ import { deleteCurrentUser, setCurrentUser } from './features/user/currentUserSl
 import { setAuthState } from './features/user/authStateSlice';
 import { PageLoading, PageSnackbar } from './components/page';
 import { setDarkMode, setLightMode } from './features/app/darkModeSlice';
+import { User } from 'firebase/auth';
 
 const lightTheme = createTheme({
   palette: {
@@ -217,10 +218,17 @@ const Background = styled(Box)(({ theme }) => ({
   zIndex: -1
 })) as typeof Box;
 
+const delay = (ms: number) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+let retries = 3;
+
 function Page() {
   const [isLoaded, setLoaded] = useState(false);
-  const [loadMessage, setLoadMessage] = useState('');
   const [spinner, setSpinner] = useState(false);
+  
+  const [loadMessage, setLoadMessage] = useState('');
 
   const dispatch = useAppDispatch();
   const darkMode = useAppSelector((state) => state.darkMode.value);
@@ -248,43 +256,64 @@ function Page() {
     }
 
     auth.onAuthStateChanged((user) => {
-        setLoaded(false);
+      setLoaded(false);
+      
+      const spinnerTimeout = setTimeout(() => { setSpinner(true) }, 6000);
+      const messageTimeout = setTimeout(() => { setSpinner(false); setLoadMessage("Sorry this is taking a bit longer than expected. You can wait a little longer or come back later.") }, 12000);
 
-        const spinnerTimeout = setTimeout(() => { setSpinner(true) }, 6000);
-        const messageTimeout = setTimeout(() => { setSpinner(false); setLoadMessage("Sorry this is taking a bit longer than expected. You can wait a little longer or come back later.") }, 12000);
-
-        function clearTimeouts(){
-          clearTimeout(spinnerTimeout);
-          clearTimeout(messageTimeout);
-        }
-
-        if(user){
-          console.log("logged in");
-          fetch(`${process.env.REACT_APP_API_URL}/api/user/${user.uid}`, { mode: 'cors' })
-          .then((res) => {
-              return res.json();
-          })
-          .then((res) => {
-              dispatch(setCurrentUser(res.items));
-              dispatch(setAuthState(true));
-              clearTimeouts();
-              setLoaded(true);
-          })
-          .catch((err) => {
-            setLoadMessage('Oops, something went wrong. Please try again later.');
+      function clearTimeouts(){
+        clearTimeout(spinnerTimeout);
+        clearTimeout(messageTimeout);
+      }
+      
+      function fetchCurrentUser(user: User){
+    
+        fetch(`${process.env.REACT_APP_API_URL}/api/user/${user.uid}`, { mode: 'cors' })
+        .then((res) => {
+            return res.json();
+        })
+        .then((res) => {
+            dispatch(setCurrentUser(res.items));
+            dispatch(setAuthState(true));
             clearTimeouts();
-          })
-        }
-        else{
-          setTimeout(() => {
-            console.log("logged out")
-            dispatch(setAuthState(false));
-            dispatch(deleteCurrentUser());
             setLoaded(true);
-            clearTimeouts();
-          }, 1)
-        }
-      });
+        })
+        .catch((err) => {
+          clearTimeouts();
+          
+          setTimeout(() => { 
+            if(retries === 2){
+              setSpinner(true);
+              retries -= 1;
+              fetchCurrentUser(user);
+            }
+            else if(retries){
+              retries -= 1;
+              fetchCurrentUser(user);
+            }
+            else{
+              setSpinner(false);
+              setLoadMessage('Oops, something went wrong. Please try again later.');
+            }
+          }, 2000);
+          
+        })
+      }
+
+      if(user){
+        console.log("logged in");
+        fetchCurrentUser(user);
+      }
+      else{
+        setTimeout(() => {
+          console.log("logged out")
+          dispatch(setAuthState(false));
+          dispatch(deleteCurrentUser());
+          setLoaded(true);
+          clearTimeouts();
+        }, 1)
+      }
+    });
   }, [])
     
   return (

@@ -6,6 +6,8 @@ import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
 import { LoadingButton } from "@mui/lab";
 import { User } from "../../features/utility/types";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { setAuthState } from "../../features/user/authStateSlice";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -29,6 +31,7 @@ const Signup = () => {
     const [errorText, setErrorText] = useState('');
 
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         document.title = "Sign up - Tomateto";
@@ -36,15 +39,13 @@ const Signup = () => {
 
     const handleSignup = (e: React.FormEvent) => {
         setSignup(true);
-
+        
         e.preventDefault();
 
         createUserWithEmailAndPassword(auth, emailInput, passwordInput)
         .then((userCredential) => {
             //Signed in
             const user = userCredential.user;
-
-            console.log(user)
 
             const userBody: User = {
                 id: user.uid,
@@ -63,19 +64,22 @@ const Signup = () => {
                 .then(res => {
                     if(res.ok){
                         console.log(res)
-                        navigate('/')
+                        navigate('/');
                     }
                     else{
+                        console.log(res)
                         deleteUser(user);
                         setSignup(false);
                     }
                 })
                 .catch((error) => {
+                    console.log("error while posting user")
                     console.log(error)
                     setSignup(false);
                 })
             })
             .catch((error) => {
+                console.log(error)
                 deleteUser(user);
                 setSignup(false);
             })
