@@ -12,7 +12,7 @@ import { openSnackbarError } from "../../features/app/snackbarSlice";
 import { Comment, Post } from "../../features/utility/types";
 import insertErrorLog from "../../features/utility/errorLogging";
 
-interface PostLikeButtonProps {
+interface PageLikeButtonProps {
     items: Post | Comment;
     comment?: boolean;
     feed?: boolean;
@@ -27,7 +27,7 @@ function instanceOfComment(object:any): object is Comment {
     return 'id' in object;
 } 
 
-const PostLikeButton = (props: PostLikeButtonProps) => {
+const PageLikeButton = (props: PageLikeButtonProps) => {
     const dispatch = useDispatch();
     const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
 
@@ -49,7 +49,7 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         dispatch(unlikePost(props.items));
                         dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
 
-                        insertErrorLog("Fetch Put Like Post / fetchLikePost / handleLike / PostLikeButton", err);
+                        insertErrorLog("Fetch Put Like Post / fetchLikePost / handleLike / PageLikeButton", err);
                     }
                 })
             }
@@ -70,7 +70,7 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         dispatch(likePost(props.items));
                         dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
 
-                        insertErrorLog("Fetch Put Unlike Post / fetchUnlikePost / handleLike / PostLikeButton", err);
+                        insertErrorLog("Fetch Put Unlike Post / fetchUnlikePost / handleLike / PageLikeButton", err);
                     }
                 })
             }
@@ -91,7 +91,7 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         dispatch(unlikeComment(props.items));
                         dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
 
-                        insertErrorLog("Fetch Put Like Comment / fetchLikeComment / handleLike / PostLikeButton", err);
+                        insertErrorLog("Fetch Put Like Comment / fetchLikeComment / handleLike / PageLikeButton", err);
                     }
                 })
             }
@@ -112,7 +112,7 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         dispatch(likeComment(props.items));
                         dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
 
-                        insertErrorLog("Fetch Put Unlike Comment / fetchLikeComment / handleLike / PostLikeButton", err);
+                        insertErrorLog("Fetch Put Unlike Comment / fetchLikeComment / handleLike / PageLikeButton", err);
                     }
                 })
             }
@@ -140,7 +140,7 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
             })
             .catch((err) => {
                 dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
-                insertErrorLog("Get id token / handleLike / PostLikeButton", err);
+                insertErrorLog("Get id token / handleLike / PageLikeButton", err);
             })
         }
         else{
@@ -155,9 +155,9 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
             <IconButton onClick={handleLike} size={ props.content ? "medium" : "small" } sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary, zIndex: 1 }}>
                 { props.items.isLiked ? <FavoriteIcon fontSize="inherit" /> : <FavoriteBorderOutlinedIcon fontSize="inherit" /> }
             </IconButton>
-            { props.feed || props.comment ? <Typography variant="body2" sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary }}>{ props.items.likesCount && props.items.likesCount > 0 && props.items.likesCount }</Typography> : <></> }
+            { props.feed || props.comment ? <Typography variant="body2" sx={{ color: theme => props.items.isLiked ? "tomato" : theme.palette.text.secondary }}>{ props.items.likesCount && props.items.likesCount > 0 ? props.items.likesCount : null }</Typography> : <></> }
         </Stack>
     )
 }
 
-export default PostLikeButton;
+export default PageLikeButton;

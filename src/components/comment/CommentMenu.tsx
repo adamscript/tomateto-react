@@ -10,7 +10,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { deleteComment } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
 import { Comment } from "../../features/utility/types";
-import { openSnackbarError } from "../../features/app/snackbarSlice";
+import { openSnackbarError, openSnackbarInfo } from "../../features/app/snackbarSlice";
 import insertErrorLog from "../../features/utility/errorLogging";
 
 interface CommentMenuProps {
@@ -58,6 +58,8 @@ const CommentMenu = (props: CommentMenuProps) => {
     const handleCopy = () => {
         navigator.clipboard.writeText(props.items.content);
         setMenuOpen(false);
+
+        dispatch(openSnackbarInfo('Copied to clipboard'));
     };
 
     const handleDelete = () => {
@@ -76,8 +78,6 @@ const CommentMenu = (props: CommentMenuProps) => {
                 })
             .catch((err) => {
                 dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
-                console.log(err)
-
                 insertErrorLog("Fetch Delete Comment / handleDelete / CommentMenu", err);
             })
         }

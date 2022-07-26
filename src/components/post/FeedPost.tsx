@@ -54,7 +54,7 @@ const FeedPost = (props: FeedPostProps) => {
                             <Stack direction="row" justifyContent="space-between">
                                 <Stack spacing={1} direction="row" alignItems="center">
                                     <IconButton size="small" onClick={ () => { navigate(`/${props.items.user.username}/post/${props.items.id}`) }}><ModeCommentOutlinedIcon fontSize="inherit" /></IconButton>
-                                    <Typography variant="body2" sx={{ color: theme => theme.palette.text.secondary }}>{ props.items.commentsCount && props.items.commentsCount > 0 && props.items.commentsCount }</Typography>
+                                    <Typography variant="body2" sx={{ color: theme => theme.palette.text.secondary }}>{ props.items.commentsCount && props.items.commentsCount > 0 ? props.items.commentsCount : null }</Typography>
                                 </Stack>
                                 <PageLikeButton feed items={props.items} />
                                 <PageShareButton items={props.items} />

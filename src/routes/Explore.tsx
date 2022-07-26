@@ -123,7 +123,6 @@ const Explore = () => {
             })
         }
         else{
-            console.log("explore not logged")
             fetchListFeedPost();
         }
     }, [value])

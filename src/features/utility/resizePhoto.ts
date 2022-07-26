@@ -12,8 +12,6 @@ let canvas = document.createElement("canvas");
 const resizePhoto = (photoFile: File, dimension: number) => {
     
     return new Promise((resolve) => {
-        console.log('resizing')
-
         reader.onload = (e) => {
             img.onload = () => {
                 canvas.width = img.width > img.height ? ((dimension / img.height) * img.width) : dimension;

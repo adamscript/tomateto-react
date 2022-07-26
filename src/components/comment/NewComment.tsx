@@ -93,8 +93,6 @@ const NewComment = forwardRef<HTMLInputElement, NewCommentProps>((props, ref) =>
                 dispatch(incrementCommentsCount(props.post.id));
                 setContent("");
                 setPosting(false);
-
-                console.log(newComment)
             })
             .catch((err) => {
                 setPosting(false);

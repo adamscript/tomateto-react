@@ -48,8 +48,6 @@ const PasswordChar = (props: PasswordCharProps) => {
     )
 }
 
-console.log(auth?.currentUser)
-
 const SettingsAccount = () => {
     const [passwordInput, setPasswordInput] = useState('');
     

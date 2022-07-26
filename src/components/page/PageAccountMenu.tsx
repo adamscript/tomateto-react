@@ -68,7 +68,6 @@ const PageAccountMenu = (props: PageAccountMenuProps) => {
     }
 
     const handleDarkMode = () => {
-        console.log(darkMode)
         if(darkMode){
             dispatch(setLightMode());
         }

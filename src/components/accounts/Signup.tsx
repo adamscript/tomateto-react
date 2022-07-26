@@ -64,25 +64,20 @@ const Signup = () => {
                 })
                 .then(res => {
                     if(res.ok){
-                        console.log(res)
                         navigate('/');
                     }
                     else{
-                        console.log(res)
                         deleteUser(user);
                         setSignup(false);
                     }
                 })
                 .catch((error) => {
-                    console.log("error while posting user")
-                    console.log(error)
                     setSignup(false);
 
                     insertErrorLog("Fetch Post new User / handleSignup / Signup", error);
                 })
             })
             .catch((error) => {
-                console.log(error)
                 deleteUser(user);
                 setSignup(false);
 

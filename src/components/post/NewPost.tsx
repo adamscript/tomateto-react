@@ -83,7 +83,6 @@ const NewPost = () => {
         function getPhotoURL(photoUploadRef: StorageReference){
             getDownloadURL(photoUploadRef)
                 .then((url) => {
-                    console.log(url)
                     newPost.photo = url;
 
                     fetchInsertPost();
@@ -128,7 +127,6 @@ const NewPost = () => {
         function handlePostSuccess(){
             dispatch(insertPost(newPost));
             dispatch(openSnackbarInfo("Your post was sent"));
-            console.log(newPost)
 
             setContent("");
             setPhotoURLPreview("");
@@ -151,20 +149,19 @@ const NewPost = () => {
                 setUploadProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
             },
             (error) => {
-                console.log(error)
+                setUploading(false);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Uploading photo while posting new post", error);
             },
             () => {
                 setUploading(false);
                 setPosting(true);
-
-                console.log("upload successful")
 
                 getPhotoURL(photoUploadRef);
             })
         }
 
         if(photoFile){
-            console.log("post with photo upload")
             setUploading(true)
 
             const photoUploadRef = ref(storage, `photo/${currentUser.id}/post/${uuid()}.jpg`);

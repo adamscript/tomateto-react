@@ -237,8 +237,6 @@ function Page() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)', {noSsr: true});
   const storedTheme = JSON.parse(localStorage.getItem('currentTheme') || '{}');
 
-  console.log("loaded " + isLoaded)
-
   useEffect(() => {
     localStorage.setItem('currentTheme', JSON.stringify(darkMode ? 'dark' : 'light'));
   }, [darkMode])
@@ -303,12 +301,10 @@ function Page() {
       }
 
       if(user){
-        console.log("logged in");
         fetchCurrentUser(user);
       }
       else{
         setTimeout(() => {
-          console.log("logged out")
           dispatch(setAuthState(false));
           dispatch(deleteCurrentUser());
           setLoaded(true);

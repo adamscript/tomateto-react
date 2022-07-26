@@ -6,8 +6,6 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import SearchIcon from '@mui/icons-material/Search';
 import { useLocation, useNavigate } from "react-router-dom";
 
-const Offset = styled('div')(({theme}) => theme.mixins.toolbar);
-
 const PageBottomNavigation = () => {
     const currentUser = useAppSelector((state) => state.currentUser);
     const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);

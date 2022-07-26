@@ -51,7 +51,6 @@ const ExploreFeedUser = (props: ExploreFeedUserProps) => {
             })
         }
         else{
-            console.log("explore not logged")
             fetchListFeedUser();
         }
 

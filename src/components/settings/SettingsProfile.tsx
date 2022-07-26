@@ -75,8 +75,6 @@ const SettingsProfile = (props: SettingsProfileProps) => {
         setPhotoURLPreview(""); 
         setPhotoFile(null);
 
-        console.log(editedUser)
-
         if(photoInputRef.current){
             photoInputRef.current.value = "";
         }
@@ -112,7 +110,6 @@ const SettingsProfile = (props: SettingsProfileProps) => {
         function getPhotoURL(photoUploadRef: StorageReference, dimension: number){
             getDownloadURL(photoUploadRef)
                 .then((url) => {
-                    console.log(url)
                     if(dimension == 270 && editedUser.avatar){
                         editedUser.avatar.default = url;
                         uploadedPhotoList.push(dimension);
@@ -163,7 +160,6 @@ const SettingsProfile = (props: SettingsProfileProps) => {
                     return res.json();
                 })
                 .then((res) => {
-                    console.log(res)
                     if(!res.code){
                         handleEditSuccess();
                     }
@@ -193,10 +189,8 @@ const SettingsProfile = (props: SettingsProfileProps) => {
         function handleEditSuccess(){
             dispatch(setCurrentUser(editedUser));
             dispatch(openSnackbarInfo("Profile saved"))
-            console.log(editedUser)
             
             if(currentUserAvatar.default && photoFile){
-                console.log('deleteing avatars')
                 Object.values(currentUserAvatar).forEach(value => {
                     deletePhoto(value);
                 });
@@ -216,8 +210,6 @@ const SettingsProfile = (props: SettingsProfileProps) => {
 
             uploadBytes(photoUploadRef, photoFile, metadata)
             .then((snapshot) => {
-                console.log("upload successful " + dimension)
-
                 getPhotoURL(photoUploadRef, dimension);
             })
             .catch((err) => {
@@ -245,7 +237,6 @@ const SettingsProfile = (props: SettingsProfileProps) => {
 
             if(resizedPhotoList.length == 4){
                 resizedPhotoList.forEach((result: { blob: Blob, dimension: number }) => {
-                    console.log(result)
                     uploadPhoto(result.blob, photoFileName, result.dimension);
                 })
             }
@@ -255,21 +246,13 @@ const SettingsProfile = (props: SettingsProfileProps) => {
             const photoRef = ref(storage, url);
 
             deleteObject(photoRef)
-            .then((res) => {
-                //success
-                console.log('post photo deleted successfully')
-            })
             .catch((err) => {
-                //error
-                console.log('photo deletion failed')
                 insertErrorLog("Deleting photo after being changed in profile settings / deletePhoto / handleEdit / SettingsProfile");
             })
         }
 
         if(photoFile){
             setSaving(true);
-
-            console.log("post with photo upload")
             resizePhotos();
         }
         else{

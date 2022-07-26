@@ -2,15 +2,13 @@ import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Navigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
-import { ExploreFeedTopPost } from "../components/explore";
-import { PageLabel, PageSearchInput } from "../components/page";
+import { PageLabel } from "../components/page";
 import { FeedPost } from "../components/post";
 import { UserRecommendation } from "../components/user";
 import { openSnackbarError } from "../features/app/snackbarSlice";
 import { loadPosts } from "../features/post/feedPostSlice";
 import insertErrorLog from "../features/utility/errorLogging";
 import { auth } from "../firebase";
-import Explore from "./Explore";
 
 const Search = () => {
     const [searchParams] = useSearchParams();
@@ -86,7 +84,6 @@ const Search = () => {
             })
         }
         else{
-            console.log("search not logged")
             fetchListSearchPost();
             fetchListSearchUser();
         }

@@ -37,10 +37,8 @@ const PostContentComment = (props: PostContentCommentProps) => {
             .then((res) => {
                 dispatch(loadComments(res.items));
                 setLoaded(true);
-                console.log(res)
             })
             .catch((err) => {
-                console.log(err);
                 setLoaded(true);
 
                 dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));

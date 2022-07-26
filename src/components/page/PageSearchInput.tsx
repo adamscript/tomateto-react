@@ -123,10 +123,7 @@ const PageSearchInput = () => {
         e.preventDefault();
         
         if(location.pathname == '/search'){
-
             setSearchParams({q: e.target.value}, {replace: true});
-            console.log(searchParams)
-            
         }
         else if(location.pathname == '/explore'){
             navigate(`search?q=${e.target.value}`);

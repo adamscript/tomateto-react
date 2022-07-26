@@ -190,13 +190,7 @@ const PostMenu = (props: PostMenuProps) => {
             const photoRef = ref(storage, props.items.photo);
 
             deleteObject(photoRef)
-            .then((res) => {
-                //success
-                console.log('post photo deleted successfully')
-            })
             .catch((err) => {
-                //error
-                console.log('photo deletion failed')
                 insertErrorLog("Deleting photo on firebase storage / deletePhoto / handleDelete / PostMenu", err);
             })
         }
