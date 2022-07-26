@@ -48,7 +48,7 @@ const Post = () => {
     const theme = useTheme();
     const smDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    let { postId } = useParams();
+    let { username, postId } = useParams();
 
     const handleBack = () => {
         if(location.state){
@@ -71,10 +71,15 @@ const Post = () => {
             })
             .then((res) => {
                 if(!res.code){
-                    dispatch(loadPosts(new Array(res.items)));
-                    setLoaded(true);
-
-                    document.title = `${res.items.user.displayName} on Tomateto: "${res.items.content.length > 64 ? res.items.content.substring(0, 60) + "..." : res.items.content}" - Tomateto`;
+                    if(res.items.user.username === username){
+                        dispatch(loadPosts(new Array(res.items)));
+                        setLoaded(true);
+    
+                        document.title = `${res.items.user.displayName} on Tomateto: "${res.items.content.length > 64 ? res.items.content.substring(0, 60) + "..." : res.items.content}" - Tomateto`;
+                    }
+                    else{
+                        navigate('/404');
+                    }
                 }
                 else{
                     navigate('/404');

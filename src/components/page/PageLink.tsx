@@ -178,7 +178,12 @@ const PageLinkModal = (props: PageLinkModalProps) => {
                 return res.json();
             })
             .then((res) => {
-                handleFetchSuccess(res.items);
+                if(!res.code){
+                    handleFetchSuccess(res.items);
+                }
+                else{
+                    navigate('/404');
+                }
             })
             .catch((err) => {
                 dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
