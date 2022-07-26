@@ -164,8 +164,7 @@ const PostMenu = (props: PostMenuProps) => {
         if(location.pathname.includes('/post/')){
             navigate('/');
         }
-
-        dispatch(deletePost(props.items));
+        
         dispatch(openSnackbarInfo("Your post was deleted"));
 
         function fetchDeletePost(res: string){
@@ -176,6 +175,8 @@ const PostMenu = (props: PostMenuProps) => {
                                 'Authorization': `Bearer ${res}`}
                 })
             .then((res) => {
+                dispatch(deletePost(props.items));
+
                 if(props.items.photo){
                     deletePhoto();
                 }

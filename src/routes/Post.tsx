@@ -70,10 +70,15 @@ const Post = () => {
                 return res.json();
             })
             .then((res) => {
-                dispatch(loadPosts(new Array(res.items)));
-                setLoaded(true)
+                if(!res.code){
+                    dispatch(loadPosts(new Array(res.items)));
+                    setLoaded(true);
 
-                document.title = `${res.items.user.displayName} on Tomateto: "${res.items.content.length > 64 ? res.items.content.substring(0, 60) + "..." : res.items.content}" - Tomateto`;
+                    document.title = `${res.items.user.displayName} on Tomateto: "${res.items.content.length > 64 ? res.items.content.substring(0, 60) + "..." : res.items.content}" - Tomateto`;
+                }
+                else{
+                    navigate('/404');
+                }
             })
             .catch((err) => {
                 setLoaded(true);
