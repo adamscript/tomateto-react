@@ -38,5 +38,12 @@ console.log(`
    ██║   ╚██████╔╝██║ ╚═╝ ██║██║  ██║   ██║   ███████╗███████║██╗
    ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝╚═╝
                                                                  
+Did you know that you can log in anonymously with this account?
+
+email: anonymous@tomateto.com
+password: tomate
+
+You're welcome :)
+
 Built with ♥ by Adam Darmawan (adamscript.com)
-   `)
+`)

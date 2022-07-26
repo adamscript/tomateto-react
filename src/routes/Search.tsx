@@ -74,8 +74,10 @@ const Search = () => {
         if(authState.isLoggedIn){
             auth.currentUser?.getIdToken()
             .then((res) => {
-                fetchListSearchPost(res);
-                fetchListSearchUser(res);
+                if(searchParams.get('q')){
+                    fetchListSearchPost(res);
+                    fetchListSearchUser(res);
+                }
             })
             .catch((err) => {
                 setLoaded(true);
@@ -84,8 +86,10 @@ const Search = () => {
             })
         }
         else{
-            fetchListSearchPost();
-            fetchListSearchUser();
+            if(searchParams.get('q')){
+                fetchListSearchPost();
+                fetchListSearchUser();
+            }
         }
     }, [searchParams]);
 

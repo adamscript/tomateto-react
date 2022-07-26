@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import PageAccountMenu from "./PageAccountMenu";
 import PageSearchInput from "./PageSearchInput";
+import PageInfoMenu from "./PageInfoMenu";
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
     height: '64px',
@@ -46,15 +47,20 @@ const PageAppBar = () => {
                       { !smUp && location.pathname != '/' ? <></> : <SvgIcon onClick={() => {navigate('/')}} sx={{ width: '160px', height: '60px', cursor: 'pointer' }} component={TomatetoLightLogo} inheritViewBox /> }
                       {
                         smUp &&
-                        <>{
+                        <>
+                        <PageSearchInput />
+                            {
                           isLoggedIn ?
-                            <><PageSearchInput />
+                            <>
                             <IconButtonWrapper>
                                 <IconButton onClick={handleNewPost}><AddBoxOutlinedIcon /></IconButton>
                                 <PageAccountMenu />
                             </IconButtonWrapper></>
-                            : 
-                            <Button onClick={() => { navigate("/accounts/login")}} sx={{ width: 120 }} variant="outlined">Log in</Button>
+                            :
+                            <Stack direction="row" spacing={1} alignItems="center">
+                                <PageInfoMenu />
+                                <Button onClick={() => { navigate("/accounts/login")}} sx={{ width: 120 }} variant="outlined">Log in</Button>
+                            </Stack>
                         }</>
                       }
                   </ Stack>

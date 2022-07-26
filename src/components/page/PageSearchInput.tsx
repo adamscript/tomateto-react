@@ -8,6 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { ReactComponent as TomatetoLightIcon } from "../../logos/tomatetolight-icon.svg";
 import { useAppSelector } from "../../app/hooks";
+import PageInfoMenu from "./PageInfoMenu";
 
 const Search = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -178,6 +179,7 @@ const PageSearchInput = () => {
                           </IconButtonWrapper>
                       }
                   </Search>
+                  { smDown && <PageInfoMenu /> }
                   <SearchMenu open={searchMenuOpen} anchorEl={searchRef} onClose={handleSearchClose} onClick={handleSearchSubmit} query={searchQuery} />
               </SearchContainer>
         </Box>
