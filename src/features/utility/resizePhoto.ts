@@ -1,5 +1,6 @@
 import Pica from "pica";
 import compressPhoto from "./compressPhoto";
+import insertErrorLog from "./errorLogging";
 
 const pica = new Pica();
 
@@ -29,7 +30,16 @@ const resizePhoto = (photoFile: File, dimension: number) => {
                         .then((result) => {
                             resolve(result);
                         })
+                        .catch((err) => {
+                            insertErrorLog("Compressing photo / resizePhoto", err);
+                        })
                     })
+                    .catch((err) => {
+                        insertErrorLog("Converting to Blob with pica / resizePhoto", err);
+                    })
+                })
+                .catch((err) => {
+                    insertErrorLog("Resizing photo with pica / resizePhoto", err);
                 })
                 
             }

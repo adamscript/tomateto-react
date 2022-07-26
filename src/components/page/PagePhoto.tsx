@@ -4,6 +4,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from "react";
 import { Post } from "../../features/utility/types";
+import insertErrorLog from "../../features/utility/errorLogging";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
+import { useAppDispatch } from "../../app/hooks";
 
 interface PagePhotoProps {
     items: Post;
@@ -47,6 +50,8 @@ const PagePhotoModal = () => {
     const location = useLocation();
     const locationState = location.state as { photo: string; };
 
+    const dispatch = useAppDispatch();
+
     const handleClose = () => {
         locationState ? navigate(-1) : navigate('..');
     }
@@ -62,6 +67,10 @@ const PagePhotoModal = () => {
             })
             .then((res) => {
                 setPhoto(res.items.photo);
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetching post photo / fetchPostPhoto / PagePhotoModal", err);
             })
         }
 

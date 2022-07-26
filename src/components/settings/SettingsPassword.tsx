@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
-import { openSnackbarInfo } from "../../features/app/snackbarSlice";
+import { openSnackbarError, openSnackbarInfo } from "../../features/app/snackbarSlice";
 import { useAppDispatch } from "../../app/hooks";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -34,8 +35,6 @@ const SettingsPassword = () => {
     }, [])
 
     const handleChangePassword = (e: React.FormEvent<HTMLFormElement>) => {
-        
-
         setLoading(true);
 
         e.preventDefault();
@@ -64,6 +63,8 @@ const SettingsPassword = () => {
         
                         setErrorAlertMessage(firebaseErrorHandling(err));
                         setErrorText('');
+
+                        insertErrorLog("Updating password / handleChangePassword / SettingsPassword", err);
                     })
                 })
                 .catch((err) => {
@@ -77,14 +78,18 @@ const SettingsPassword = () => {
                         setErrorAlertMessage(firebaseErrorHandling(err));
                         setErrorText('');
                     }
+
+                    insertErrorLog("Reauthenticating with credential / handleChangePassword / SettingsPassword", err);
                 })
             }
             else{
-                //catch
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Getting credential / handleChangePassword / SettingsPassword");
             }
         }
         else{
-            //catch
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Getting auth current User / handleChangePassword / SettingsPassword");
         }
     }
 

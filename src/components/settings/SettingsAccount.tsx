@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 import { firebaseErrorHandling } from "../../features/utility";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -82,14 +83,15 @@ const SettingsAccount = () => {
                 .catch((err) => {
                     setLoading(false);
                     setErrorText(firebaseErrorHandling(err));
+                    insertErrorLog("Reauthenticate with credential / handleConfirm / SettingsAccount", err);
                 })
             }
             else{
-                //catch
+                insertErrorLog("Getting credential / handleConfirm / SettingsAccount");
             }
         }
         else{
-            //catch
+            insertErrorLog("Getting auth current User / handleConfirm / SettingsAccount");
         }
     }
 

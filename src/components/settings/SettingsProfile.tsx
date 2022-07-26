@@ -21,6 +21,7 @@ import { TransitionProps } from '@mui/material/transitions';
 import { resizePhoto } from '../../features/utility';
 import { openSnackbarError, openSnackbarInfo } from '../../features/app/snackbarSlice';
 import { Avatar as AvatarType, User } from '../../features/utility/types';
+import insertErrorLog from '../../features/utility/errorLogging';
 
 const Input = styled('input')({
     display: 'none',
@@ -133,6 +134,9 @@ const SettingsProfile = (props: SettingsProfileProps) => {
                         fetchEditUser();
                     }
                 })
+                .catch((err) => {
+                    insertErrorLog("Get download URL for new User avatar / getPhotoURL / handleEdit / SettingsProfile", err);
+                })
         }
 
         function fetchEditUser(){
@@ -173,6 +177,16 @@ const SettingsProfile = (props: SettingsProfileProps) => {
                         setErrorText('');
                     }
                 })
+                .catch((err) => {
+                    setSaving(false);
+                    dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                    insertErrorLog("Fetch Put User edit profile / fetchEditUser / handleEdit / SettingsProfile", err);
+                })
+            })
+            .catch((err) => {
+                setSaving(false);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get Id token / fetchEditUser / handleEdit / SettingsProfile", err);
             })
         }
 
@@ -205,7 +219,12 @@ const SettingsProfile = (props: SettingsProfileProps) => {
                 console.log("upload successful " + dimension)
 
                 getPhotoURL(photoUploadRef, dimension);
-            });
+            })
+            .catch((err) => {
+                setSaving(false);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Uploading avatar photo while editing User / uploadPhoto / handleEdit / SettingsProfile", err);
+            })
             
         }
 
@@ -243,6 +262,7 @@ const SettingsProfile = (props: SettingsProfileProps) => {
             .catch((err) => {
                 //error
                 console.log('photo deletion failed')
+                insertErrorLog("Deleting photo after being changed in profile settings / deletePhoto / handleEdit / SettingsProfile");
             })
         }
 

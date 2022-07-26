@@ -9,6 +9,7 @@ import { EmailAuthProvider, reauthenticateWithCredential, updateEmail } from "fi
 import { firebaseErrorHandling } from "../../features/utility";
 import { useAppDispatch } from "../../app/hooks";
 import { openSnackbarInfo } from "../../features/app/snackbarSlice";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -52,11 +53,15 @@ const SettingsEmail = () => {
                 .catch((err) => {
                     setLoading(false);
                     setErrorText(firebaseErrorHandling(err));
+                    insertErrorLog("Reauthenticating with credential / handleConfirm / SettingsEmail", err);
                 })
             }
             else{
-                //catch
+                insertErrorLog("Getting credential / handleConfirm / SettingsAccount");
             }
+        }
+        else{
+            insertErrorLog("Getting auth current User / handleConfirm / SettingsAccount");
         }
     }
 
@@ -79,10 +84,11 @@ const SettingsEmail = () => {
             .catch((err) => {
                 setLoading(false);
                 setErrorAlertMessage(firebaseErrorHandling(err));
+                insertErrorLog("Updating email / handleChangeEmail / SettingsEmail", err);
             })
         }
         else{
-            //catch
+            insertErrorLog("Getting auth current User / handleChangeEmail / SettingsEmail");
         }
         
     }

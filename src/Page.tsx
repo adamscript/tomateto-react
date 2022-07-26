@@ -10,6 +10,7 @@ import { setAuthState } from './features/user/authStateSlice';
 import { PageLoading, PageSnackbar } from './components/page';
 import { setDarkMode, setLightMode } from './features/app/darkModeSlice';
 import { User } from 'firebase/auth';
+import insertErrorLog from './features/utility/errorLogging';
 
 const lightTheme = createTheme({
   palette: {
@@ -294,8 +295,9 @@ function Page() {
             else{
               setSpinner(false);
               setLoadMessage('Oops, something went wrong. Please try again later.');
+              insertErrorLog("Fetching current user on Page", err);
             }
-          }, 2000);
+          }, 4000);
           
         })
       }

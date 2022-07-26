@@ -8,6 +8,7 @@ import { LoadingButton } from "@mui/lab";
 import { User } from "../../features/utility/types";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setAuthState } from "../../features/user/authStateSlice";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -76,18 +77,24 @@ const Signup = () => {
                     console.log("error while posting user")
                     console.log(error)
                     setSignup(false);
+
+                    insertErrorLog("Fetch Post new User / handleSignup / Signup", error);
                 })
             })
             .catch((error) => {
                 console.log(error)
                 deleteUser(user);
                 setSignup(false);
+
+                insertErrorLog("Get Id Token / handleSignup / Signup", error);
             })
             
         })
         .catch((error) => {
             setErrorText(firebaseErrorHandling(error));
             setSignup(false);
+
+            insertErrorLog("Creating user with Email and password / handleSignup / Signup", error);
         })
     }
 

@@ -11,6 +11,8 @@ import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { setLightMode, setDarkMode } from "../../features/app/darkModeSlice";
+import insertErrorLog from "../../features/utility/errorLogging";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
 
 const Puller = styled(Box)(({ theme }) => ({
     width: 30,
@@ -79,7 +81,11 @@ const PageAccountMenu = (props: PageAccountMenuProps) => {
         auth.signOut()
         .then(() => {
             navigate("/accounts/login");
-        }) 
+        })
+        .catch((err) => {
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Logging out / handleLogOut / PageAccountMenu", err);
+        })
     }
 
     return(

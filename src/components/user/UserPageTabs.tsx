@@ -10,6 +10,8 @@ import UserProfilePost from "./UserProfilePost";
 import { useLocation, useParams } from "react-router-dom";
 import { auth } from "../../firebase";
 import { Comment, Post } from "../../features/utility/types";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 interface TabPanelProps {
     value: string;
@@ -121,12 +123,22 @@ const UserPageTabs = (props: UserPageTabsProps) => {
                 }
                 setLoaded(true);
             })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetch loading post for user page / fetchListFeedPost / UserPageTabs", err);
+            })
         }
 
         if(authState.isLoggedIn){
             auth.currentUser?.getIdToken()
             .then((res) => {
                 fetchListFeedPost(res);
+            })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get Id token / UserPageTabs", err);
             })
         }
         else{

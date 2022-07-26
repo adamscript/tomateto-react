@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { loadComments } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
 import { Post } from "../../features/utility/types";
+import insertErrorLog from "../../features/utility/errorLogging";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
 
 interface PostContentCommentProps {
     response: Post;
@@ -40,6 +42,9 @@ const PostContentComment = (props: PostContentCommentProps) => {
             .catch((err) => {
                 console.log(err);
                 setLoaded(true);
+
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetch Post Comments / fetchListComment / PostContentComment", err);
             })
         }
 
@@ -47,6 +52,10 @@ const PostContentComment = (props: PostContentCommentProps) => {
             auth.currentUser?.getIdToken()
             .then((res) => {
                 fetchListComment(res);
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get id token / PostContentComment", err)
             })
         }
         else{

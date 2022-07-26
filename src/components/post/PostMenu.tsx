@@ -16,6 +16,7 @@ import { openSnackbarError, openSnackbarInfo } from "../../features/app/snackbar
 import { useLocation, useNavigate } from "react-router-dom";
 import { deleteObject, getStorage, ref } from "firebase/storage";
 import { Post } from "../../features/utility/types";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const storage = getStorage();
 
@@ -120,11 +121,22 @@ const PostMenu = (props: PostMenuProps) => {
                 dispatch(editPost(editedPost));
                 dispatch(openSnackbarInfo('Post saved'));
             })
+            .catch((err) => {
+                setEditPostOpen(false);
+                setEditSaving(false);
+
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetch Put edit post / fetchEditPost / handleEdit / PostMenu", err);
+            })
         }
         
         auth.currentUser?.getIdToken()
         .then((res) => {
             fetchEditPost(res);
+        })
+        .catch((err) => {
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Get id token / handleEdit / PostMenu", err);
         })
     }
 
@@ -169,7 +181,8 @@ const PostMenu = (props: PostMenuProps) => {
                 }
             })
             .catch((err) => {
-                dispatch(openSnackbarError("An error occurred while processing your request"))
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetch Delete post / fetchDeletePost / handleDelete / PostMenu", err);
             })
         }
 
@@ -184,12 +197,17 @@ const PostMenu = (props: PostMenuProps) => {
             .catch((err) => {
                 //error
                 console.log('photo deletion failed')
+                insertErrorLog("Deleting photo on firebase storage / deletePhoto / handleDelete / PostMenu", err);
             })
         }
 
         auth.currentUser?.getIdToken()
         .then((res) => {
             fetchDeletePost(res);
+        })
+        .catch((err) => {
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Get Id Token / handleDelete / PostMenu", err);
         })
     }
 

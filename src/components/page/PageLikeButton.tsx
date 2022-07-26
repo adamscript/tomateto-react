@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks";
 import { openSnackbarError } from "../../features/app/snackbarSlice";
 import { Comment, Post } from "../../features/utility/types";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 interface PostLikeButtonProps {
     items: Post | Comment;
@@ -43,10 +44,12 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         headers: {'Content-Type': 'application/json',
                                     'Authorization': `Bearer ${res}`}
                     })
-                .catch((res) => {
+                .catch((err) => {
                     if(instanceOfPost(props.items)){
                         dispatch(unlikePost(props.items));
-                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                        dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+
+                        insertErrorLog("Fetch Put Like Post / fetchLikePost / handleLike / PostLikeButton", err);
                     }
                 })
             }
@@ -62,10 +65,12 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         headers: {'Content-Type': 'application/json',
                                     'Authorization': `Bearer ${res}`}
                     })
-                .catch((res) => {
+                .catch((err) => {
                     if(instanceOfPost(props.items)){
                         dispatch(likePost(props.items));
-                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                        dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+
+                        insertErrorLog("Fetch Put Unlike Post / fetchUnlikePost / handleLike / PostLikeButton", err);
                     }
                 })
             }
@@ -81,10 +86,12 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         headers: {'Content-Type': 'application/json',
                                     'Authorization': `Bearer ${res}`}
                     })
-                .catch((res) => {
+                .catch((err) => {
                     if(instanceOfComment(props.items)){
                         dispatch(unlikeComment(props.items));
-                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                        dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+
+                        insertErrorLog("Fetch Put Like Comment / fetchLikeComment / handleLike / PostLikeButton", err);
                     }
                 })
             }
@@ -100,10 +107,12 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         headers: {'Content-Type': 'application/json',
                                     'Authorization': `Bearer ${res}`}
                     })
-                .catch((res) => {
+                .catch((err) => {
                     if(instanceOfComment(props.items)){
                         dispatch(likeComment(props.items));
-                        dispatch(openSnackbarError("An error occurred while processing your request"));
+                        dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+
+                        insertErrorLog("Fetch Put Unlike Comment / fetchLikeComment / handleLike / PostLikeButton", err);
                     }
                 })
             }
@@ -128,6 +137,10 @@ const PostLikeButton = (props: PostLikeButtonProps) => {
                         fetchLikePost(res);
                     }
                 }
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get id token / handleLike / PostLikeButton", err);
             })
         }
         else{

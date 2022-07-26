@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
 import { LoadingButton } from "@mui/lab";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -48,6 +49,8 @@ const Login = () => {
             .catch((err) => {
                 setErrorText(firebaseErrorHandling(err));
                 setLogin(false);
+
+                insertErrorLog("Sign in with email and password / handleLogin / Login", err);
             })
     }
 

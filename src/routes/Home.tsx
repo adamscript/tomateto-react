@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { FeedNewPost, FeedPost, PostSkeleton } from "../components/post";
+import { openSnackbarError } from "../features/app/snackbarSlice";
 import { loadPosts } from "../features/post/feedPostSlice";
+import insertErrorLog from "../features/utility/errorLogging";
 import { auth } from "../firebase";
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -45,11 +47,21 @@ const Home = () => {
                 dispatch(loadPosts(res.items));
                 setLoaded(true);
             })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetching Post for home page / Home", err);
+            })
         }
         
         auth.currentUser?.getIdToken()
         .then((res) => {
             fetchListFeedPost(res);
+        })
+        .catch((err) => {
+            setLoaded(true);
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Get Id Token / Home", err);
         })
 
     }, [])

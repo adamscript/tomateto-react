@@ -8,6 +8,7 @@ import { incrementCommentsCount } from "../../features/post/feedPostSlice";
 import { PageEmojiButton } from "../page";
 import { LoadingButton } from "@mui/lab";
 import { Comment, Post } from "../../features/utility/types";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const NewCommentContainer = styled(Box)(({theme}) => ({
     padding: 16,
@@ -97,6 +98,8 @@ const NewComment = forwardRef<HTMLInputElement, NewCommentProps>((props, ref) =>
             })
             .catch((err) => {
                 setPosting(false);
+
+                insertErrorLog("Fetch Insert new comment / fetchInsertComment / handleComment / NewComment", err);
             })
         }
 
@@ -106,6 +109,7 @@ const NewComment = forwardRef<HTMLInputElement, NewCommentProps>((props, ref) =>
         })
         .catch((err) => {
             setPosting(false);
+            insertErrorLog("Get Id Token / fetchInsertComment / NewComment", err);
         })
 
     }

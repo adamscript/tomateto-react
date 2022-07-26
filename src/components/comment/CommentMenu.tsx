@@ -11,6 +11,7 @@ import { deleteComment } from "../../features/comment/feedCommentSlice";
 import { auth } from "../../firebase";
 import { Comment } from "../../features/utility/types";
 import { openSnackbarError } from "../../features/app/snackbarSlice";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 interface CommentMenuProps {
     items: Comment;
@@ -74,14 +75,20 @@ const CommentMenu = (props: CommentMenuProps) => {
                                 'Authorization': `Bearer ${res}`}
                 })
             .catch((err) => {
-                dispatch(openSnackbarError("An error occurred while processing your request"));
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
                 console.log(err)
+
+                insertErrorLog("Fetch Delete Comment / handleDelete / CommentMenu", err);
             })
         }
         
         auth.currentUser?.getIdToken()
         .then((res) => {
             fetchDeleteComment(res);
+        })
+        .catch((err) => {
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Get id token / handleDelete / CommentMenu", err);
         })
     }
 

@@ -6,7 +6,9 @@ import { ExploreFeedTopPost } from "../components/explore";
 import { PageLabel, PageSearchInput } from "../components/page";
 import { FeedPost } from "../components/post";
 import { UserRecommendation } from "../components/user";
+import { openSnackbarError } from "../features/app/snackbarSlice";
 import { loadPosts } from "../features/post/feedPostSlice";
+import insertErrorLog from "../features/utility/errorLogging";
 import { auth } from "../firebase";
 import Explore from "./Explore";
 
@@ -45,6 +47,11 @@ const Search = () => {
                     dispatch(loadPosts(res.items));
                     setPostLoaded(true);
                 })
+                .catch((err) => {
+                    setLoaded(true);
+                    dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                    insertErrorLog("Fetching Post for search page / Search", err);
+                })
         }
 
         function fetchListSearchUser(res?: string){
@@ -59,6 +66,11 @@ const Search = () => {
                     setSearchUserItems(res.items);
                     setUserLoaded(true);
                 })
+                .catch((err) => {
+                    setLoaded(true);
+                    dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                    insertErrorLog("Fetching User for search page / Search", err);
+                })
         }
 
         if(authState.isLoggedIn){
@@ -66,6 +78,11 @@ const Search = () => {
             .then((res) => {
                 fetchListSearchPost(res);
                 fetchListSearchUser(res);
+            })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get Id token / Search", err);
             })
         }
         else{

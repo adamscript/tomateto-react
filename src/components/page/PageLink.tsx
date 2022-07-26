@@ -1,7 +1,7 @@
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, Slide, Stack, styled, Tooltip, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { forwardRef, ReactElement, Ref, useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { auth } from "../../firebase";
 import { UserRecommendation } from "../user";
 import CloseIcon from '@mui/icons-material/Close';
@@ -9,6 +9,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { TransitionProps } from "@mui/material/transitions";
 import { format, intervalToDuration, parseISO } from "date-fns";
 import { Comment, Post, User } from "../../features/utility/types";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const LinkTypography = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -115,6 +117,7 @@ const PageLinkModal = (props: PageLinkModalProps) => {
     const [isLoaded, setLoaded] = useState(false);
 
     const authState = useAppSelector((state) => state.authState)
+    const dispatch = useAppDispatch();
     
     const navigate = useNavigate();
     const { username, postId } = useParams();
@@ -143,6 +146,10 @@ const PageLinkModal = (props: PageLinkModalProps) => {
             .then((res) => {
                 handleFetchSuccess(res.items);
             })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetching user following / fetchListUserFollowing / PageLinkModal", err);
+            })
         }
 
         function fetchListUserFollowers(res?: string){
@@ -156,6 +163,10 @@ const PageLinkModal = (props: PageLinkModalProps) => {
             .then((res) => {
                 handleFetchSuccess(res.items);
             })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetching user followers / fetchListUserFollowers / PageLinkModal", err);
+            })
         }
 
         function fetchListPostLikes(res?: string){
@@ -168,6 +179,10 @@ const PageLinkModal = (props: PageLinkModalProps) => {
             })
             .then((res) => {
                 handleFetchSuccess(res.items);
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetching post likes / fetchListPostLikes / PageLinkModal", err);
             })
         }
 
@@ -192,6 +207,10 @@ const PageLinkModal = (props: PageLinkModalProps) => {
             auth.currentUser?.getIdToken()
             .then((res) => {
                 handleFetch(res);
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get id token / PageLinkModal", err);
             })
         }
         else{

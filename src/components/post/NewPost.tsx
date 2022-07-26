@@ -13,9 +13,10 @@ import { getDownloadURL, ref, StorageReference, uploadBytesResumable } from "fir
 import { auth, storage } from '../../firebase';
 import { PageEmojiButton } from '../page';
 import { compressPhoto } from '../../features/utility';
-import { openSnackbarInfo } from '../../features/app/snackbarSlice';
+import { openSnackbarError, openSnackbarInfo } from '../../features/app/snackbarSlice';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Post } from '../../features/utility/types';
+import insertErrorLog from '../../features/utility/errorLogging';
 
 const Input = styled('input')({
     display: 'none',
@@ -87,6 +88,10 @@ const NewPost = () => {
 
                     fetchInsertPost();
                 })
+                .catch((err) => {
+                    dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                    insertErrorLog("Getting download URL for photo of new post / getPhotoURL / handlePost / NewPost", err)
+                })
         }
 
         function fetchInsertPost(){
@@ -109,6 +114,14 @@ const NewPost = () => {
                     newPost.id = res.items.id;
                     handlePostSuccess();
                 })
+                .catch((err) => {
+                    dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                    insertErrorLog("Fetch Post new post / fetchInsertPost / handlePost / NewPost", err)
+                })
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get id token / fetchInsertPost / handlePost / NewPost", err)
             })
         }
 
@@ -164,6 +177,10 @@ const NewPost = () => {
                 if(res instanceof Blob){
                     uploadPhoto(photoUploadRef, res, metadata);
                 }
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Compressing photo / handlePost / NewPost", err)
             })
 
         }

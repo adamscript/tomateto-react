@@ -7,6 +7,7 @@ import { useAppDispatch } from "../../app/hooks";
 import { openSnackbarInfo } from "../../features/app/snackbarSlice";
 import { LoadingButton } from "@mui/lab";
 import { useSearchParams } from "react-router-dom";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -38,6 +39,7 @@ const ForgotPassword = () => {
         .catch((err) => {
             setErrorText(firebaseErrorHandling(err));
             setLoading(false);
+            insertErrorLog("Sending password reset email / handleSendLink / ForgotPassword", err);
         });
     }
 
@@ -83,6 +85,8 @@ const ResetPassword = () => {
                 setErrorText(firebaseErrorHandling(err));
                 setValid(false);
                 setLoading(false);
+
+                insertErrorLog("Verifying Password Reset Code / ResetPassword", err)
             })
         }
         else{
@@ -107,6 +111,8 @@ const ResetPassword = () => {
             .catch((err) => {
                 setErrorText(firebaseErrorHandling(err));
                 setLoading(false);
+
+                insertErrorLog("Confirm Password Reset / handleResetPassword / ForgotPassword", err);
             })
         }
     }

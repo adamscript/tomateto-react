@@ -1,12 +1,14 @@
 import { Box, IconButton, LinearProgress, Stack, styled, useMediaQuery, useTheme } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import { PageAccountMenu, PageLabel } from "../components/page";
 import { FeedPost } from "../components/post";
 import { UserProfile, UserPageTabs } from "../components/user";
 import { auth } from "../firebase";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { openSnackbarError } from "../features/app/snackbarSlice";
+import insertErrorLog from "../features/utility/errorLogging";
 
 const PageTopNavigation = styled(Box)(({theme}) => ({
     position: 'fixed',
@@ -33,6 +35,7 @@ const User = () => {
     const [isLoaded, setLoaded] = useState(false);
 
     const authState = useAppSelector((state) => state.authState);
+    const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -71,12 +74,22 @@ const User = () => {
                     navigate('/404');
                 }
             })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetching User for user page / User", err);
+            })
         }
         
         if(authState.isLoggedIn){
             auth.currentUser?.getIdToken()
             .then((res) => {
                 fetchListUser(res);
+            })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get Id token / User", err);
             })
         }
         else{

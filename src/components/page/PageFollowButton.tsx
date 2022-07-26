@@ -2,9 +2,11 @@ import { alpha, styled } from "@mui/material";
 import { useState } from "react";
 import { auth } from "../../firebase";
 import { LoadingButton } from '@mui/lab';
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { useNavigate } from "react-router-dom";
 import { User } from "../../features/utility/types";
+import insertErrorLog from "../../features/utility/errorLogging";
+import { openSnackbarError } from "../../features/app/snackbarSlice";
 
 const FollowButton = styled(LoadingButton)(({ theme }) => ({
     color: '#FFFFFF',
@@ -38,6 +40,7 @@ const PageFollowButton = (props: PageFollowButtonProps) => {
     const [followedLabel, setFollowedLabel] = useState('Followed');
 
     const isLoggedIn = useAppSelector((state) => state.authState.isLoggedIn);
+    const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
 
@@ -55,12 +58,21 @@ const PageFollowButton = (props: PageFollowButtonProps) => {
                 setLoading(false);
                 setFollowed(true);
             })
+            .catch((err) => {
+                insertErrorLog("Fetch Put follow user / fetchFollowUser / handleFollow / PageFollowButton", err);
+                setLoading(false);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            })
         }
 
         if(isLoggedIn){
             auth.currentUser?.getIdToken()
             .then((res) => {
                 fetchFollowUser(res);
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get id token / handleFollow / PageFollowButton", err);
             })
         }
         else{
@@ -73,7 +85,7 @@ const PageFollowButton = (props: PageFollowButtonProps) => {
     const handleUnfollow = () => {
         setLoading(true);
 
-        function fetchFollowUser(res: string){
+        function fetchUnfollowUser(res: string){
             fetch(`${process.env.REACT_APP_API_URL}/api/user/${props.items.id}/unfollow`, {
                     mode: 'cors',
                     method: 'PUT',
@@ -84,11 +96,20 @@ const PageFollowButton = (props: PageFollowButtonProps) => {
                 setLoading(false);
                 setFollowed(false);
             })
+            .catch((err) => {
+                insertErrorLog("Fetch Put unfollow user / fetchUnfollowUser / handleUnfollow / PageFollowButton", err);
+                setLoading(false);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            })
         }
         
         auth.currentUser?.getIdToken()
         .then((res) => {
-            fetchFollowUser(res);
+            fetchUnfollowUser(res);
+        })
+        .catch((err) => {
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Get id token / handleUnfollow / PageFollowButton", err);
         })
     }
 

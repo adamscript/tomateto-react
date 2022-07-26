@@ -9,6 +9,8 @@ import { PostContent, PostContentComment } from "../components/post";
 import { loadPosts } from "../features/post/feedPostSlice";
 import { auth } from "../firebase";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { openSnackbarError } from "../features/app/snackbarSlice";
+import insertErrorLog from "../features/utility/errorLogging";
 
 const PageTopNavigation = styled(Box)(({theme}) => ({
     position: 'fixed',
@@ -73,12 +75,22 @@ const Post = () => {
 
                 document.title = `${res.items.user.displayName} on Tomateto: "${res.items.content.length > 64 ? res.items.content.substring(0, 60) + "..." : res.items.content}" - Tomateto`;
             })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Fetching Post for Post page / Post", err);
+            })
         }
         
         if(authState.isLoggedIn){
             auth.currentUser?.getIdToken()
             .then((res) => {
                 fetchListPost(res);
+            })
+            .catch((err) => {
+                setLoaded(true);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get Id Token / Post", err);
             })
         }
         else{

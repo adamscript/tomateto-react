@@ -9,6 +9,7 @@ import { firebaseErrorHandling } from "../../features/utility";
 import { openSnackbarError, openSnackbarWarning } from "../../features/app/snackbarSlice";
 import { useDispatch } from "react-redux";
 import { LoadingButton } from "@mui/lab";
+import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
@@ -44,7 +45,9 @@ const SettingsDelete = () => {
                 deleteAccount();
             })
             .catch((err) => {
-                dispatch(openSnackbarError("An error occurred while processing your request"))
+                setLoading(false);
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."))
+                insertErrorLog("Fetch Delete User / fetchDeleteUser / handleDeleteAccount / SettingsDelete", err);
             })
         }
         
@@ -63,24 +66,30 @@ const SettingsDelete = () => {
                         })
                         .catch((err) => {
                             dispatch(openSnackbarError(firebaseErrorHandling(err)));
+                            insertErrorLog("Deleting account on firebase / deleteAccount / handleDeleteAccount / SettingsDelete", err);
                         })
                     })
                     .catch((err) => {
                         setErrorText(firebaseErrorHandling(err));
+                        insertErrorLog("Reaunthenticating with credential / deleteAccount / handleDeleteAccount / SettingsDelete", err);
                     })
                 }
                 else{
-                    //catch
+                    insertErrorLog("Getting credential / deleteAccount / handleDeleteAccount / SettingsDelete");
                 }
             }
             else{
-                //catch
+                insertErrorLog("Getting auth current User / deleteAccount / handleDeleteAccount / SettingsDelete");
             }
         }
 
         auth.currentUser?.getIdToken()
         .then((res) => {
             fetchDeleteUser(res);
+        })
+        .catch((err) => {
+            dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+            insertErrorLog("Get id token / handleDeleteAccount / SettingsDelete", err);
         })
     }
 

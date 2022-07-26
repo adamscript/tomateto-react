@@ -6,7 +6,9 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { ExploreFeedLatestPost, ExploreFeedTopPost, ExploreFeedUser } from "../components/explore";
 import { PageLabel, PageSearchInput, PageShowMore } from "../components/page";
 import { PostSkeleton } from "../components/post";
+import { openSnackbarError } from "../features/app/snackbarSlice";
 import { loadPosts } from "../features/post/feedPostSlice";
+import insertErrorLog from "../features/utility/errorLogging";
 import { auth } from "../firebase";
 
 interface TabPanelProps {
@@ -100,6 +102,10 @@ const Explore = () => {
                     dispatch(loadPosts(res.items));
                     setLoaded(true);
                 })
+                .catch((err) => {
+                    dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                    insertErrorLog("Fetching Post for explore page / Explore", err);
+                })
             }
             else{
                 setLoaded(true);
@@ -110,6 +116,10 @@ const Explore = () => {
             auth.currentUser?.getIdToken()
             .then((res) => {
                 fetchListFeedPost(res);
+            })
+            .catch((err) => {
+                dispatch(openSnackbarError("An error occurred while processing your request. Please try again later."));
+                insertErrorLog("Get Id Token / Explore", err);
             })
         }
         else{
