@@ -5,7 +5,7 @@ import Page from './Page';
 import reportWebVitals from './reportWebVitals';
 import store from './app/store'
 import { Provider } from 'react-redux'
-import { BrowserRouter, Link, Route, Routes, useParams } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -38,5 +38,5 @@ console.log(`
    ██║   ╚██████╔╝██║ ╚═╝ ██║██║  ██║   ██║   ███████╗███████║██╗
    ╚═╝    ╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝╚═╝
                                                                  
-Built with ♥ by Adam Darmawan (github.com/adamscript)
+Built with ♥ by Adam Darmawan (adamscript.com)
    `)

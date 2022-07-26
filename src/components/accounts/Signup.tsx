@@ -6,8 +6,7 @@ import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
 import { LoadingButton } from "@mui/lab";
 import { User } from "../../features/utility/types";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { setAuthState } from "../../features/user/authStateSlice";
+import { useAppDispatch } from "../../app/hooks";
 import insertErrorLog from "../../features/utility/errorLogging";
 
 const StyledForm = styled('form')(() => ({

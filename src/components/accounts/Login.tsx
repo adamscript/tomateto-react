@@ -1,12 +1,12 @@
-import { Alert, Box, Button, Paper, Stack, styled, TextField, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Alert, Stack, styled, TextField, Typography } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
+import { LoadingButton } from "@mui/lab";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { auth } from "../../firebase";
 import { firebaseErrorHandling } from "../../features/utility";
-import { LoadingButton } from "@mui/lab";
 import insertErrorLog from "../../features/utility/errorLogging";
+import { auth } from "../../firebase";
 
 const StyledForm = styled('form')(() => ({
     width: '100%',
