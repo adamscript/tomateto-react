@@ -25,19 +25,19 @@ This is the front-end side of Tomateto. To learn more about the back-end side, c
 ### Demo
 Here is the working live demo : <https://tomateto.com>
 
-### Built with
-- Typescript
-- React
-- Redux
-- MUI (Material UI)
-- Firebase
-- Vercel
+### Built With
+- [Typescript](https://www.typescriptlang.org/)
+- [React](https://reactjs.org/)
+- [Redux](https://react-redux.js.org/)
+- [MUI (Material UI)](https://mui.com/)
+- [Firebase](https://firebase.google.com/)
+- [Vercel](https://vercel.com/)
 
 ## Features
-### Single page app ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/App.tsx))
+### Single Page App ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/App.tsx)) {#single-page-app}
 By building this web app as a single page app, users can navigate through the pages without reloading the entire page. This feature is powered by [React Router](https://reactrouter.com/).
 
-### Responsive design ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/App.tsx))
+### Responsive Design ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/App.tsx))
 This web app will adapt its layout based on the device it’s currently running on. So it will always look good whether you use it on mobile or desktop.
 
 | Desktop | Mobile |
@@ -47,19 +47,19 @@ This web app will adapt its layout based on the device it’s currently running 
 | <img src="https://user-images.githubusercontent.com/69242299/183032528-0af346aa-47a3-4197-b3f5-82107d69f873.png" alt="post_desktop" width="400"/> | <img src="https://user-images.githubusercontent.com/69242299/183032531-61085f71-9022-4a70-a4f5-5c3defa94ac7.png" alt="post_mobile" height="200"/> |
 | <img src="https://user-images.githubusercontent.com/69242299/183032521-600f2e64-f565-4f1d-a900-ea406bdda0bf.png" alt="newpost_desktop" width="400"/> | <img src="https://user-images.githubusercontent.com/69242299/183032527-372d95b9-b38d-43e8-bed9-4fe851e9324f.png" alt="newpost_mobile" height="200"/> |
 
-### Instant search ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/Search.tsx))
+### Instant Search ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/Search.tsx))
 Users can type in keywords and get results instantly.
 
-### Image resize & compression ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/features/utility/resizePhoto.ts))
+### Image Resize & Compression ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/features/utility/resizePhoto.ts))
 To reduce pixelation on pictures loaded on the page even on the smallest scale, every picture uploaded will be compressed and resized by implementing image processing. This procedure also reduces upload size. This feature is powered by [Pica](https://github.com/nodeca/pica).
 
 ### Authentication
 Users can sign up and log in to create posts, comments, and follow other users. They also can reset password, change email, and delete their account when needed. This feature is powered by [Firebase Authentication](https://firebase.google.com/docs/auth).
 
-### Error logging ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/features/utility/errorLogging.ts))
+### Error Logging ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/features/utility/errorLogging.ts))
 When the web app detects an error, it will store the error message, timestamp, and the action that causes the error in a dedicated NoSQL database to aid in the debugging and troubleshooting process.
 
-### Dark mode ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/Page.tsx))
+### Dark Mode ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/Page.tsx))
 It’s just better for your eyes.
 
 <img src="https://user-images.githubusercontent.com/69242299/183036628-03d8ed10-2abe-4ea7-a0a3-b9b1d63919db.png" alt="home_dark_desktop" width="600"/>
@@ -86,4 +86,4 @@ If I had more time, I would add these :
 - Optimize it further by implementing caching (perhaps Redis?).
 
 ## Support
-If you are having issues or found a bug, feel free to open an issue. Also if you have questions about the project, feel free to reach out at: <adam@adamscript.com>.
+If you are having issues or found a bug, feel free to [open an issue](https://github.com/adamscript/tomateto-react/issues). Also if you have questions about the project, feel free to reach out at: <adam@adamscript.com>.
