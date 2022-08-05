@@ -34,7 +34,7 @@ Here is the working live demo : <https://tomateto.com>
 - [Vercel](https://vercel.com/)
 
 ## Features
-### Single Page App ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/App.tsx)) {#single-page-app}
+### Single Page App ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/App.tsx))
 By building this web app as a single page app, users can navigate through the pages without reloading the entire page. This feature is powered by [React Router](https://reactrouter.com/).
 
 ### Responsive Design ([example code](https://github.com/adamscript/tomateto-react/blob/main/src/routes/App.tsx))
