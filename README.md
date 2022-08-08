@@ -70,7 +70,7 @@ It’s just better for your eyes.
 - Like and unlike post
 - Create and delete comment
 - Like and unlike comment
-- Upload photo
+- Upload photo, powered by [Cloud Storage for Firebase](https://firebase.google.com/docs/storage)
 - Add emoji, powered by [Emoji Mart](https://github.com/missive/emoji-mart)
 - Edit profile
 
