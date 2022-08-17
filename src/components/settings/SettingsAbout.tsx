@@ -37,7 +37,7 @@ const SettingsAbout = () => {
                     Tomateto is a personal project built by Adam Darmawan as a means to learn full-stack web development.
                 </Typography>
                 <Typography>
-                    You can find him on various social medias (including Tomateto) as @adamscript and @awantobreakfree. His inbox is also open at adam@adamscript.com and ajiaditya27@gmail.com. If you have any questions, suggestions, or just want to let him know how awesome he is, feel free to send him a dm. He'll really appreciate it (and probably cry a little bit, depends on what you tell him).
+                    You can find him on Tomateto and LinkedIn as @adamscript. His inbox is also open at adam@adamscript.com. If you have any questions, suggestions, or just want to let him know how awesome he is, feel free to send him an email. He'll really appreciate it (and probably cry a little bit, depends on what you tell him).
                 </Typography>
                 <Typography sx={{ display: 'inline-flex' }}>Finally, you can learn more about the creator of Tomateto on his personal website.</Typography>
                 <LinkTypography component='a' href="https://www.adamscript.com">adamscript.com</LinkTypography>
